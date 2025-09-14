@@ -1,0 +1,85 @@
+<%- include('./partials/header.ejs') %>
+<body class="h-full bg-gradient-to-br from-brand-50 via-white to-brand-100 light:from-slate-900 light:via-slate-950 light:to-slate-900">
+    <!-- Décor arrière-plan -->
+    <div aria-hidden="true" class="pointer-events-none fixed inset-0 overflow-hidden">
+      <div class="absolute -top-40 -left-40 h-80 w-80 rounded-full bg-brand-300/30 blur-3xl"></div>
+      <div class="absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-brand-500/20 blur-3xl"></div>
+    </div>
+  
+    <main class="relative z-10 min-h-full flex items-center justify-center p-4 sm:p-6">
+      <div class="w-full max-w-md">
+        <!-- Logo / Titre -->
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <div class="h-9 w-9 rounded-xl bg-brand-600 text-white grid place-items-center shadow-soft">★</div>
+            <div>
+              <h1 class="text-xl sm:text-2xl font-semibold text-slate-900 light:text-white">Bienvenue</h1>
+              <p class="text-xs text-slate-500 light:text-slate-400">Connectez-vous à votre espace</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Carte formulaire -->
+        <div class="rounded-2xl border border-white/60 backdrop-blur bg-white/80 light:bg-slate-900/70 light:border-white/10 shadow-soft">
+          <form id="loginForm" class="p-5 sm:p-6" novalidate>
+            <div class="space-y-4">
+              <label class="grid gap-1 text-sm">
+                <span class="text-slate-700 light:text-slate-200">Email</span>
+                <input id="email" type="email" required autocomplete="email" placeholder="vous@exemple.com"
+                       class="rounded-xl border border-slate-200 light:border-slate-700 bg-white/90 light:bg-slate-800/60 px-3 py-3 outline-none focus:ring-4 focus:ring-brand-200 light:focus:ring-brand-800" />
+                <p id="emailError" class="hidden text-xs text-red-600">Veuillez saisir une adresse email valide.</p>
+              </label>
+  
+              <label class="grid gap-1 text-sm">
+                <span class="text-slate-700 light:text-slate-200">Mot de passe</span>
+                <div class="relative">
+                  <input id="password" type="password" required minlength="8" placeholder="••••••••" autocomplete="current-password"
+                         class="w-full rounded-xl border border-slate-200 light:border-slate-700 bg-white/90 light:bg-slate-800/60 px-3 py-3 pr-10 outline-none focus:ring-4 focus:ring-brand-200 light:focus:ring-brand-800" />
+                  <button type="button" id="togglePwd" class="absolute inset-y-0 right-0 grid place-items-center px-3 text-slate-500 hover:text-slate-700 light:text-slate-400 light:hover:text-slate-200" aria-label="Afficher ou masquer le mot de passe">
+                    <svg id="eyeOpen" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg id="eyeClosed" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l18 18"/><path d="M10.58 10.58A3 3 0 0 0 9 12c0 1.66 1.34 3 3 3 .48 0 .93-.11 1.33-.3M9.88 5.09A10.94 10.94 0 0 1 12 5c6 0 10 7 10 7a18.86 18.86 0 0 1-3.34 4.54"/><path d="M6.1 6.1A18.94 18.94 0 0 0 2 12s4 7 10 7c1.64 0 3.18-.36 4.58-.99"/></svg>
+                  </button>
+                </div>
+                <p id="passwordError" class="hidden text-xs text-red-600">Au moins 8 caractères.</p>
+              </label>
+  
+              <div class="flex items-center justify-between text-sm">
+                <label class="inline-flex items-center gap-2 select-none">
+                  <input id="remember" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500" />
+                  <span class="text-slate-600 light:text-slate-300">Se souvenir de moi</span>
+                </label>
+                <a href="#" class="text-brand-700 hover:underline light:text-brand-300">Mot de passe oublié ?</a>
+              </div>
+  
+              <button id="submitBtn" type="submit" class="w-full rounded-xl bg-brand-600 text-white py-3 font-medium hover:bg-brand-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-300 active:scale-[.99] transition">
+                Se connecter
+              </button>
+  
+              <div class="relative text-center text-xs text-slate-500 light:text-slate-400">
+                <span class="bg-white/80 light:bg-slate-900/70 px-2 relative z-10">ou</span>
+                <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-slate-200 light:bg-slate-700"></div>
+              </div>
+  
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button type="button" class="rounded-xl border border-slate-200 light:border-slate-700 bg-white/70 light:bg-slate-800/60 py-2.5 font-medium hover:bg-white light:hover:bg-slate-800 transition">
+                  Continuer avec Google
+                </button>
+                <button type="button" class="rounded-xl border border-slate-200 light:border-slate-700 bg-white/70 light:bg-slate-800/60 py-2.5 font-medium hover:bg-white light:hover:bg-slate-800 transition">
+                  Continuer avec Apple
+                </button>
+              </div>
+            </div>
+          </form>
+  
+          <div class="px-5 sm:px-6 pb-5 sm:pb-6 text-center text-sm text-slate-600 light:text-slate-300">
+            Pas encore de compte ? <a href="#" class="text-brand-700 light:text-brand-300 hover:underline">Créer un compte</a>
+          </div>
+        </div>
+  
+        <p class="mt-4 text-center text-xs text-slate-500 light:text-slate-400">© <span id="year"></span> Votre société. Tous droits réservés.</p>
+      </div>
+    </main>
+  
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 hidden bg-black text-white light:bg-white light:text-black px-4 py-2 rounded-full shadow-soft">Connexion réussie ✔</div>
+  </body>

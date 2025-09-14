@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@config "../../tailwind.config.js";
+
+/* Dis au moteur où scanner : */
+@source "../views/**/*.ejs";
+@source "../public/**/*.js";

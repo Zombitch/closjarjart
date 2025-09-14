@@ -1,0 +1,232 @@
+<%- include('./partials/header.ejs') %>
+<body class="bg-gray-50 text-gray-800">
+  <!-- Header / Hero -->
+  <header class="relative">
+    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1600&auto=format&fit=crop" alt="Séjour lumineux" class="h-[52vh] w-full object-cover" />
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 px-6 sm:px-10 lg:px-16 pb-8 text-white">
+      <div class="max-w-6xl">
+        <span class="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-sm backdrop-blur">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4"><path d="M11.28 3.599a.75.75 0 0 1 1.44 0l.528 1.648a3.75 3.75 0 0 0 2.382 2.382l1.648.528a.75.75 0 0 1 0 1.44l-1.648.528a3.75 3.75 0 0 0-2.382 2.382l-.528 1.648a.75.75 0 0 1-1.44 0l-.528-1.648a3.75 3.75 0 0 0-2.382-2.382l-1.648-.528a.75.75 0 0 1 0-1.44l1.648-.528a3.75 3.75 0 0 0 2.382-2.382l.528-1.648Z"/></svg>
+          Super hôte • Savigné-sur-Lathan
+        </span>
+        <h1 class="mt-3 text-3xl sm:text-5xl font-semibold">Studio — 60m², 1 ch, 1 sde</h1>
+        <div class="mt-3 flex flex-wrap items-center gap-3 text-sm sm:text-base">
+          <div class="flex items-center gap-1"><span>★ ★ ★ ★ ★</span></div>
+          <span class="opacity-60">•</span>
+          <div>Jusqu'à 3 voyageurs</div>
+          <span class="opacity-60">•</span>
+          <div>À partir de <span class="font-semibold">€120</span>/nuit</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 -mt-8">
+    <!-- Card principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Colonne contenu -->
+      <section class="lg:col-span-2">
+        <!-- Galerie -->
+        <div class="grid grid-cols-3 gap-2 rounded-2xl overflow-hidden shadow-soft bg-white">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop" alt="Salon" class="col-span-2 h-60 sm:h-80 w-full object-cover cursor-pointer" onclick="openLightbox(0)"/>
+          <img src="https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=1200&auto=format&fit=crop" alt="Cuisine" class="h-60 sm:h-80 w-full object-cover cursor-pointer" onclick="openLightbox(1)"/>
+          <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1200&auto=format&fit=crop" alt="Chambre" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(2)"/>
+          <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?q=80&w=1200&auto=format&fit=crop" alt="Salle de bain" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(3)"/>
+          <img src="https://images.unsplash.com/photo-1472220625704-91e1462799b2?q=80&w=1200&auto=format&fit=crop" alt="Terrasse" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(4)"/>
+        </div>
+
+        <!-- Description -->
+        <article class="mt-6 p-6 rounded-2xl bg-white shadow-soft">
+          <h2 class="text-2xl font-semibold">À propos du logement</h2>
+          <p class="mt-3 leading-7">Ce loft lumineux de 70 m² se situe au dernier étage d'un immeuble moderne avec ascenseur. Grande pièce à vivre ouverte, cuisine équipée (four, plaques, Nespresso), 2 chambres calmes donnant sur cour, salle de bain avec douche à l'italienne, et terrasse de 12 m² exposée sud. Fibre optique, TV connectée, climatisation réversible et chauffage au sol garantissent votre confort en toute saison.</p>
+          <ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <li class="flex items-center gap-2"><span class="text-brand-600">✔</span> Check-in autonome (boîte à clés)</li>
+            <li class="flex items-center gap-2"><span class="text-brand-600">✔</span> Wi‑Fi 1 Gbit/s & espace de télétravail</li>
+            <li class="flex items-center gap-2"><span class="text-brand-600">✔</span> Lave‑linge + sèche‑linge</li>
+            <li class="flex items-center gap-2"><span class="text-brand-600">✔</span> Lit 160×200 + 2 lits 90×190</li>
+          </ul>
+        </article>
+
+        <!-- Équipements -->
+        <section class="mt-6 p-6 rounded-2xl bg-white shadow-soft">
+          <h3 class="text-xl font-semibold">Équipements</h3>
+          <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+            <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z"/><path d="M6 8h12v2H6z"/></svg> Cuisine équipée</div>
+            <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v4H4zM4 10h16v10H4z"/></svg> Chauffage / Clim</div>
+            <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2m14.95 7.05-2.83-2.83M7.05 7.05 4.22 4.22m14.73 0-2.83 2.83M7.05 16.95l-2.83 2.83"/></svg> Ventilation et air pur</div>
+            <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v12H3z"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/></svg> TV 4K + Netflix</div>
+            <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3h14v18H5z"/><path d="M8 7h8v2H8zM8 11h8v2H8zM8 15h5v2H8z"/></svg> Linge & essentiels</div>
+            <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/></svg> Terrasse meublée</div>
+          </div>
+        </section>
+
+        <!-- Règles & politique -->
+        <section class="mt-6 p-6 rounded-2xl bg-white shadow-soft">
+          <h3 class="text-xl font-semibold">Règles du logement</h3>
+          <ul class="mt-3 list-disc pl-5 space-y-2 text-sm leading-6">
+            <li>Non‑fumeur à l'intérieur. Animaux sur demande préalable.</li>
+            <li>Pas de fêtes. Respect du voisinage après 22h.</li>
+            <li>Check‑in 16:00 • Check‑out 11:00. Dépôt de garantie : €300 (pré‑autorisation).</li>
+            <li>Tri des déchets obligatoire. Merci d'économiser eau & énergie.</li>
+          </ul>
+          <h4 class="mt-5 font-semibold">Politique d'annulation</h4>
+          <p class="mt-2 text-sm">Annulation gratuite jusqu'à 5 jours avant l'arrivée. Au‑delà : 50% du séjour dû. No‑show : 100%.</p>
+        </section>
+
+        <!-- Avis -->
+        <section class="mt-6 p-6 rounded-2xl bg-white shadow-soft">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xl font-semibold">Avis récents</h3>
+            <button class="text-brand-700 hover:underline" onclick="toggleAllReviews()">Voir tout</button>
+          </div>
+          <div id="reviews" class="mt-4 grid gap-4 sm:grid-cols-2">
+            <article class="border rounded-xl p-4">
+              <div class="flex items-center justify-between">
+                <div class="font-medium">Camille</div>
+                <div class="text-sm">★★★★★</div>
+              </div>
+              <p class="mt-2 text-sm">Appartement impeccable, très calme et parfaitement situé pour visiter le centre. Internet ultra rapide pour le télétravail.</p>
+              <p class="mt-1 text-xs opacity-70">Août 2025</p>
+            </article>
+            <article class="border rounded-xl p-4">
+              <div class="flex items-center justify-between">
+                <div class="font-medium">Julien</div>
+                <div class="text-sm">★★★★☆</div>
+              </div>
+              <p class="mt-2 text-sm">La terrasse est un vrai plus. Check‑in très simple. Un peu chaud l'après‑midi mais la clim fait le job.</p>
+              <p class="mt-1 text-xs opacity-70">Juillet 2025</p>
+            </article>
+            <article class="border rounded-xl p-4 hidden more-review">
+              <div class="flex items-center justify-between">
+                <div class="font-medium">Sofia</div>
+                <div class="text-sm">★★★★★</div>
+              </div>
+              <p class="mt-2 text-sm">Propreté irréprochable et literie confortable. On reviendra !</p>
+              <p class="mt-1 text-xs opacity-70">Mai 2025</p>
+            </article>
+            <article class="border rounded-xl p-4 hidden more-review">
+              <div class="flex items-center justify-between">
+                <div class="font-medium">Nicolas</div>
+                <div class="text-sm">★★★★★</div>
+              </div>
+              <p class="mt-2 text-sm">Très bon rapport qualité/prix. Hôte réactif.</p>
+              <p class="mt-1 text-xs opacity-70">Avril 2025</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Quartier / carte -->
+        <section class="mt-6 p-6 rounded-2xl bg-white shadow-soft">
+          <h3 class="text-xl font-semibold">Quartier & Accès</h3>
+          <p class="mt-2 text-sm leading-7">Idéalement situé à 5 min à pied de la place principale, restaurants et musées. Tram A à 300 m (accès direct gare en 10 min). Parking public couvert à 200 m.</p>
+          <div class="mt-4 aspect-[16/10] w-full overflow-hidden rounded-xl border">
+            <iframe title="Carte" width="100%" height="100%" src="https://www.openstreetmap.org/export/embed.html?bbox=0.23294448852539065%2C47.416530908708154%2C0.37628173828125006%2C47.46657077685898&layer=mapnik" loading="lazy"></iframe>
+          </div>
+        </section>
+      </section>
+
+      <!-- Colonne réservation -->
+      <aside class="lg:col-span-1 lg:sticky lg:top-6 h-fit">
+        <div class="bg-white shadow-soft rounded-2xl p-5">
+          <div class="flex items-end justify-between">
+            <div><span class="text-2xl font-semibold">€<span id="pricePerNight">120</span></span> <span class="text-sm opacity-70">/ nuit</span></div>
+            <div class="text-sm opacity-80">4.9 ★ (126)</div>
+          </div>
+          <form id="bookingForm" class="mt-4 grid gap-3" onsubmit="event.preventDefault(); submitBooking();">
+            <label class="text-sm">Dates</label>
+            <div class="grid grid-cols-2 gap-2">
+              <input type="date" id="checkIn" class="rounded-lg border px-3 py-2" required />
+              <input type="date" id="checkOut" class="rounded-lg border px-3 py-2" required />
+            </div>
+            <label class="text-sm">Voyageurs</label>
+            <div class="flex items-center gap-2">
+              <button type="button" class="w-9 h-9 rounded-lg border" onclick="stepGuests(-1)">−</button>
+              <input id="guests" type="number" min="1" max="4" value="2" class="w-14 text-center rounded-lg border px-2 py-2" />
+              <button type="button" class="w-9 h-9 rounded-lg border" onclick="stepGuests(1)">+</button>
+              <span class="text-xs opacity-70 ml-auto">max 4</span>
+            </div>
+            <div class="mt-2 space-y-1 text-sm">
+              <div class="flex justify-between"><span>Nuits</span><span id="nights">0</span></div>
+              <div class="flex justify-between"><span>Sous‑total</span><span>€<span id="subtotal">0</span></span></div>
+              <div class="flex justify-between"><span>Frais de ménage</span><span>€<span id="cleaning">35</span></span></div>
+              <div class="flex justify-between"><span>Taxes (10%)</span><span>€<span id="taxes">0</span></span></div>
+              <hr>
+              <div class="flex justify-between font-semibold text-lg"><span>Total</span><span>€<span id="total">0</span></span></div>
+            </div>
+            <button class="mt-3 w-full rounded-xl bg-brand-600 text-white py-3 font-medium hover:bg-brand-700 transition" type="submit">Réserver maintenant</button>
+            <p class="text-xs text-center opacity-70">Vous ne serez pas encore débité.</p>
+          </form>
+        </div>
+
+        <!-- Points clés -->
+        <div class="mt-6 grid gap-3">
+          <div class="bg-white rounded-2xl p-4 shadow-soft">
+            <div class="font-semibold">Points santé & sécurité</div>
+            <ul class="mt-2 text-sm list-disc pl-5 space-y-1">
+              <li>Détecteurs de fumée & CO</li>
+              <li>Trousse de premiers secours</li>
+              <li>Extincteur sous l'évier</li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-2xl p-4 shadow-soft">
+            <div class="font-semibold">Durabilité</div>
+            <ul class="mt-2 text-sm list-disc pl-5 space-y-1">
+              <li>Électroménager A++</li>
+              <li>Tri sélectif & compost</li>
+              <li>Recharge vélo/EDP</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- FAQ -->
+    <section class="mt-8 mb-16 p-6 rounded-2xl bg-white shadow-soft">
+      <h3 class="text-xl font-semibold">FAQ</h3>
+      <div class="mt-4 divide-y">
+        <details class="py-3 group">
+          <summary class="cursor-pointer flex items-center justify-between font-medium">Les draps et serviettes sont‑ils fournis ?<span class="opacity-60">+</span></summary>
+          <p class="mt-2 text-sm">Oui, tout le linge de lit et de toilette est fourni, ainsi que des consommables de base (gel douche, papier, pastilles lave‑vaisselle).</p>
+        </details>
+        <details class="py-3 group">
+          <summary class="cursor-pointer flex items-center justify-between font-medium">Y a‑t‑il un lit bébé ?<span class="opacity-60">+</span></summary>
+          <p class="mt-2 text-sm">Un lit parapluie et une chaise haute sont disponibles gratuitement sur demande.</p>
+        </details>
+        <details class="py-3 group">
+          <summary class="cursor-pointer flex items-center justify-between font-medium">Puis‑je déposer mes bagages avant l'heure ?<span class="opacity-60">+</span></summary>
+          <p class="mt-2 text-sm">Si le planning le permet, nous proposons une consigne sécurisée à partir de 12h. Sinon, un casier en gare est disponible.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <dialog id="lightbox" class="backdrop:bg-black/70 rounded-xl w-full max-w-4xl p-0 m-auto">
+    <div class="relative">
+      <button onclick="closeLightbox()" class="absolute top-3 right-3 z-10 rounded-full bg-black/60 text-white w-9 h-9 grid place-items-center">✕</button>
+      <img id="lightboxImage" src="" alt="Photo du logement" class="w-full max-h-[80vh] object-contain bg-black" />
+      <div class="flex justify-between p-3 bg-black text-white text-sm">
+        <button class="px-3 py-1 rounded border border-white/30" onclick="prevImage()">Précédent</button>
+        <button class="px-3 py-1 rounded border border-white/30" onclick="nextImage()">Suivant</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 hidden bg-black text-white px-4 py-3 rounded-full shadow-lg">Demande envoyée ✔</div>
+
+  <footer class="border-t bg-white mt-8">
+    <div class="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 py-8 text-sm flex flex-wrap items-center justify-between gap-3">
+      <div class="opacity-80">© <span id="year"></span> Loft Lumière. Tous droits réservés.</div>
+      <div class="flex gap-4">
+        <a href="#" class="hover:underline">Mentions légales</a>
+        <a href="#" class="hover:underline">Politique de confidentialité</a>
+        <a href="#" class="hover:underline" onclick="contactHost()">Contacter l'hôte</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript" src="static/front.js"></script>
+</body>
+</html>

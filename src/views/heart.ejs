@@ -1,0 +1,95 @@
+<%- include('./partials/header.ejs') %>
+<body>
+    <main class="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 -mt-8"></main>
+      <section id="configuration" class="mt-8 mb-16 p-6 rounded-2xl bg-white shadow-soft">
+        <h2 class="text-2xl font-semibold">Configuration du logement</h2>
+        <p class="mt-1 text-sm opacity-80">Renseignez les tarifs, la taxe, la capacité, ajoutez des photos, la description, les règles, et gérez les listes d'équipements et de jeux.</p>
+  
+        <form id="configForm" class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-5" onsubmit="event.preventDefault(); saveConfig();">
+          <!-- Colonne A -->
+          <div class="space-y-5">
+            <div>
+              <h3 class="font-semibold mb-2">Tarifs</h3>
+              <div class="grid grid-cols-1 gap-3">
+                <label class="text-sm grid gap-1">Prix / nuit (€)
+                  <input id="cfg_price_night" type="number" min="0" step="1" class="rounded-lg border px-3 py-2" placeholder="120" />
+                </label>
+                <label class="text-sm grid gap-1">Frais de ménage (€)
+                  <input id="cfg_cleaning_fees" type="number" min="0" step="1" class="rounded-lg border px-3 py-2" placeholder="35" />
+                </label>
+                <label class="text-sm grid gap-1">Taxe (%)
+                  <input id="cfg_tax_rate" type="number" min="0" step="0.1" class="rounded-lg border px-3 py-2" placeholder="10" />
+                </label>
+                <label class="text-sm grid gap-1">Max voyageurs
+                  <input id="cfg_max_guests" type="number" min="1" max="16" step="1" class="rounded-lg border px-3 py-2" placeholder="4" />
+                </label>
+              </div>
+            </div>
+  
+            <div>
+              <h3 class="font-semibold mb-2">Extras (réservables)</h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <label class="text-sm gap-1">Sauna (€)
+                  <input id="cfg_price_sauna" type="number" min="0" step="1" class="rounded-lg border px-3 py-2 block" placeholder="25" />
+                </label>
+                <label class="text-sm gap-1">Jacuzzi (€)
+                  <input id="cfg_price_jacuzzi" type="number" min="0" step="1" class="rounded-lg border px-3 py-2 block" placeholder="30" />
+                </label>
+              </div>
+              <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+                <label class="text-sm gap-1">Canoë — court (€)
+                  <input id="cfg_price_canoe_short" type="number" min="0" step="1" class="rounded-lg border px-3 py-2 block" placeholder="15" />
+                </label>
+                <label class="text-sm gap-1">Canoë — moyen (€)
+                  <input id="cfg_price_canoe_medium" type="number" min="0" step="1" class="rounded-lg border px-3 py-2 block" placeholder="25" />
+                </label>
+                <label class="text-sm gap-1">Canoë — long (€)
+                  <input id="cfg_price_canoe_long" type="number" min="0" step="1" class="rounded-lg border px-3 py-2 block" placeholder="40" />
+                </label>
+              </div>
+            </div>
+  
+            <div>
+              <h3 class="font-semibold mb-2">Photos</h3>
+              <input id="cfg_photos" type="file" accept="image/*" multiple class="rounded-lg border px-3 py-2 w-full" />
+              <div id="cfg_photos_preview" class="mt-3 grid grid-cols-3 gap-2"></div>
+            </div>
+          </div>
+  
+          <!-- Colonne B -->
+          <div class="space-y-5">
+            <div>
+              <h3 class="font-semibold mb-2">Description</h3>
+              <textarea id="cfg_description" rows="5" class="w-full rounded-lg border px-3 py-2" placeholder="Décrivez l'espace, la disposition, les points forts, etc."></textarea>
+            </div>
+            <div>
+              <h3 class="font-semibold mb-2">Règles du logement</h3>
+              <textarea id="cfg_rules" rows="5" class="w-full rounded-lg border px-3 py-2" placeholder="Ex. non-fumeur, pas de fêtes, horaires de calme, etc."></textarea>
+            </div>
+  
+            <div>
+              <h3 class="font-semibold mb-2">Équipements</h3>
+              <div class="flex gap-2">
+                <input id="equipInput" type="text" class="flex-1 rounded-lg border px-3 py-2" placeholder="Ajouter un équipement (ex: Lave-vaisselle)" />
+                <button type="button" class="rounded-lg border px-3 py-2" onclick="addListItem('equipList','equipInput')">Ajouter</button>
+              </div>
+              <ul id="equipList" class="mt-3 flex flex-wrap gap-2"></ul>
+            </div>
+  
+            <div>
+              <h3 class="font-semibold mb-2">Jeux de société</h3>
+              <div class="flex gap-2">
+                <input id="gamesInput" type="text" class="flex-1 rounded-lg border px-3 py-2" placeholder="Ajouter un jeu (ex: Catan)" />
+                <button type="button" class="rounded-lg border px-3 py-2" onclick="addListItem('gamesList','gamesInput')">Ajouter</button>
+              </div>
+              <ul id="gamesList" class="mt-3 flex flex-wrap gap-2"></ul>
+            </div>
+  
+            <div class="pt-2">
+              <button type="submit" class="w-full rounded-xl bg-brand-600 text-white py-3 font-medium hover:bg-brand-700 transition">Enregistrer</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
+</body>

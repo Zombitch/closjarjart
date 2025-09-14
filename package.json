@@ -1,0 +1,66 @@
+{
+  "name": "closjarjart",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch src --host 0.0.0.0 --disable-host-check --exec \"ts-node src/server.ts\"",
+    "build:css:dev": "npx @tailwindcss/cli -c ./tailwind.config.js -i ./src/public/tailwind.css -o ./src/public/styles.css --watch",
+    "build:css": "npx @tailwindcss/cli -c ./tailwind.config.js -i ./src/public/tailwind.css -o ./src/public/styles.css --minify",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zombitch/closjarjart.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zombitch/closjarjart/issues"
+  },
+  "homepage": "https://github.com/Zombitch/closjarjart#readme",
+  "dependencies": {
+    "autoprefixer": "^10.4.21",
+    "bcryptjs": "^3.0.2",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "dotenv": "^17.2.2",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.1.0",
+    "express-session": "^1.18.2",
+    "express-slow-down": "^3.0.0",
+    "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
+    "mongoose": "^8.18.1",
+    "morgan": "^1.10.1",
+    "sanitize-html": "^2.17.0",
+    "tailwindcss": "^4.1.13",
+    "zod": "^4.1.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.13",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/compression": "^1.8.1",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/csurf": "^1.11.5",
+    "@types/express": "^5.0.3",
+    "@types/express-session": "^1.18.2",
+    "@types/hpp": "^0.2.6",
+    "@types/mongoose": "^5.11.96",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.3.3",
+    "@types/sanitize-html": "^2.16.0",
+    "nodemon": "^3.1.10",
+    "postcss": "^8.5.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}
