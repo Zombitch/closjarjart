@@ -55,9 +55,9 @@ router.post('/logout', (req, res, next) => {
 export default router;
 
 declare module 'express-session' {
-    interface SessionData {
-      userId?: string;
-      roles?: string[];
-    }
+  interface SessionData {
+    userId?: string;
+    roles?: string[];
   }
+}
   

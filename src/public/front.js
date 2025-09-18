@@ -1,3 +1,101 @@
+    // --- Minimal month calendar with events fetched from /api/events ---
+    /*const grid = document.getElementById('grid');
+    const monthLabel = document.getElementById('monthLabel');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const todayBtn = document.getElementById('todayBtn');
+
+    let viewDate = new Date(); // current month
+
+    async function fetchEvents(startISO, endISO) {
+      const url = new URL('/api/events', window.location.origin);
+      url.searchParams.set('start', startISO);
+      url.searchParams.set('end', endISO);
+      const res = await fetch(url.toString());
+      return res.ok ? res.json() : [];
+    }
+
+    function startOfMonth(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
+    function endOfMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0, 23,59,59,999); }
+    function startOfGrid(d){
+      const s = startOfMonth(d);
+      const day = s.getDay(); // 0 Sun .. 6 Sat
+      const g = new Date(s);
+      g.setDate(s.getDate() - day);
+      return g;
+    }
+
+    function fmtMonth(d){
+      return d.toLocaleString(undefined, { month: 'long', year: 'numeric' });
+    }
+
+    function isSameDay(a,b){
+      return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+    }
+
+    function dayKey(d){ return d.toISOString().slice(0,10); }
+
+    async function render() {
+      const monthStart = startOfMonth(viewDate);
+      const monthEnd = endOfMonth(viewDate);
+      const gridStart = startOfGrid(viewDate);
+      const today = new Date();
+
+      monthLabel.textContent = fmtMonth(viewDate);
+
+      // Load events for the visible month
+      const events = await fetchEvents(monthStart.toISOString(), monthEnd.toISOString());
+      const byDay = {};
+      for (const ev of events) {
+        const key = ev.start?.slice(0,10);
+        (byDay[key] ||= []).push(ev);
+      }
+
+      grid.innerHTML = '';
+      for (let i=0;i<42;i++){ // 6 weeks
+        const d = new Date(gridStart); d.setDate(gridStart.getDate()+i);
+        const inMonth = d.getMonth() === viewDate.getMonth();
+        const key = dayKey(d);
+        const dayEvents = byDay[key] || [];
+
+        const cell = document.createElement('button');
+        cell.className = [
+          'p-2 border -m-[0.5px] text-left focus:outline-none focus:ring-2 focus:ring-blue-500',
+          inMonth ? 'bg-white' : 'bg-gray-50 text-gray-400',
+          isSameDay(d, today) ? 'relative ring-2 ring-blue-500' : ''
+        ].join(' ');
+
+        cell.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-sm ${inMonth ? 'text-gray-900' : 'text-gray-400'}">${d.getDate()}</span>
+            ${isSameDay(d, today) ? '<span class="ml-2 inline-block w-2 h-2 rounded-full bg-blue-600"></span>' : ''}
+          </div>
+          <div class="mt-1 space-y-1 overflow-hidden">
+            ${dayEvents.slice(0,3).map(e => `
+              <div class="truncate text-xs rounded px-1 py-0.5 ${e.color || 'bg-blue-50 text-blue-700'}">
+                ${e.title}
+              </div>
+            `).join('')}
+            ${dayEvents.length>3 ? `<div class="text-[11px] text-gray-500">+${dayEvents.length-3} more</div>` : ''}
+          </div>
+        `;
+
+        cell.addEventListener('click', () => {
+          if (dayEvents.length === 0) { alert(key + '\\nNo events'); return; }
+          alert(key + '\\n' + dayEvents.map(e => `• ${e.title} (${e.start.slice(11,16)}${e.end ? '–'+e.end.slice(11,16):''})`).join('\\n'));
+        });
+
+        grid.appendChild(cell);
+      }
+    }
+
+    prevBtn.addEventListener('click', () => { viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth()-1, 1); render(); });
+    nextBtn.addEventListener('click', () => { viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth()+1, 1); render(); });
+    todayBtn.addEventListener('click', () => { viewDate = new Date(); render(); });
+
+    render();
+
+
 // --- Galerie / Lightbox ---
 /*const gallery = [
     'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1600&auto=format&fit=crop',
@@ -94,6 +192,8 @@ function togglePassword(openState, closeState){
   openState.classList.toggle('hidden', isPwd);
   closeState.classList.toggle('hidden', !isPwd);
 }
+
+
 
 // Année footer & calc init
 //document.getElementById('year').textContent = new Date().getFullYear();

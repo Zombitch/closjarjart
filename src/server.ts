@@ -3,6 +3,7 @@ import session from 'express-session';
 import path from 'path';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
+import fs from 'fs';
 import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
@@ -161,6 +162,11 @@ app.use(((err, _req, res, next) => {
 }) as ErrorRequestHandler);
 
 app.use(mongoSanitize());
+
+const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(UPLOADS_DIR)) {
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+}
 
 process.on('uncaughtException', (err) => {
   console.error('UncaughtException:', err);

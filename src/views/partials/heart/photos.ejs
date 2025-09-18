@@ -1,0 +1,25 @@
+<header class="mb-5">
+    <h1 class="text-2xl font-semibold text-slate-800">Photos</h1>
+    <p class="text-sm text-slate-500">Gérer les photos à afficher sur le site.</p>
+</header>
+
+<section>
+    <div class="p-4 sm:p-5 flex gap-2">
+        <input name="cfg_photos" id="cfg_photos" type="file" accept="image/*" multiple class="hidden rounded-lg border px-3 py-2 w-full" />
+        <% if(photos.length > 1) {%><a class="rounded-xl bg-red-600 text-white px-4 py-3 font-medium hover:bg-red-700 active:scale-[.99]" onclick="fetch('/heart/photos',{method:'DELETE'})">Tout supprimer</a><% } %>
+        <a id="addPhotoBtn" class="rounded-xl bg-cyan-600 text-white px-4 py-3 font-medium hover:bg-cyan-700 active:scale-[.99]">Ajouter des photos</a>
+    </div>
+    <div class="px-4 sm:px-5 pb-4 text-sm text-slate-500"><span id="count"><%= photos.length %></span> photo(s)</div>
+    <ul id="list" class="divide-y">
+        <% photos.forEach(function(photo) { %>
+            <li class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 group">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span class="h-2 w-2 rounded-full bg-cyan-600 shrink-0"></span>
+                    <img class="thumb h-24 w-full object-cover rounded-lg shadow" src="<%= photo.url %>"/>
+                    <span class="name block truncate"><%= photo.originalName %></span>
+                </div>
+                <button class="delete grid place-items-center rounded-lg border border-slate-200 text-slate-500 hover:text-white hover:bg-red-500 hover:border-red-500 w-8 h-8" aria-label="Delete item" onclick="fetch('/heart/photo/<%= photo._id %>',{method:'DELETE'})">×</button>
+            </li>
+        <% }); %>
+    </ul>
+</section>
