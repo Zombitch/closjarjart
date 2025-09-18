@@ -1,5 +1,5 @@
 // --- Galerie / Lightbox ---
-const gallery = [
+/*const gallery = [
     'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1600&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=1600&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1600&auto=format&fit=crop',
@@ -76,7 +76,25 @@ const gallery = [
     if(message === null) return;
     showToast('Message envoyé, merci ' + name + ' !');
   }
+*/
+// Afficher / masquer le mot de passe
+const togglePwd = document.getElementById('togglePwd');
+const password = document.getElementById('password');
+if(togglePwd){
+  const eyeOpen = document.getElementById('eyeOpen');
+  const eyeClosed = document.getElementById('eyeClosed');
+  togglePwd.addEventListener('click', ()=>{
+    togglePassword(eyeOpen, eyeClosed);
+  });
+}
 
-  // Année footer & calc init
-  document.getElementById('year').textContent = new Date().getFullYear();
-  recalc();
+function togglePassword(openState, closeState){  
+  const isPwd = password.getAttribute('type') === 'password';
+  password.setAttribute('type', isPwd ? 'text' : 'password');
+  openState.classList.toggle('hidden', isPwd);
+  closeState.classList.toggle('hidden', !isPwd);
+}
+
+// Année footer & calc init
+//document.getElementById('year').textContent = new Date().getFullYear();
+/*recalc();*/

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/user'
+import { requireAuth } from '../middlewares/auth';
 
 const router = Router();
 const SALT_ROUNDS = 12;
@@ -35,8 +36,12 @@ router.post('/login', async (req, res, next) => {
 
     req.session.userId = String(user._id);
     req.session.roles = user.roles;
-    res.json({ ok: true, user: { id: user._id, email: user.email } });
+    res.redirect('/heart');
   } catch (e) { next(e); }
+});
+
+router.get('/check', requireAuth, async (req, res) => {
+  res.json({ title: 'Hello Express', message: 'It works' });
 });
 
 router.post('/logout', (req, res, next) => {

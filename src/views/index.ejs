@@ -1,5 +1,5 @@
 <%- include('./partials/header.ejs') %>
-<body class="bg-gray-50 text-gray-800">
+<body class="h-full bg-gray-50 text-gray-800">
   <!-- Header / Hero -->
   <header class="relative">
     <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1600&auto=format&fit=crop" alt="Séjour lumineux" class="h-[52vh] w-full object-cover" />
@@ -216,17 +216,6 @@
   <!-- Toast -->
   <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 hidden bg-black text-white px-4 py-3 rounded-full shadow-lg">Demande envoyée ✔</div>
 
-  <footer class="border-t bg-white mt-8">
-    <div class="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 py-8 text-sm flex flex-wrap items-center justify-between gap-3">
-      <div class="opacity-80">© <span id="year"></span> Loft Lumière. Tous droits réservés.</div>
-      <div class="flex gap-4">
-        <a href="#" class="hover:underline">Mentions légales</a>
-        <a href="#" class="hover:underline">Politique de confidentialité</a>
-        <a href="#" class="hover:underline" onclick="contactHost()">Contacter l'hôte</a>
-      </div>
-    </div>
-  </footer>
-
-  <script type="text/javascript" src="static/front.js"></script>
+  <%- include('./partials/footer.ejs') %>
 </body>
 </html>

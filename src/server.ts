@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { ErrorRequestHandler, NextFunction } from 'express';
 import session from 'express-session';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import csurf from 'csurf';
+import { doubleCsrf } from 'csrf-csrf';
 import rateLimit from 'express-rate-limit';
 import slowDown from 'express-slow-down';
 import hpp from 'hpp';
@@ -99,14 +99,28 @@ app.use('/static', express.static(path.join(__dirname, 'public'), {
   maxAge: isProd ? '30d' : 0
 }));
 
-const csrfProtection = csurf({
-  cookie: {
-    key: process.env.COOKIE_NAME || 'csrf.token',
+const {
+  doubleCsrfProtection,
+  generateCsrfToken,
+  invalidCsrfTokenError,
+} = doubleCsrf({
+  // clé(s) secrète(s) forte(s) — idéalement rotation possible
+  getSecret: () => process.env.SESSION_SECRET!,
+  // identifiant unique de session / utilisateur (ex: req.session.id)
+  getSessionIdentifier: (req) => (req.session as any)?.id ?? req.ip,
+  cookieName: "_csrf",            // en dev, pas de préfixe __Host-
+  cookieOptions: {
     httpOnly: true,
-    sameSite: 'lax',
-    secure: isProd
-  }
+    sameSite: "lax",
+    secure: isProd,
+  },
 });
+
+// Expose le helper à tes vues (EJS)
+app.use((req, res, next) => {
+  (res.locals as any).csrfToken = () => generateCsrfToken(req, res);
+  next();
+});;
 
 app.use((req, res, next) => {
   res.locals.csrfToken = null;
@@ -126,15 +140,10 @@ app.use(session({
   }
 }));
 
-app.post('/', csrfProtection, (req, _res, next) => next());
-app.put('/', csrfProtection, (req, _res, next) => next());
-app.patch('/', csrfProtection, (req, _res, next) => next());
-app.delete('/', csrfProtection, (req, _res, next) => next());
-
-app.post('/heart', csrfProtection, (req, _res, next) => next());
-app.put('/heart', csrfProtection, (req, _res, next) => next());
-app.patch('/heart', csrfProtection, (req, _res, next) => next());
-app.delete('/heart', csrfProtection, (req, _res, next) => next());
+app.post('/', doubleCsrfProtection, (req, _res, next) => next());
+app.put('/', doubleCsrfProtection, (req, _res, next) => next());
+app.patch('/', doubleCsrfProtection, (req, _res, next) => next());
+app.delete('/', doubleCsrfProtection, (req, _res, next) => next());
 
 app.use('/', homeRouter);
 app.use('/auth', authRouter);
@@ -144,12 +153,20 @@ app.use((_req, res) => res.status(404).send('Not found'));
 
 app.use(errorHandler);
 
+app.use(((err, _req, res, next) => {
+  if (err && (err as any).name === invalidCsrfTokenError.name) {
+    return res.status(403).json({ error: true, message: 'Token CSRF invalide' });
+  }
+  next(err);
+}) as ErrorRequestHandler);
+
 app.use(mongoSanitize());
 
 process.on('uncaughtException', (err) => {
   console.error('UncaughtException:', err);
   process.exit(1);
 });
+
 process.on('unhandledRejection', (reason) => {
   console.error('UnhandledRejection:', reason);
 });
