@@ -2,7 +2,7 @@ let blockedRanges = getBlockedDateRanges();
 
 // ======= OUTILS DE DATES =======
 const MS_DAY = 24*60*60*1000;
-const toISO = d => d.toISOString().slice(0,19);
+const toISO = d => d.toISOString();
 const fromISO = iso => { return new Date(iso); };
 const frFormat = d => d ? String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear() : '';
 const atMidnight = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -38,7 +38,6 @@ function isBlockedPM(d){
 }
 
 function spanCrossesBlocked(a,b){
-  console.log(a + " " + b)
   for(const d of daysBetween(a,b)){ 
     if(isBlocked(d)) return true; 
   }
@@ -156,7 +155,7 @@ function onPick(d){
   const stringDateDay = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,'0')+"-"+String(d.getDate()).padStart(2,'0');
   const formattedSelectedDateStart = new Date(stringDateDay+"T18:00:00Z");
   const formattedSelectedDateEnd = new Date(stringDateDay+"T11:00:00Z");
-  console.log(formattedSelectedDateStart)
+
   if(selectingStart){
     selStart = formattedSelectedDateStart;
     selEnd = null;

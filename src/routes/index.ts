@@ -25,7 +25,6 @@ router.post('/', doubleCsrfProtection, async (req, res, next) => {
   if (!startDate || !endDate || !guests) return res.status(400).json({ error: true, message: 'Données requises' });
 
   //const reservation = await Reservation.create({ startDate, endDate, guests });
-  console.log(startDate)
 
   return res.status(201).json({ ok: true});
 });
