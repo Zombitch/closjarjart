@@ -1,8 +1,8 @@
 <%- include('./partials/header.ejs') %>
-<body class="h-full bg-gray-50 text-gray-800">
-  <!-- Header / Hero -->
+
+<body class="h-full bg-gray-50 text-gray-800 ">
   <header class="relative">
-    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1600&auto=format&fit=crop" alt="Séjour lumineux" class="h-[52vh] w-full object-cover" />
+    <img src="<%= photoDefault.url %>" alt="Séjour lumineux" class="h-[52vh] w-full object-cover" />
     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
     <div class="absolute inset-x-0 bottom-0 px-6 sm:px-10 lg:px-16 pb-8 text-white">
       <div class="max-w-6xl">
@@ -14,39 +14,23 @@
         <div class="mt-3 flex flex-wrap items-center gap-3 text-sm sm:text-base">
           <div class="flex items-center gap-1"><span>★ ★ ★ ★ ★</span></div>
           <span class="opacity-60">•</span>
-          <div>Jusqu'à 3 voyageurs</div>
+          <div>Jusqu'à <%= config.max_guests %> voyageurs</div>
           <span class="opacity-60">•</span>
-          <div>À partir de <span class="font-semibold">€120</span>/nuit</div>
+          <div>À partir de <span class="font-semibold"><%= config.price %>€</span>/nuit</div>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 -mt-8">
+  <main class="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 -mt-8 pb-10">
     <!-- Card principal -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Colonne contenu -->
       <section class="lg:col-span-2">
-        <!-- Galerie -->
-        <div class="grid grid-cols-3 gap-2 rounded-2xl overflow-hidden shadow-soft bg-white">
-          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop" alt="Salon" class="col-span-2 h-60 sm:h-80 w-full object-cover cursor-pointer" onclick="openLightbox(0)"/>
-          <img src="https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=1200&auto=format&fit=crop" alt="Cuisine" class="h-60 sm:h-80 w-full object-cover cursor-pointer" onclick="openLightbox(1)"/>
-          <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1200&auto=format&fit=crop" alt="Chambre" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(2)"/>
-          <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?q=80&w=1200&auto=format&fit=crop" alt="Salle de bain" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(3)"/>
-          <img src="https://images.unsplash.com/photo-1472220625704-91e1462799b2?q=80&w=1200&auto=format&fit=crop" alt="Terrasse" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(4)"/>
-        </div>
+        <%- include('./closjarjart/photos.ejs') %>
 
         <!-- Description -->
-        <article class="mt-6 p-6 rounded-2xl bg-white shadow-soft">
-          <h2 class="text-2xl font-semibold">À propos du logement</h2>
-          <p class="mt-3 leading-7">Ce loft lumineux de 70 m² se situe au dernier étage d'un immeuble moderne avec ascenseur. Grande pièce à vivre ouverte, cuisine équipée (four, plaques, Nespresso), 2 chambres calmes donnant sur cour, salle de bain avec douche à l'italienne, et terrasse de 12 m² exposée sud. Fibre optique, TV connectée, climatisation réversible et chauffage au sol garantissent votre confort en toute saison.</p>
-          <ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-            <li class="flex items-center gap-2"><span class="text-brand-600">✔</span> Check-in autonome (boîte à clés)</li>
-            <li class="flex items-center gap-2"><span class="text-brand-600">✔</span> Wi‑Fi 1 Gbit/s & espace de télétravail</li>
-            <li class="flex items-center gap-2"><span class="text-brand-600">✔</span> Lave‑linge + sèche‑linge</li>
-            <li class="flex items-center gap-2"><span class="text-brand-600">✔</span> Lit 160×200 + 2 lits 90×190</li>
-          </ul>
-        </article>
+        <%- config.description %>
 
         <!-- Équipements -->
         <section class="mt-6 p-6 rounded-2xl bg-white shadow-soft">
@@ -62,58 +46,9 @@
         </section>
 
         <!-- Règles & politique -->
-        <section class="mt-6 p-6 rounded-2xl bg-white shadow-soft">
+        <section class="mt-6 p-6 rounded-2xl bg-white shadow-soft" id="rules">
           <h3 class="text-xl font-semibold">Règles du logement</h3>
-          <ul class="mt-3 list-disc pl-5 space-y-2 text-sm leading-6">
-            <li>Non‑fumeur à l'intérieur. Animaux sur demande préalable.</li>
-            <li>Pas de fêtes. Respect du voisinage après 22h.</li>
-            <li>Check‑in 16:00 • Check‑out 11:00. Dépôt de garantie : €300 (pré‑autorisation).</li>
-            <li>Tri des déchets obligatoire. Merci d'économiser eau & énergie.</li>
-          </ul>
-          <h4 class="mt-5 font-semibold">Politique d'annulation</h4>
-          <p class="mt-2 text-sm">Annulation gratuite jusqu'à 5 jours avant l'arrivée. Au‑delà : 50% du séjour dû. No‑show : 100%.</p>
-        </section>
-
-        <!-- Avis -->
-        <section class="mt-6 p-6 rounded-2xl bg-white shadow-soft">
-          <div class="flex items-center justify-between">
-            <h3 class="text-xl font-semibold">Avis récents</h3>
-            <button class="text-brand-700 hover:underline" onclick="toggleAllReviews()">Voir tout</button>
-          </div>
-          <div id="reviews" class="mt-4 grid gap-4 sm:grid-cols-2">
-            <article class="border rounded-xl p-4">
-              <div class="flex items-center justify-between">
-                <div class="font-medium">Camille</div>
-                <div class="text-sm">★★★★★</div>
-              </div>
-              <p class="mt-2 text-sm">Appartement impeccable, très calme et parfaitement situé pour visiter le centre. Internet ultra rapide pour le télétravail.</p>
-              <p class="mt-1 text-xs opacity-70">Août 2025</p>
-            </article>
-            <article class="border rounded-xl p-4">
-              <div class="flex items-center justify-between">
-                <div class="font-medium">Julien</div>
-                <div class="text-sm">★★★★☆</div>
-              </div>
-              <p class="mt-2 text-sm">La terrasse est un vrai plus. Check‑in très simple. Un peu chaud l'après‑midi mais la clim fait le job.</p>
-              <p class="mt-1 text-xs opacity-70">Juillet 2025</p>
-            </article>
-            <article class="border rounded-xl p-4 hidden more-review">
-              <div class="flex items-center justify-between">
-                <div class="font-medium">Sofia</div>
-                <div class="text-sm">★★★★★</div>
-              </div>
-              <p class="mt-2 text-sm">Propreté irréprochable et literie confortable. On reviendra !</p>
-              <p class="mt-1 text-xs opacity-70">Mai 2025</p>
-            </article>
-            <article class="border rounded-xl p-4 hidden more-review">
-              <div class="flex items-center justify-between">
-                <div class="font-medium">Nicolas</div>
-                <div class="text-sm">★★★★★</div>
-              </div>
-              <p class="mt-2 text-sm">Très bon rapport qualité/prix. Hôte réactif.</p>
-              <p class="mt-1 text-xs opacity-70">Avril 2025</p>
-            </article>
-          </div>
+          <%- config.rules %>
         </section>
 
         <!-- Quartier / carte -->
@@ -127,30 +62,46 @@
       </section>
 
       <!-- Colonne réservation -->
-      <aside class="lg:col-span-1 lg:sticky lg:top-6 h-fit">
+      <aside class="lg:col-span-1 lg:sticky lg:top-6 h-fit md:mt-10">
         <div class="bg-white shadow-soft rounded-2xl p-5">
-          <div class="flex items-end justify-between">
-            <div><span class="text-2xl font-semibold">€<span id="pricePerNight">120</span></span> <span class="text-sm opacity-70">/ nuit</span></div>
-            <div class="text-sm opacity-80">4.9 ★ (126)</div>
+          <div class="flex items-center">
+          <img src="/static/closjarjart_min.png" alt="Logo Closjarjart" class="h-30 w-auto m-auto">
+          </div>
+          <div class="flex items-center text-center justify-between">
+            <div class="m-auto"><span class="text-2xl font-semibold">€<span id="pricePerNight"><%= config.price %></span></span> <span class="text-sm opacity-70">/ nuit</span></div>
           </div>
           <form id="bookingForm" class="mt-4 grid gap-3" onsubmit="event.preventDefault(); submitBooking();">
+            <input type="hidden" id="_csrf" name="_csrf" value="<%= csrfToken %>">
             <label class="text-sm">Dates</label>
             <div class="grid grid-cols-2 gap-2">
-              <input type="date" id="checkIn" class="rounded-lg border px-3 py-2" required />
-              <input type="date" id="checkOut" class="rounded-lg border px-3 py-2" required />
+              <input type="text" id="dateStart" class="rounded-lg border px-3 py-2 cursor-pointer" placeholder="JJ/MM/AAAA" autocomplete="off" required />
+              <input id="dateStartISO" name="dateStart" type="hidden" />
+              <input type="text" id="dateEnd" class="rounded-lg border px-3 py-2 cursor-pointer" placeholder="JJ/MM/AAAA" autocomplete="off" required />
+              <input id="dateEndISO" name="dateEnd" type="hidden" />
+            </div>
+            <div id="picker" class="hidden z-50 bg-white border rounded-xl shadow-soft p-3 w-full select-none">
+              <div class="flex items-center justify-between mb-2">
+                <button id="prevBtn" class="px-2 py-1 rounded hover:bg-gray-100">◀</button>
+                <div id="monthLabel" class="font-medium"></div>
+                <button id="nextBtn" class="px-2 py-1 rounded hover:bg-gray-100">▶</button>
+              </div>
+              <div class="cal-grid text-xs font-medium text-gray-500 mb-1">
+                <div>Lu</div><div>Ma</div><div>Me</div><div>Je</div><div>Ve</div><div>Sa</div><div>Di</div>
+              </div>
+              <div id="cal" class="cal-grid"></div>
+              <div id="hint" class="mt-2 text-[11px] text-gray-500"></div>
             </div>
             <label class="text-sm">Voyageurs</label>
             <div class="flex items-center gap-2">
               <button type="button" class="w-9 h-9 rounded-lg border" onclick="stepGuests(-1)">−</button>
-              <input id="guests" type="number" min="1" max="4" value="2" class="w-14 text-center rounded-lg border px-2 py-2" />
+              <input id="guests" type="number" min="1" max="<%= config.max_guests %>" value="2" class="w-14 text-center rounded-lg border px-2 py-2" />
               <button type="button" class="w-9 h-9 rounded-lg border" onclick="stepGuests(1)">+</button>
-              <span class="text-xs opacity-70 ml-auto">max 4</span>
+              <span class="text-xs opacity-70 ml-auto">max <%= config.max_guests %></span>
             </div>
             <div class="mt-2 space-y-1 text-sm">
               <div class="flex justify-between"><span>Nuits</span><span id="nights">0</span></div>
-              <div class="flex justify-between"><span>Sous‑total</span><span>€<span id="subtotal">0</span></span></div>
-              <div class="flex justify-between"><span>Frais de ménage</span><span>€<span id="cleaning">35</span></span></div>
-              <div class="flex justify-between"><span>Taxes (10%)</span><span>€<span id="taxes">0</span></span></div>
+              <% if(config.cleaning_fees > 0){ %><div class="flex justify-between"><span>Sous‑total</span><span>€<span id="subtotal">0</span></span></div><% } %>
+              <% if(config.cleaning_fees > 0){ %><div class="flex justify-between"><span>Frais de ménage</span><span>€<span id="cleaning"><%= config.cleaning_fees %></span></span></div><% } %>
               <hr>
               <div class="flex justify-between font-semibold text-lg"><span>Total</span><span>€<span id="total">0</span></span></div>
             </div>
@@ -164,17 +115,7 @@
           <div class="bg-white rounded-2xl p-4 shadow-soft">
             <div class="font-semibold">Points santé & sécurité</div>
             <ul class="mt-2 text-sm list-disc pl-5 space-y-1">
-              <li>Détecteurs de fumée & CO</li>
-              <li>Trousse de premiers secours</li>
-              <li>Extincteur sous l'évier</li>
-            </ul>
-          </div>
-          <div class="bg-white rounded-2xl p-4 shadow-soft">
-            <div class="font-semibold">Durabilité</div>
-            <ul class="mt-2 text-sm list-disc pl-5 space-y-1">
-              <li>Électroménager A++</li>
-              <li>Tri sélectif & compost</li>
-              <li>Recharge vélo/EDP</li>
+              <li>Détecteurs de fumée & CO²</li>
             </ul>
           </div>
         </div>
@@ -182,20 +123,12 @@
     </div>
 
     <!-- FAQ -->
-    <section class="mt-8 mb-16 p-6 rounded-2xl bg-white shadow-soft">
+    <section class="mt-8 mb-16 p-6 rounded-2xl bg-white shadow-soft" id="faq">
       <h3 class="text-xl font-semibold">FAQ</h3>
       <div class="mt-4 divide-y">
         <details class="py-3 group">
           <summary class="cursor-pointer flex items-center justify-between font-medium">Les draps et serviettes sont‑ils fournis ?<span class="opacity-60">+</span></summary>
           <p class="mt-2 text-sm">Oui, tout le linge de lit et de toilette est fourni, ainsi que des consommables de base (gel douche, papier, pastilles lave‑vaisselle).</p>
-        </details>
-        <details class="py-3 group">
-          <summary class="cursor-pointer flex items-center justify-between font-medium">Y a‑t‑il un lit bébé ?<span class="opacity-60">+</span></summary>
-          <p class="mt-2 text-sm">Un lit parapluie et une chaise haute sont disponibles gratuitement sur demande.</p>
-        </details>
-        <details class="py-3 group">
-          <summary class="cursor-pointer flex items-center justify-between font-medium">Puis‑je déposer mes bagages avant l'heure ?<span class="opacity-60">+</span></summary>
-          <p class="mt-2 text-sm">Si le planning le permet, nous proposons une consigne sécurisée à partir de 12h. Sinon, un casier en gare est disponible.</p>
         </details>
       </div>
     </section>
@@ -218,4 +151,7 @@
 
   <%- include('./partials/footer.ejs') %>
 </body>
+<script type="text/javascript">
+  setConfig(JSON.parse('<%- blockedDate %>'), JSON.parse('<%- config.max_guests %>'))
+  //updateBlockedDateRange(JSON.parse('<%- blockedDate %>'))</script>
 </html>

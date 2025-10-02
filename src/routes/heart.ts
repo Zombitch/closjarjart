@@ -11,7 +11,7 @@ const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
 const upload = makeImageUpload(uploadsDir);
 
 router.get('/login', async (req, res) => {
-  res.render('heart-login');
+  res.render('heart/login');
 });
 
 router.delete('/photos', requireAuth, async (req, res) => {
@@ -21,7 +21,7 @@ router.delete('/photos', requireAuth, async (req, res) => {
     await PhotoModel.deleteMany();
   } catch (e) { }
 
-  res.redirect('/heart');
+  res.json({ok:true});
 });
 
 router.delete('/photo/:id', requireAuth, async (req, res) => {
@@ -43,22 +43,39 @@ router.get('/', requireAuth, async (req, res) => {
   const photos = await PhotoModel.find().sort({ createdAt: -1 }).limit(50).lean();
   let config = await ConfigModel.findOne().sort({ createdAt: -1 });
 
-  if(config) await config.deleteOne();
-
   if(!config) config = await ConfigModel.create({});
 
-  res.render('heart', { photos: photos, config: config });
+  res.render('heart/heart', { photos: photos, config: config });
 });
 
 router.post('/', upload.array('cfg_photos', 6), requireAuth, async (req, res) => {
-  const debug = req.query.debug === '1';
-
   try {
     const files = req.files as Express.Multer.File[] | undefined;
     files?.map(file => processImageUploadToDatabase(req, file));
   } catch (e) { }
 
+ if(req.body){
+  const config = new ConfigModel(req.body);
+  config.save();
+ }
+
   res.redirect('/heart');
+});
+
+router.post('/photo/setDefault/:id', requireAuth, async (req, res) => {
+  try {
+      const items = await PhotoModel.find();
+      await Promise.all(items.map(photo => {
+        if(photo._id.toString() == req.params.id) photo.default = true;
+        else{
+          photo.default = false;
+        }
+        photo.save();
+        Promise.resolve();
+      }));
+  } catch (e) { }
+
+  res.json({ok:true});
 });
 
 export default router;

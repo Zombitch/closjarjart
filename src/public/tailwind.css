@@ -5,3 +5,13 @@
 /* Dis au moteur où scanner : */
 @source "../views/**/*.ejs";
 @source "../public/**/*.js";
+
+a, button{
+    cursor: pointer;
+}
+
+/* Calendar */
+.cal-grid { display:grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap:.25rem; }
+.cal-cell { height: 2.25rem; }
+.cal-cell-blocked-am{ background: linear-gradient(to bottom, var(--color-gray-200) 50%, #ffffff00 50%); }
+.cal-cell-blocked-pm{ background: linear-gradient(to bottom, #ffffff00 50%, var(--color-gray-200) 50%); }

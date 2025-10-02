@@ -151,16 +151,6 @@
     input.value = val;
   }
 
-  function submitBooking(){
-    // Simple validation
-    const ci = document.getElementById('checkIn').value;
-    const co = document.getElementById('checkOut').value;
-    const nights = dateDiffInNights(ci, co);
-    if(nights <= 0){ alert('Sélectionnez des dates valides.'); return; }
-    showToast('Votre demande de réservation a été envoyée.');
-    // Ici vous pourriez faire un fetch/POST vers votre backend
-  }
-
   function showToast(msg){
     const t = document.getElementById('toast');
     t.textContent = msg; t.classList.remove('hidden');
@@ -194,7 +184,77 @@ function togglePassword(openState, closeState){
 }
 
 
+//Calcule du nombre de nuit
+const dateEnd = document.getElementById('dateEnd');
+const dateStartInput = document.getElementById('dateStartISO');
+const dateEndInput = document.getElementById('dateEndISO');
+const nights = document.getElementById('nights');
+const total_price = document.getElementById('total');
 
+dateEnd.addEventListener('change', ()=>{
+  if(dateStartInput && dateEndInput){
+    nights.innerText = computeNight(dateStartInput.value, dateEndInput.value);
+    total_price.innerText = computeTotal();
+  }
+});
+
+function computeNight(dateStringStart, dateStringEnd){
+  const dateStart = new Date(dateStringStart);
+  const dateEnd = new Date(dateStringEnd);
+
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const utcA = Date.UTC(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate());
+  const utcB = Date.UTC(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate());
+
+  return Math.round((utcB - utcA) / msPerDay);
+}
+
+function computeTotal(){
+  const pricePerNight = document.getElementById('pricePerNight').innerText;
+  return pricePerNight*computeNight(dateStartInput.value, dateEndInput.value);
+}
+
+ function stepGuests(delta){
+  const input = document.getElementById('guests');
+  const val = Math.min(getMaxGuests(), Math.max(1, Number(input.value) + delta));
+  input.value = val;
+}
+
+
+
+// Send data forms
+function submitBooking(){
+  const nbGuests = document.getElementById('guests');
+  const token = document.getElementById('_csrf').value;
+  
+  if(dateStartInput && dateEndInput && nbGuests){
+    fetch('/', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-csrf-token': token
+      },
+      body: JSON.stringify({
+        startDate: dateStartInput.value,
+        endDate: dateEndInput.value,
+        guests: nbGuests.value
+      })
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Erreur réseau');
+      return res.json();
+    })
+    .then(data => {
+      console.log('Réponse du serveur :', data);
+    })
+    .catch(err => {
+      console.error('Erreur:', err);
+    });
+  }
+
+  // Ici vous pourriez faire un fetch/POST vers votre backend
+}
 // Année footer & calc init
 //document.getElementById('year').textContent = new Date().getFullYear();
 /*recalc();*/

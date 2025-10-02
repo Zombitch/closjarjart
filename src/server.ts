@@ -1,4 +1,4 @@
-import express, { ErrorRequestHandler, NextFunction } from 'express';
+import express, { ErrorRequestHandler } from 'express';
 import session from 'express-session';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -7,7 +7,7 @@ import fs from 'fs';
 import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import { doubleCsrf } from 'csrf-csrf';
+import { doubleCsrfProtection, generateCsrfToken, isCsrfError } from './core/csrf';
 import rateLimit from 'express-rate-limit';
 import slowDown from 'express-slow-down';
 import hpp from 'hpp';
@@ -47,7 +47,20 @@ app.use(hpp());
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(session({
+  name: SESSION_NAME,
+  secret: process.env.SESSION_SECRET!,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: isProd,
+    maxAge: Number(process.env.SESSION_MAX_AGE || 60*60*24*30) * 1000
+  }
+}));
+
 
 // --- Helmet (headers de sécurité + CSP de base)
 app.use(helmet({
@@ -60,7 +73,7 @@ app.use(
     useDefaults: true,
     directives: {
       'default-src': ["'self'"],
-      'script-src': ["'self'"],
+      'script-src': ["'self'", "'unsafe-inline'"],
       'script-src-attr': ["'self'", "'unsafe-inline'"],
       'frame-src': ["'self'", 'https: data:'],
       'style-src': ["'self'", "'unsafe-inline'"],
@@ -71,7 +84,7 @@ app.use(
     }
   })
 );
-
+/*
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -84,7 +97,7 @@ const speedLimiter = slowDown({
   delayMs:(hits) => hits * 100
 });
 app.use(limiter);
-app.use(speedLimiter);
+app.use(speedLimiter);*/
 
 app.use((req, res, next) => {
   if (isProd && req.headers['x-forwarded-proto'] !== 'https') {
@@ -100,62 +113,21 @@ app.use('/static', express.static(path.join(__dirname, 'public'), {
   maxAge: isProd ? '30d' : 0
 }));
 
-const {
-  doubleCsrfProtection,
-  generateCsrfToken,
-  invalidCsrfTokenError,
-} = doubleCsrf({
-  // clé(s) secrète(s) forte(s) — idéalement rotation possible
-  getSecret: () => process.env.SESSION_SECRET!,
-  // identifiant unique de session / utilisateur (ex: req.session.id)
-  getSessionIdentifier: (req) => (req.session as any)?.id ?? req.ip,
-  cookieName: "_csrf",            // en dev, pas de préfixe __Host-
-  cookieOptions: {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: isProd,
-  },
-});
-
 // Expose le helper à tes vues (EJS)
 app.use((req, res, next) => {
-  (res.locals as any).csrfToken = () => generateCsrfToken(req, res);
-  next();
-});;
-
-app.use((req, res, next) => {
-  res.locals.csrfToken = null;
+  (res.locals as any).csrfToken = generateCsrfToken(req, res);
   next();
 });
-
-app.use(session({
-  name: SESSION_NAME,
-  secret: process.env.SESSION_SECRET!,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    sameSite: 'strict',
-    secure: isProd,
-    maxAge: Number(process.env.SESSION_MAX_AGE || 60*60*24*30) * 1000
-  }
-}));
-
-app.post('/', doubleCsrfProtection, (req, _res, next) => next());
-app.put('/', doubleCsrfProtection, (req, _res, next) => next());
-app.patch('/', doubleCsrfProtection, (req, _res, next) => next());
-app.delete('/', doubleCsrfProtection, (req, _res, next) => next());
 
 app.use('/', homeRouter);
 app.use('/auth', authRouter);
 app.use('/heart', heartRouter);
 
 app.use((_req, res) => res.status(404).send('Not found'));
-
 app.use(errorHandler);
 
 app.use(((err, _req, res, next) => {
-  if (err && (err as any).name === invalidCsrfTokenError.name) {
+  if (isCsrfError(err)) {
     return res.status(403).json({ error: true, message: 'Token CSRF invalide' });
   }
   next(err);

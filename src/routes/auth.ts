@@ -34,6 +34,7 @@ router.post('/login', async (req, res, next) => {
     const ok = await bcrypt.compare(password, user.passwordHash);
     if (!ok) return res.status(401).json({ error: true, message: 'Identifiants invalides' });
 
+    console.log(req.session);
     req.session.userId = String(user._id);
     req.session.roles = user.roles;
     res.redirect('/heart');
