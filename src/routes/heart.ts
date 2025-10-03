@@ -5,6 +5,7 @@ import { makeImageUpload, processImageUploadToDatabase, safeUnlink } from '../co
 import PhotoModel from '../models/photo';
 import ConfigModel from '../models/config';
 import {ObjectId} from 'mongodb';
+import { getReservationsAsArray } from '../core/reservation';
 
 const router = Router();
 const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
@@ -45,7 +46,9 @@ router.get('/', requireAuth, async (req, res) => {
 
   if(!config) config = await ConfigModel.create({});
 
-  res.render('heart/heart', { photos: photos, config: config });
+  const reservationArray = await getReservationsAsArray();
+
+  res.render('heart/heart', { photos: photos, config: config, blockedDate:JSON.stringify(reservationArray)});
 });
 
 router.post('/', upload.array('cfg_photos', 6), requireAuth, async (req, res) => {

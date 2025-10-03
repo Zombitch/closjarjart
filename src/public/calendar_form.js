@@ -12,7 +12,22 @@ function inRange(d, a, b){ const x=+(d), A=+(a), B=+(b); return x>=Math.min(A,B)
 function* daysBetween(a,b){ const start=a, end=b; for(let t=+start; t<=+end; t+=MS_DAY){ yield new Date(t); } }
 
 // Prépare les ensembles pour recherches rapides
-let blockedRangeObjs = blockedRanges.map(([a,b])=>[fromISO(a), fromISO(b)]);
+let blockedRangeObjs = blockedRanges.map(([a,b,c,d,e])=>[fromISO(a), fromISO(b), c, d,e]);
+
+function getRangeData(checkDate){ 
+  let reservation = [];
+  for(const [a,b,c,d,e] of blockedRangeObjs){ 
+    if(inRange(checkDate, atMidnight(a),b)){
+      reservation.push({
+        startDate: a,
+        endDate: b,
+        id: c,
+        isConfirmed: d,
+        type: e});
+    }
+  }
+  return reservation;
+}
 
 function updateBlockedDateRange(dateRange){
     blockedRanges = dateRange;
@@ -61,6 +76,11 @@ let selectingStart = true;
 let selStart = null, selEnd = null;
 let viewYear, viewMonth; // 0-11
 
+function setViewDate(d){
+  viewYear = d.getFullYear();
+  viewMonth = d.getMonth();
+}
+
 function openPicker(forInput){
   anchorInput = forInput;
   const rect = forInput.getBoundingClientRect();
@@ -71,8 +91,7 @@ function openPicker(forInput){
   const base = forInput === startInput && startISO.value ? fromISO(startISO.value)
              : forInput === endInput   && endISO.value   ? fromISO(endISO.value)
              : new Date();
-  viewYear = base.getFullYear();
-  viewMonth = base.getMonth();
+  setViewDate(base);
   selectingStart = (forInput === startInput) || !(startISO.value);
   selStart = startISO.value ? fromISO(startISO.value) : null;
   selEnd   = endISO.value   ? fromISO(endISO.value)   : null;
@@ -90,10 +109,10 @@ function closePicker(){
 function onKey(e){ if(e.key==='Escape') closePicker(); }
 function onDocClick(e){ if(!picker.contains(e.target) && e.target!==startInput && e.target!==endInput){ closePicker(); } }
 
-startInput.addEventListener('click', ()=> openPicker(startInput));
-endInput.addEventListener('click',   ()=> openPicker(endInput));
-prevBtn.addEventListener('click', ()=> { if(--viewMonth<0){ viewMonth=11; viewYear--; } renderCalendar(); });
-nextBtn.addEventListener('click', ()=> { if(++viewMonth>11){ viewMonth=0;  viewYear++; } renderCalendar(); });
+if(startInput) startInput.addEventListener('click', ()=> openPicker(startInput));
+if(endInput) endInput.addEventListener('click',   ()=> openPicker(endInput));
+if(prevBtn) prevBtn.addEventListener('click', ()=> { if(--viewMonth<0){ viewMonth=11; viewYear--; } renderCalendar(); });
+if(nextBtn) nextBtn.addEventListener('click', ()=> { if(++viewMonth>11){ viewMonth=0;  viewYear++; } renderCalendar(); });
 
 function renderCalendar(){
   const first = new Date(viewYear, viewMonth, 1);

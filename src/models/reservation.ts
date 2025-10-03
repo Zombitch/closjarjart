@@ -6,7 +6,8 @@ const ReservationSchema = new Schema({
   endDate: { type: Date, required: true },
   guests: { type: Number, default: 1 },
   totalPrice: { type: Number, required: false},
-  isConfirmed: { type: Boolean, default:false, required: false}
+  isConfirmed: { type: Boolean, default:false, required: false},
+  type: { type: String, default:"SITE", required: false}
 }, { versionKey: false });
 
 export type Reservation = InferSchemaType<typeof ReservationSchema>;

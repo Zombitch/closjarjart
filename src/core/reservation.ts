@@ -1,5 +1,6 @@
 import Reservation from "../models/reservation";
 import ConfigModel from '../models/config';
+import {ObjectId} from 'mongodb';
 
 export function computeNight(dateStart: Date, dateEnd: Date){
     const msPerDay = 1000 * 60 * 60 * 24;
@@ -23,8 +24,8 @@ export async function getReservations(fromNow: boolean = true){
 
 export async function getReservationsAsArray(fromNow: boolean = true){
     const reservationSchemaList = await getReservations(fromNow);
-    let reservationArray: [string, string][] = [];  
-    if(reservationSchemaList) reservationArray= reservationSchemaList.map(r => [r.startDate.toISOString(), r.endDate.toISOString()]);
+    let reservationArray: [string, string, ObjectId, boolean | null | undefined, string | null | undefined][] = [];  
+    if(reservationSchemaList) reservationArray= reservationSchemaList.map(r => [r.startDate.toISOString(), r.endDate.toISOString(), r._id, r.isConfirmed, r.type]);
 
     return reservationArray;
 }

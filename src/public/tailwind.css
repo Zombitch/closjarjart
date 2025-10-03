@@ -13,5 +13,17 @@ a, button{
 /* Calendar */
 .cal-grid { display:grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap:.25rem; }
 .cal-cell { height: 2.25rem; }
+#tab-reservations .cal-cell { height: 5rem; }
 .cal-cell-blocked-am{ background: linear-gradient(to bottom, var(--color-gray-200) 50%, #ffffff00 50%); }
 .cal-cell-blocked-pm{ background: linear-gradient(to bottom, #ffffff00 50%, var(--color-gray-200) 50%); }
+
+.cal-cell-end-reservation{
+    height: 50%;
+    top: 0;
+    right: 0;
+}
+.cal-cell-start-reservation{
+    height: 50%;
+    bottom: 0;
+    left: 0;
+}

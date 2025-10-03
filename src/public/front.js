@@ -206,12 +206,14 @@ const dateEndInput = document.getElementById('dateEndISO');
 const nights = document.getElementById('nights');
 const total_price = document.getElementById('total');
 
-dateEnd.addEventListener('change', ()=>{
-  if(dateStartInput && dateEndInput){
-    nights.innerText = computeNight(dateStartInput.value, dateEndInput.value);
-    total_price.innerText = computeTotal();
-  }
-});
+if(dateEnd){
+  dateEnd.addEventListener('change', ()=>{
+    if(dateStartInput && dateEndInput){
+      nights.innerText = computeNight(dateStartInput.value, dateEndInput.value);
+      total_price.innerText = computeTotal();
+    }
+  });
+}
 
 function computeNight(dateStringStart, dateStringEnd){
   const dateStart = new Date(dateStringStart);
