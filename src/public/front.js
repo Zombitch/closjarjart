@@ -151,12 +151,6 @@
     input.value = val;
   }
 
-  function showToast(msg){
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.remove('hidden');
-    setTimeout(()=> t.classList.add('hidden'), 2200);
-  }
-
   function contactHost(){
     const name = prompt('Votre nom ?');
     if(name === null) return;
@@ -165,6 +159,27 @@
     showToast('Message envoyé, merci ' + name + ' !');
   }
 */
+
+
+// Affiche le toast
+function showToast(msg, type){
+  const t = document.getElementById('toast');
+  let bgClass;
+
+  if(type == "danger") bgClass= "bg-red-600";
+  else bgClass= "bg-green-600";
+
+  t.textContent = msg; 
+  t.classList.remove('hidden');
+  t.classList.add(bgClass);
+
+  setTimeout(()=> {
+    t.classList.add('hidden');
+    t.classList.remove(bgClass);
+  }, 5000);
+}
+
+
 // Afficher / masquer le mot de passe
 const togglePwd = document.getElementById('togglePwd');
 const password = document.getElementById('password');
@@ -242,11 +257,21 @@ function submitBooking(){
       })
     })
     .then(res => {
-      if (!res.ok) throw new Error('Erreur réseau');
+      if (!res.ok){
+        showToast(res.message, "danger");
+        throw new Error('Erreur réseau');
+      }
       return res.json();
     })
     .then(data => {
-      console.log('Réponse du serveur :', data);
+      if (!data.ok)showToast(data.message, "danger");
+      else showToast(data.message, "success");
+
+      if(data.reservations){        
+        dateStartInput.value = "";
+        dateEndInput.value = "";
+        updateBlockedDateRange(data.reservations);
+      }
     })
     .catch(err => {
       console.error('Erreur:', err);
