@@ -144,8 +144,8 @@ function renderCalendar(){
     else if(disabledAM){ cls = 'cal-cell-blocked-am'; }
     else if(disabledPM){ cls = 'cal-cell-blocked-pm'; }
     else if(disabled){ cls = 'bg-gray-200 text-gray-400 cursor-not-allowed line-through'; }
-    if(inSelSpan){ cls = 'bg-blue-100 text-blue-700'; }
-    if(isSelStart || isSelEnd){ cls = 'bg-blue-600 text-white'; }
+    if(inSelSpan){ cls = 'bg-cyan-100 text-cyan-700'; }
+    if(isSelStart || isSelEnd){ cls = 'bg-cyan-600 text-white'; }
 
     cell.className += ' ' + cls;
     cell.innerHTML = '<div>'+day+'</div>';

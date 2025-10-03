@@ -6,6 +6,7 @@ import PhotoModel from '../models/photo';
 import ConfigModel from '../models/config';
 import {ObjectId} from 'mongodb';
 import { getReservationsAsArray } from '../core/reservation';
+import Reservation from '../models/reservation';
 
 const router = Router();
 const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
@@ -39,6 +40,30 @@ router.delete('/photo/:id', requireAuth, async (req, res) => {
   res.redirect('/heart');
 });
 
+router.post('/photo/setDefault/:id', requireAuth, async (req, res) => {
+  try {
+      const items = await PhotoModel.find();
+      await Promise.all(items.map(photo => {
+        if(photo._id.toString() == req.params.id) photo.default = true;
+        else{
+          photo.default = false;
+        }
+        photo.save();
+        Promise.resolve();
+      }));
+  } catch (e) { }
+
+  res.json({ok:true});
+});
+
+router.get('/reservation/:id', requireAuth, async (req, res) => {
+  const id = req.params.id;
+  const reservation = await Reservation.findById(new ObjectId(id as unknown as string)).lean();
+  let config = await ConfigModel.findOne().sort({ createdAt: -1 });
+
+  res.json(reservation);
+});
+
 router.get('/', requireAuth, async (req, res) => {
   // Get all photos
   const photos = await PhotoModel.find().sort({ createdAt: -1 }).limit(50).lean();
@@ -63,22 +88,6 @@ router.post('/', upload.array('cfg_photos', 6), requireAuth, async (req, res) =>
  }
 
   res.redirect('/heart');
-});
-
-router.post('/photo/setDefault/:id', requireAuth, async (req, res) => {
-  try {
-      const items = await PhotoModel.find();
-      await Promise.all(items.map(photo => {
-        if(photo._id.toString() == req.params.id) photo.default = true;
-        else{
-          photo.default = false;
-        }
-        photo.save();
-        Promise.resolve();
-      }));
-  } catch (e) { }
-
-  res.json({ok:true});
 });
 
 export default router;

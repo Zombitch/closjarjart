@@ -176,7 +176,7 @@ function showToast(msg, type){
   setTimeout(()=> {
     t.classList.add('hidden');
     t.classList.remove(bgClass);
-  }, 5000);
+  }, 10000);
 }
 
 
@@ -237,12 +237,12 @@ function computeTotal(){
   input.value = val;
 }
 
-
-
 // Send data forms
 function submitBooking(){
   const nbGuests = document.getElementById('guests');
   const token = document.getElementById('_csrf').value;
+  const contactInput = document.getElementById('contact');
+  const nameInput = document.getElementById('name');
   
   if(dateStartInput && dateEndInput && nbGuests){
     fetch('/', {
@@ -255,7 +255,9 @@ function submitBooking(){
       body: JSON.stringify({
         startDate: dateStartInput.value,
         endDate: dateEndInput.value,
-        guests: nbGuests.value
+        guests: nbGuests.value,
+        name: nameInput.value,
+        contact: contactInput.value
       })
     })
     .then(res => {
@@ -269,14 +271,18 @@ function submitBooking(){
       if (!data.ok)showToast(data.message, "danger");
       else showToast(data.message, "success");
 
-      if(data.reservations){        
+      if(data.reservations){
+        startInput.value = "";
+        endInput.value = "";
         dateStartInput.value = "";
         dateEndInput.value = "";
+        contactInput.value = "";
+        nameInput.value = "";
         updateBlockedDateRange(data.reservations);
       }
     })
-    .catch(err => {
-      console.error('Erreur:', err);
+    .catch((err, data)  => {
+      showToast('Une erreur est survenue, veuillez de nouveau renseigner le formulaire de réservation', "danger");
     });
   }
 

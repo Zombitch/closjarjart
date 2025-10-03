@@ -37,8 +37,8 @@ router.get('/reservation/list', async (_req, res) => {
 
 router.post('/', doubleCsrfProtection, async (req, res, next) => {
   const config = await ConfigModel.findOne().sort({ createdAt: -1 });
-  const { startDate, endDate, guests } = req.body as { startDate: Date; endDate: Date, guests: number };
-  if (!startDate || !endDate || !guests) return res.status(400).json({ error: true, message: 'Données requises' });
+  const { startDate, endDate, guests, name, contact } = req.body as { startDate: Date; endDate: Date, guests: number, name: string, contact: string };
+  if (!startDate || !endDate || !guests || !name || !contact) return res.status(400).json({ error: true, ok:false, message: 'Données requises' });
 
   const formattedStartDate = new Date(startDate);
   const formattedEndDate = new Date(endDate);  
@@ -57,7 +57,7 @@ router.post('/', doubleCsrfProtection, async (req, res, next) => {
       reservations: reservationArray
     });
   }else {
-    await Reservation.create({ startDate: formattedStartDate, endDate: formattedEndDate, guests: guests, totalPrice: totalPrice });
+    await Reservation.create({ startDate: formattedStartDate, endDate: formattedEndDate, guests: guests, totalPrice: totalPrice, name: name, contact: contact });
     const reservationArray = await getReservationsAsArray();
     return res.status(201).json({ 
       ok: true, 

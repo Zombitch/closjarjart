@@ -5,6 +5,10 @@ const editResarvationDashboardBtn = document.getElementById('editReservationBtn'
 const deleteResarvationDashboardBtn = document.getElementById('deleteReservationBtn');
 const dashboardEditModal = document.getElementById("dashboardEditModal");
 
+function closeModal(){
+    document.getElementById("dashboardEditModal").classList.add("hidden");
+}
+
 function activeSelectedModeButton(btn){
     btn.classList.add("bg-cyan-600", "hover:bg-cyan-700");
     btn.classList.remove("bg-gray-200", "hover:bg-gray-300"); 
@@ -45,7 +49,7 @@ addResarvationDashboardBtn.addEventListener('click', () =>setCalendarDashboardMo
 editResarvationDashboardBtn.addEventListener('click', () =>setCalendarDashboardMode("EDIT"));
 deleteResarvationDashboardBtn.addEventListener('click', () =>setCalendarDashboardMode("DELETE"));
 
-function onPick(d){
+function onPick(d, reservationData){
     if(selectionMode == 'ADD'){
         const stringDateDay = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,'0')+"-"+String(d.getDate()).padStart(2,'0');
         const formattedSelectedDateStart = new Date(stringDateDay+"T18:00:00Z");
@@ -74,6 +78,8 @@ function onPick(d){
         }
     }
     else if(selectionMode == "EDIT"){
+        console.log(reservationData);
+        //fetch.get('/reservation')
         dashboardEditModal.classList.remove("hidden");
         dashboardEditModal.classList.add("flex");
     }
@@ -94,7 +100,7 @@ function renderCalendar(){
   for(let day=1; day<=daysInMonth; day++){
     const d = new Date(viewYear, viewMonth, day);
     const cellContainer = document.createElement('div');
-    cellContainer.className = 'relative inline-block w-full rounded-md text-sm text-center ';
+    cellContainer.className = 'relative inline-block w-full rounded-md text-sm text-center';
 
     const cellOverlay = document.createElement('div');
     cellOverlay.className = 'absolute flex items-center justify-center text-white text-xs'
@@ -149,8 +155,9 @@ function renderCalendar(){
     else if(disabledPM) cell.title = 'Disponible jusqu\'au matin';
     else if(disabled) cell.title = 'Date indisponible';
     
-    if(!disabled || ((disabledAM || disabledPM) && !disabledAMPM)){
-      cell.addEventListener('click', ()=> onPick(d));
+    if(!inThePast){
+      cellContainer.className += ' cursor-pointer';
+      cellContainer.addEventListener('click', ()=> onPick(d, reservationData));
     }
 
     cellContainer.appendChild(cellOverlay);

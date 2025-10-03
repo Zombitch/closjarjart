@@ -81,15 +81,23 @@
             </div>
             <div id="picker" class="hidden z-50 bg-white border rounded-xl shadow-soft p-3 w-full select-none">
               <div class="flex items-center justify-between mb-2">
-                <button id="prevBtn" class="px-2 py-1 rounded hover:bg-gray-100">◀</button>
+                <button id="prevBtn" class="px-2 py-1 rounded hover:bg-gray-100"><</button>
                 <div id="monthLabel" class="font-medium"></div>
-                <button id="nextBtn" class="px-2 py-1 rounded hover:bg-gray-100">▶</button>
+                <button id="nextBtn" class="px-2 py-1 rounded hover:bg-gray-100">></button>
               </div>
               <div class="cal-grid text-xs font-medium text-gray-500 mb-1 text-center">
                 <div>Lu</div><div>Ma</div><div>Me</div><div>Je</div><div>Ve</div><div>Sa</div><div>Di</div>
               </div>
               <div id="cal" class="cal-grid"></div>
               <div id="hint" class="mt-2 text-[11px] text-gray-500"></div>
+            </div>
+            <label class="text-sm">Nom | Prénom</label>
+             <div class="flex items-center gap-2">
+              <input id="name" name="name" type="text" class="w-full text-center rounded-lg border px-2 py-2" placeholder="NOM prénom" autocomplete="off" required/>
+            </div>
+            <label class="text-sm">Email | Téléphone</label>
+             <div class="flex items-center gap-2">
+              <input id="contact" name="contact" type="text" class="w-full text-center rounded-lg border px-2 py-2" placeholder="contact@gmail.com ou 06.XX.XX.XX.XX" autocomplete="off" required/>
             </div>
             <label class="text-sm">Voyageurs</label>
             <div class="flex items-center gap-2">
