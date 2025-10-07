@@ -18,6 +18,7 @@ import { connectMongo, disconnectMongo } from './db/mongo';
 import homeRouter from './routes/index';
 import authRouter from './routes/auth';
 import heartRouter from './routes/heart';
+import reservationRouter from './routes/reservation';
 import errorHandler from './middlewares/error';
 
 dotenv.config();
@@ -122,6 +123,7 @@ app.use((req, res, next) => {
 app.use('/', homeRouter);
 app.use('/auth', authRouter);
 app.use('/heart', heartRouter);
+app.use('/reservation', reservationRouter);
 
 app.use((_req, res) => res.status(404).send('Not found'));
 app.use(errorHandler);

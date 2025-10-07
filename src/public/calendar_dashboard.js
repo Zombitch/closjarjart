@@ -1,12 +1,122 @@
 const now = new Date();
-let selectionMode = "EDIT"; // EDIT ADD DELETE
+let selectionMode = "EDIT"; // EDIT ADD CONFIG
+let reservation = null;
+
+const modalResaId = document.getElementById("dashboardModalId");
+const modalResaLastName = document.getElementById("dashboardModalLastName");
+const modalResaFisrtName = document.getElementById("dashboardModalFirstName");
+const modalResaEmail = document.getElementById("dashboardModalEmail");
+const modalResaPhone = document.getElementById("dashboardModalPhone");
+const modalResaGuests = document.getElementById("dashboardModalGuests");
+const modalResaTotalPrice = document.getElementById("dashboardModalTotalPrice");
+const modalResaType = document.getElementById("dashboardModalType");
+
 const addResarvationDashboardBtn = document.getElementById('addReservationBtn');
 const editResarvationDashboardBtn = document.getElementById('editReservationBtn');
-const deleteResarvationDashboardBtn = document.getElementById('deleteReservationBtn');
 const dashboardEditModal = document.getElementById("dashboardEditModal");
+const dashboardModalLayerReservationChoice = document.getElementById("dashboardModalLayerReservationChoice");
+const dashboardModalLayerReservationEdit = document.getElementById("dashboardModalLayerReservationEdit");
 
 function closeModal(){
     document.getElementById("dashboardEditModal").classList.add("hidden");
+    reservation = null;
+}
+
+function deleteReservation(){
+    fetch("/reservation/"+reservation._id, {
+      method: 'DELETE',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res =>{
+      if (!res.ok) showToast(res.message, "danger");
+      return res.json();
+    })
+    .then(data => {
+      showToast("Réservation supprimée", "success");
+      updateBlockedDateRange(data.reservations);
+      renderCalendar();
+    })
+    .catch((err, data)  => showToast('Une erreur est survenue : ' + err , "danger"));
+
+    this.closeModal();
+}
+
+function saveReservation(){
+  fetch('/reservation', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: modalResaId.value,
+        startDate: toISO(formattedSelectedDateStart),
+        endDate: toISO(formattedSelectedDateEnd),
+        guests: modalResaGuests.value,
+        lastname: modalResaLastName.value,
+        firstname: modalResaFisrtName.value,
+        email: modalResaEmail.value,
+        tel: modalResaPhone.value,
+        totalPrice: modalResaTotalPrice.value,
+        type: modalResaType.value
+      })
+    })
+    .then(res => {
+      if (!res.ok){
+        showToast(res.message, "danger");
+        throw new Error('Erreur réseau');
+      }
+      return res.json();
+    })
+    .then(data => {
+      if (!data.ok)showToast(data.message, "danger");
+      else showToast(data.message, "success");
+
+      if(data.reservations){
+        modalResaId.value = "";
+        modalResaLastName.value = "";
+        modalResaFisrtName.value = "";
+        modalResaEmail.value = "";
+        modalResaPhone.value = "";
+        modalResaGuests.value = "";
+        modalResaTotalPrice.value = "";
+        modalResaType.value = "";
+        updateBlockedDateRange(data.reservations);
+        renderCalendar();
+      }
+    })
+    .catch((err, data)  => {
+      showToast('Une erreur est survenue, veuillez de nouveau renseigner le formulaire de réservation', "danger");
+    });
+
+}
+
+function getReservation(resID){
+    fetch("/reservation/"+resID, {
+      method: 'GET',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      if (!res.ok){
+        showToast("Erreur lors de la récupération des données liées à la réservation", "danger");
+        throw new Error('Erreur réseau');
+      }
+      return res.json();
+    })
+    .then(data => {
+      reservation = data;
+      renderReservation(reservation);
+      console.info(data);
+    })
+    .catch((err, data)  => {
+      showToast('Une erreur est survenue : ' + err , "danger");
+    });
 }
 
 function activeSelectedModeButton(btn){
@@ -21,10 +131,6 @@ function activeSelectedModeButton(btn){
         editResarvationDashboardBtn.classList.remove("bg-cyan-600", "hover:bg-cyan-700");
         editResarvationDashboardBtn.classList.add("bg-gray-200", "hover:bg-gray-300"); 
     }
-    if(btn != deleteResarvationDashboardBtn){
-        deleteResarvationDashboardBtn.classList.remove("bg-cyan-600", "hover:bg-cyan-700");
-        deleteResarvationDashboardBtn.classList.add("bg-gray-200", "hover:bg-gray-300"); 
-    }
 }
 
 function setCalendarDashboardMode(mode){
@@ -37,17 +143,13 @@ function setCalendarDashboardMode(mode){
     case "EDIT":
         activeSelectedModeButton(editResarvationDashboardBtn);
         break;
-    case "DELETE":
-        activeSelectedModeButton(deleteResarvationDashboardBtn);
-        break;
     default:
-        console.log("Mode inconnu, aucune action exécutée");
+        console.info("Mode inconnu, aucune action exécutée");
     }
 }
 
 addResarvationDashboardBtn.addEventListener('click', () =>setCalendarDashboardMode("ADD"));
 editResarvationDashboardBtn.addEventListener('click', () =>setCalendarDashboardMode("EDIT"));
-deleteResarvationDashboardBtn.addEventListener('click', () =>setCalendarDashboardMode("DELETE"));
 
 function onPick(d, reservationData){
     if(selectionMode == 'ADD'){
@@ -59,32 +161,93 @@ function onPick(d, reservationData){
             selStart = formattedSelectedDateStart;
             selEnd = null;
             selectingStart = false;
-            renderCalendar();
             startInput.dispatchEvent(new Event("change"));
         } else {
             // Ensure order start <= end
             if(selStart && d < selStart){ [selStart, d] = [d, selStart]; }
             // Validate no blocked inside span
             if(spanCrossesBlocked(selStart, formattedSelectedDateEnd)){
-            hint.textContent = 'Période invalide : elle traverse des dates bloquées.';
-            // clignote rapide
-            picker.animate([{transform:'scale(1)'},{transform:'scale(1.02)'},{transform:'scale(1)'}], {duration:180});
-            return;
+                hint.textContent = 'Période invalide : elle traverse des dates bloquées.';
+                // clignote rapide
+                picker.animate([{transform:'scale(1)'},{transform:'scale(1.02)'},{transform:'scale(1)'}], {duration:180});
+                return;
             }
             selEnd = formattedSelectedDateEnd;
             commitSelection();
-            closePicker();
-            endInput.dispatchEvent(new Event("change"));
+            dashboardModalLayerReservationEdit.classList.remove("hidden");
+            dashboardModalLayerReservationChoice.classList.add("hidden");
+            dashboardEditModal.classList.remove("hidden");
+            dashboardEditModal.classList.add("flex");
+            resetSelection();
         }
+        renderCalendar();
     }
     else if(selectionMode == "EDIT"){
-        console.log(reservationData);
-        //fetch.get('/reservation')
-        dashboardEditModal.classList.remove("hidden");
-        dashboardEditModal.classList.add("flex");
+        if(reservationData.length > 1){
+            renderReservationList(reservationData);
+            dashboardModalLayerReservationEdit.classList.add("hidden");
+            dashboardModalLayerReservationChoice.classList.remove("hidden");
+            dashboardEditModal.classList.remove("hidden");
+            dashboardEditModal.classList.add("flex");
+        }else if(reservationData.length == 1){
+            getReservation(reservationData[0].id)
+            dashboardModalLayerReservationEdit.classList.remove("hidden");
+            dashboardModalLayerReservationChoice.classList.add("hidden");
+            dashboardEditModal.classList.remove("hidden");
+            dashboardEditModal.classList.add("flex");
+        }
     }
 }
 
+function renderReservationList(reservationData){
+    const listWrap = document.getElementById('modalReservationListWrap');
+    listWrap.innerHTML = '';
+
+    reservationData.forEach((r, idx) => {
+        const row = document.createElement('div');
+        row.className = 'p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2';
+
+        // Left: label + dates
+        const left = document.createElement('div');
+        left.className = 'min-w-0';
+        const title = document.createElement('div');
+        title.className = 'text-sm font-medium text-gray-800 truncate';
+        title.textContent = r.guestName ? r.guestName : `Réservation #${r._id ?? (idx+1)}`;
+
+        const dates = document.createElement('div');
+        dates.className = 'text-sm text-gray-600';
+        dates.textContent = `${frFormat(r.startDate)} → ${frFormat(r.endDate)}`;
+
+        left.appendChild(title);
+        left.appendChild(dates);
+
+        // Right: small badges (optional)
+        const right = document.createElement('div');
+        right.className = 'flex items-center gap-2 flex-wrap';
+        // Example badges (you can remove or adapt)
+        const badge = document.createElement('span');
+        badge.className = 'px-2 py-0.5 text-xs rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200';
+        // nights calculation
+        const nights = computeNight(r.startDate, r.endDate);
+        badge.textContent = `${nights} nuit${nights>1?'s':''}`;
+        right.appendChild(badge);
+
+        row.appendChild(left);
+        row.appendChild(right);
+        listWrap.appendChild(row);
+      });
+}
+
+function renderReservation(reservationData){
+  modalResaId.value = reservationData._id;
+  modalResaLastName.value = reservationData.lastname;
+  modalResaFisrtName.value = reservationData.firstname;
+  modalResaEmail.value = reservationData.email;
+  modalResaPhone.value = reservationData.tel;
+  modalResaGuests.value = reservationData.guests;
+  modalResaTotalPrice.value = reservationData.totalPrice;
+  modalResaType.value = reservationData.type;
+}
 
 function renderCalendar(){
   const first = new Date(viewYear, viewMonth, 1);
@@ -128,8 +291,8 @@ function renderCalendar(){
         cls = 'bg-gray-200 text-gray-400 cursor-not-allowed line-through';
     }
     else if(disabledAMPM){
-        cellSecondOverlay.className += ' '+ 'cal-cell-end-reservation bg-cyan-600 border-r-4 border-solid border-cyan-900 h-1/2 w-full';
-        cellOverlay.className += ' '+ 'cal-cell-start-reservation bg-cyan-600 border-l-4 border-solid border-cyan-900 h-1/2 w-full'
+        cellSecondOverlay.className += ' '+ ' cal-cell-end-reservation bg-cyan-600 border-r-4 border-solid border-cyan-900 h-1/2 w-full';
+        cellOverlay.className += ' '+ ' cal-cell-start-reservation bg-cyan-600 border-l-4 border-solid border-cyan-900 h-1/2 w-full'
         lastSettings = 'bg-cyan-600';
     }
     else if(disabledAM){ 

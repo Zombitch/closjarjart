@@ -1,0 +1,104 @@
+    <div id="dashboardModalLayerReservationChoice" role="dialog" aria-modal="true" aria-labelledby="modalTitle"
+         class="hidden w-full max-w-2xl bg-white rounded-2xl shadow-xl">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-5 py-4 border-b">
+        <h2 id="modalTitle" class="text-lg font-semibold">Réservations</h2>
+        <button id="closeX" class="p-2 rounded hover:bg-gray-100" aria-label="Fermer" onclick="closeModal()">✕</button>
+      </div>
+
+      <!-- Body -->
+      <div class="px-5 py-4">
+        <!-- Summary -->
+        <div id="summary" class="text-sm text-gray-600 mb-3">Plusieurs réservations sont à cheval sur cette date, choisissez celle que vous voulez modifier :</div>
+
+        <!-- List -->
+        <div id="modalReservationListWrap" class="divide-y border rounded-lg">
+          <!-- rows injected by JS -->
+        </div>
+
+        <!-- Empty state -->
+        <div id="emptyState" class="hidden p-8 text-center text-gray-500">
+          Aucune réservation.
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-5 py-4 border-t flex justify-end">
+        <a class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100" onclick="closeModal()">Fermer</a>
+      </div>
+    </div>
+    
+    <!-- Saisie ou modif d'une reservation -->
+    <div id="dashboardModalLayerReservationEdit" role="dialog" aria-modal="true" aria-labelledby="modalTitle"
+         class="hidden w-full max-w-xl bg-white rounded-2xl shadow-xl">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-5 py-4 border-b">
+        <h2 id="modalTitle" class="text-lg font-semibold">Réservation</h2>
+        <a id="closeX" class="p-2 rounded hover:bg-gray-100" aria-label="Fermer la fenêtre" onclick="closeModal()"> ✕ </a>
+      </div>
+
+      <!-- Form -->
+      <form id="reservationForm" class="px-5 py-4 space-y-4" autocomplete="off">
+        <input id="dashboardModalId" name="dashboardModalId" type="hidden">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <label class="block">
+            <span class="text-sm text-gray-700">Nom</span>
+            <input id="dashboardModalLastName" name="dashboardModal" type="text" required class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </label>
+
+          <label class="block">
+            <span class="text-sm text-gray-700">Prénom</span>
+            <input id="dashboardModalFirstName" name="dashboardModalFirstName" type="text" required class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <label class="block">
+            <span class="text-sm text-gray-700">Email</span>
+            <input id="dashboardModalEmail" name="dashboardModalEmail" type="email" required class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </label>
+
+          <label class="block">
+            <span class="text-sm text-gray-700">Téléphone</span>
+            <input id="dashboardModalPhone" name="dashboardModalPhone" type="tel" required pattern="[0-9]{2}[.\- ]?[0-9]{2}[.\- ]?[0-9]{2}[.\- ]?[0-9]{2}[.\- ]?[0-9]{2}"
+                   placeholder="06 12 34 56 78" class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <label class="block">
+            <span class="text-sm text-gray-700">Nb personnes</span>
+            <input id="dashboardModalGuests" name="dashboardModalGuests" type="text" required class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </label>
+
+          <label class="block">
+            <span class="text-sm text-gray-700">Prix total</span>
+            <input id="dashboardModalTotalPrice" name="dashboardModalTotalPrice" type="text" class="mt-1 w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </label>
+        </div>
+
+        <label class="block">
+          <span class="text-sm text-gray-700">Type de réservation</span>
+          <select id="dashboardModalType" name="dashboardModalType" required class="mt-1 w-full border rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="" disabled selected>Choisir…</option>
+            <option value="AIRBNB">AirBnb</option>
+            <option value="LBC">Leboncoin</option>
+            <option value="DETENTE">Espace Détente</option>
+            <option value="SITE">Site Internet</option>
+          </select>
+        </label>
+
+        <!-- Footer actions -->
+        <div class="flex items-center justify-between pt-2">
+          <a type="button" id="deleteBtn" class="px-3 py-2 rounded-lg border border-red-300 text-red-600 hover:bg-red-50" onclick="deleteReservation()">
+            Supprimer
+          </a>
+          <div class="space-x-2">
+            <a type="button" id="closeBtn" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100" onclick="closeModal()">
+              Fermer
+            </a>
+            <a type="submit" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700" onclick="saveReservation()">Enregistrer</a>
+          </div>
+        </div>
+      </form>
+    </div>

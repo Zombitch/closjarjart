@@ -53,9 +53,6 @@
             <a id="editReservationBtn" class="text-sm px-2 py-2 rounded-lg text-white font-medium focus:ring-2 focus:ring-gray-400 focus:outline-none transition">
               Modifier
             </a>
-            <a id="deleteReservationBtn" class="text-sm px-2 py-2 rounded-lg text-white font-medium focus:ring-2 focus:ring-gray-400 focus:outline-none transition">
-              Supprimer
-            </a>
           </div>
           <div id="picker" class="z-50 bg-white border rounded-xl shadow-soft p-3 w-full select-none">
               <div class="flex items-center justify-between mb-2">
@@ -78,6 +75,9 @@
   </main>
   <%- include('../partials/footer.ejs') %>
 
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-15 left-1/2 -translate-x-1/2 text-white px-4 py-3 rounded-full shadow-lg hidden"></div>
+  
   <!-- Modal (validate / edit) -->
   <div id="dashboardEditModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
     <%- include('../partials/heart/modal_calendar_edit.ejs') %>

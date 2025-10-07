@@ -29,6 +29,8 @@ function getRangeData(checkDate){
   return reservation;
 }
 
+function resetSelection(){ selEnd = null; selStart = null;}
+
 function updateBlockedDateRange(dateRange){
     blockedRanges = dateRange;
     blockedRangeObjs = blockedRanges.map(([a,b])=>[fromISO(a), fromISO(b)]);

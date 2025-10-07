@@ -56,14 +56,6 @@ router.post('/photo/setDefault/:id', requireAuth, async (req, res) => {
   res.json({ok:true});
 });
 
-router.get('/reservation/:id', requireAuth, async (req, res) => {
-  const id = req.params.id;
-  const reservation = await Reservation.findById(new ObjectId(id as unknown as string)).lean();
-  let config = await ConfigModel.findOne().sort({ createdAt: -1 });
-
-  res.json(reservation);
-});
-
 router.get('/', requireAuth, async (req, res) => {
   // Get all photos
   const photos = await PhotoModel.find().sort({ createdAt: -1 }).limit(50).lean();
