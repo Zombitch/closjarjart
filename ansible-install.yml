@@ -1,0 +1,87 @@
+- hosts: localhost
+  become: yes
+  tasks:
+
+  - name: Remove a container
+    docker_container:
+      name: closjarjart
+      keep_volumes: true
+      state: absent
+
+  - name: Create closjarjart data folder
+    file:
+      path: /data/closjarjart/docker
+      state: directory
+
+  - name: Create closjarjart volume
+    community.docker.docker_volume:
+      name: closjarjart_data
+
+  - name: Delete Dockerfile
+    file:
+      path: /data/closjarjart/docker/Dockerfile
+      state: absent
+
+  - name: Write docker file
+    ansible.builtin.blockinfile:
+      path: /data/closjarjart/docker/Dockerfile
+      create: true
+      mode: a+rwx
+      block: |
+        FROM node:22.14-alpine3.21
+        RUN apk update
+        RUN apk add wget
+        RUN mkdir -p /opt/closjarjart
+        WORKDIR /opt/closjarjart/
+        RUN wget https://github.com/Zombitch/closjarjart/archive/refs/heads/main.zip
+        RUN unzip main.zip && rm -f main.zip
+        WORKDIR /opt/closjarjart/closjarjart-main/closjarjart
+        RUN echo "NODE_ENV=production" >> .env
+        RUN echo "PORT=4200" >> .env
+        RUN echo "SESSION_SECRET={{ sessionSecret }}" >> .env
+        RUN echo "CSRF_SECRET={{ csrfSecret }}" >> .env
+        RUN echo "COOKIE_SECRET={{ cookieSecret }}" >> .env
+        RUN echo "SESSION_NAME=cjjsession" >> .env
+        RUN echo "SESSION_MAX_AGE=2592000" >> .env
+        RUN echo "COOKIE_NAME=app.sid" >> .env
+        RUN echo "MONGO_URI={{ mongoURI }}" >> .env
+        RUN echo "SEND_MAIL=true" >> .env
+        RUN echo "SMTP_HOST=smtp.gmail.com" >> .env
+        RUN echo "SMTP_PORT=465" >> .env
+        RUN echo "SMTP_USER={{ smtpUser }}" >> .env
+        RUN echo "SMTP_PWD={{ smtpPwd}}" >> .env
+        RUN echo "SMTP_TO={{ smtpTo}}" >> .env
+        RUN npm i
+        RUN npm run build:css
+        RUN npm run build
+        EXPOSE 4000
+        CMD ["npm","run","dev"]
+      state: present
+
+  - name: Delete previous image
+    community.docker.docker_image:
+      name: closjarjart
+      state: absent
+      force_absent: true
+
+  - name: Create the image
+    community.docker.docker_image:
+      name: closjarjart
+      source: build
+      build:
+        path: /data/closjarjart/docker
+
+  - name: Run container
+    community.docker.docker_container:
+      container_default_behavior: no_defaults
+      name: closjarjart
+      image: closjarjart
+      hostname: closjarjart_host
+      state: started
+      restart_policy: always
+      exposed_ports :
+        - 4000
+      volumes:
+        - closjarjart_data:/opt/closjarjart/closjarjart-main/closjarjart/data
+      networks:
+        - name: "{{ network }}"
