@@ -35,18 +35,20 @@ function togglePassword(openState, closeState){
   closeState.classList.toggle('hidden', !isPwd);
 }
 
-
 //Calcule du nombre de nuit
 const dateEnd = document.getElementById('dateEnd');
 const dateStartInput = document.getElementById('dateStartISO');
 const dateEndInput = document.getElementById('dateEndISO');
 const nights = document.getElementById('nights');
+const fees_management = document.getElementById('fees_management');
 const total_price = document.getElementById('total');
 
 if(dateEnd){
   dateEnd.addEventListener('change', ()=>{
     if(dateStartInput && dateEndInput && nights){
+      const totalNightPrice = computeNightPriceTotal();
       nights.innerText = computeNight(dateStartInput.value, dateEndInput.value);
+      fees_management.innerText = computeFees(totalNightPrice);
       total_price.innerText = computeTotal();
     }
   });

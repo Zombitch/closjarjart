@@ -116,6 +116,7 @@
             </div>
             <div class="mt-2 space-y-1 text-sm">
               <div class="flex justify-between"><span>Nuits</span><span id="nights">0</span></div>
+              <div class="flex justify-between"><span>Frais de gestion</span><span id="fees_management">0</span></div>
               <% if(config.cleaning_fees > 0){ %><div class="flex justify-between"><span>Sous‑total</span><span>€<span id="subtotal">0</span></span></div><% } %>
               <% if(config.cleaning_fees > 0){ %><div class="flex justify-between"><span>Frais de ménage</span><span>€<span id="cleaning"><%= config.cleaning_fees %></span></span></div><% } %>
               <hr>

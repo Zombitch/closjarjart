@@ -33,7 +33,7 @@ function resetSelection(){ selEnd = null; selStart = null;}
 
 function updateBlockedDateRange(dateRange){
     blockedRanges = dateRange;
-    blockedRangeObjs = blockedRanges.map(([a,b])=>[fromISO(a), fromISO(b)]);
+    blockedRangeObjs = blockedRanges.map(([a,b,c,d,e])=>[fromISO(a), fromISO(b), c, d,e]);
 }
 
 function isBlocked(d){

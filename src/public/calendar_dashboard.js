@@ -20,6 +20,19 @@ const dashboardModalLayerReservationEdit = document.getElementById("dashboardMod
 function closeModal(){
     document.getElementById("dashboardEditModal").classList.add("hidden");
     reservation = null;
+    resetSelection();
+    resetModalForm();
+}
+
+function resetModalForm(){
+  modalResaId.value = "";
+  modalResaLastName.value = "";
+  modalResaFisrtName.value = "";
+  modalResaEmail.value = "";
+  modalResaPhone.value = "";
+  modalResaGuests.value = "";
+  modalResaTotalPrice.value = "";
+  modalResaType.value = "";
 }
 
 function deleteReservation(){
@@ -53,8 +66,8 @@ function saveReservation(){
       },
       body: JSON.stringify({
         id: modalResaId.value,
-        startDate: toISO(formattedSelectedDateStart),
-        endDate: toISO(formattedSelectedDateEnd),
+        startDate: selStart ? toISO(selStart) : null,
+        endDate: selEnd ? toISO(selEnd) : null,
         guests: modalResaGuests.value,
         lastname: modalResaLastName.value,
         firstname: modalResaFisrtName.value,
@@ -76,14 +89,6 @@ function saveReservation(){
       else showToast(data.message, "success");
 
       if(data.reservations){
-        modalResaId.value = "";
-        modalResaLastName.value = "";
-        modalResaFisrtName.value = "";
-        modalResaEmail.value = "";
-        modalResaPhone.value = "";
-        modalResaGuests.value = "";
-        modalResaTotalPrice.value = "";
-        modalResaType.value = "";
         updateBlockedDateRange(data.reservations);
         renderCalendar();
       }
@@ -92,6 +97,7 @@ function saveReservation(){
       showToast('Une erreur est survenue, veuillez de nouveau renseigner le formulaire de réservation', "danger");
     });
 
+    closeModal();
 }
 
 function getReservation(resID){
@@ -112,7 +118,6 @@ function getReservation(resID){
     .then(data => {
       reservation = data;
       renderReservation(reservation);
-      console.info(data);
     })
     .catch((err, data)  => {
       showToast('Une erreur est survenue : ' + err , "danger");
@@ -178,24 +183,21 @@ function onPick(d, reservationData){
             dashboardModalLayerReservationChoice.classList.add("hidden");
             dashboardEditModal.classList.remove("hidden");
             dashboardEditModal.classList.add("flex");
-            resetSelection();
         }
         renderCalendar();
     }
     else if(selectionMode == "EDIT"){
-        if(reservationData.length > 1){
-            renderReservationList(reservationData);
-            dashboardModalLayerReservationEdit.classList.add("hidden");
-            dashboardModalLayerReservationChoice.classList.remove("hidden");
-            dashboardEditModal.classList.remove("hidden");
-            dashboardEditModal.classList.add("flex");
-        }else if(reservationData.length == 1){
-            getReservation(reservationData[0].id)
-            dashboardModalLayerReservationEdit.classList.remove("hidden");
-            dashboardModalLayerReservationChoice.classList.add("hidden");
-            dashboardEditModal.classList.remove("hidden");
-            dashboardEditModal.classList.add("flex");
-        }
+      selStart = null;
+      selEnd = null;
+      if(reservationData.length > 1){
+          renderReservationList(reservationData);
+          dashboardModalLayerReservationEdit.classList.add("hidden");
+          dashboardModalLayerReservationChoice.classList.remove("hidden");
+          dashboardEditModal.classList.remove("hidden");
+          dashboardEditModal.classList.add("flex");
+      }else if(reservationData.length == 1){
+          getReservation(reservationData[0].id)
+      }
     }
 }
 
@@ -203,15 +205,18 @@ function renderReservationList(reservationData){
     const listWrap = document.getElementById('modalReservationListWrap');
     listWrap.innerHTML = '';
 
+    reservationData.sort((a,b) => new Date(a.startDate) - new Date(b.startDate));
     reservationData.forEach((r, idx) => {
         const row = document.createElement('div');
-        row.className = 'p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2';
+        row.className = 'p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 cursor-pointer hover:bg-cyan-50';
+
+        row.addEventListener("click", () => getReservation(r.id));
 
         // Left: label + dates
         const left = document.createElement('div');
         left.className = 'min-w-0';
         const title = document.createElement('div');
-        title.className = 'text-sm font-medium text-gray-800 truncate';
+        title.className = 'text-sm font-medium text-cyan-600 truncate';
         title.textContent = r.guestName ? r.guestName : `Réservation #${r._id ?? (idx+1)}`;
 
         const dates = document.createElement('div');
@@ -226,7 +231,7 @@ function renderReservationList(reservationData){
         right.className = 'flex items-center gap-2 flex-wrap';
         // Example badges (you can remove or adapt)
         const badge = document.createElement('span');
-        badge.className = 'px-2 py-0.5 text-xs rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200';
+        badge.className = 'px-2 py-0.5 text-xs rounded-full bg-cyan-50 text-cyan-600 border border-cyan-600';
         // nights calculation
         const nights = computeNight(r.startDate, r.endDate);
         badge.textContent = `${nights} nuit${nights>1?'s':''}`;
@@ -247,6 +252,17 @@ function renderReservation(reservationData){
   modalResaGuests.value = reservationData.guests;
   modalResaTotalPrice.value = reservationData.totalPrice;
   modalResaType.value = reservationData.type;
+  
+  dashboardModalLayerReservationEdit.classList.remove("hidden");
+  dashboardModalLayerReservationChoice.classList.add("hidden");
+  dashboardEditModal.classList.remove("hidden");
+  dashboardEditModal.classList.add("flex");
+}
+
+function getColorForReservationType(type){
+  if(type == "SITE") return ' bg-cyan-600';
+  else if(type == "AIRBNB") return ' bg-pink-600';
+  else if(type == "LBC") return ' bg-orange-600';
 }
 
 function renderCalendar(){
@@ -291,15 +307,16 @@ function renderCalendar(){
         cls = 'bg-gray-200 text-gray-400 cursor-not-allowed line-through';
     }
     else if(disabledAMPM){
-        cellSecondOverlay.className += ' '+ ' cal-cell-end-reservation bg-cyan-600 border-r-4 border-solid border-cyan-900 h-1/2 w-full';
-        cellOverlay.className += ' '+ ' cal-cell-start-reservation bg-cyan-600 border-l-4 border-solid border-cyan-900 h-1/2 w-full'
-        lastSettings = 'bg-cyan-600';
+        cellSecondOverlay.className += ' '+ lastSettings + ' cal-cell-end-reservation border-r-4 border-solid border-cyan-900 h-1/2 w-full';
+        lastSettings = getColorForReservationType(reservationData[1].type);
+        cellOverlay.className += ' '+ lastSettings + ' cal-cell-start-reservation border-l-4 border-solid border-cyan-900 h-1/2 w-full'
     }
-    else if(disabledAM){ 
+    else if(disabledAM){
         cls = 'cal-cell-blocked-am';
         cellOverlay.className += ' ' + lastSettings + ' '+ 'cal-cell-end-reservation border-r-4 border-solid border-cyan-900 h-1/2 w-full'
     }
     else if(disabledPM){
+        lastSettings = getColorForReservationType(reservationData[0].type);
         cls = 'cal-cell-blocked-pm';
         cellOverlay.className += ' ' + lastSettings +' '+ 'cal-cell-start-reservation border-l-4 border-solid border-cyan-900 h-1/2 w-full'
     }
