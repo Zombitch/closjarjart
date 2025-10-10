@@ -35,7 +35,7 @@
         WORKDIR /opt/closjarjart/
         RUN wget https://github.com/Zombitch/closjarjart/archive/refs/heads/main.zip
         RUN unzip main.zip && rm -f main.zip
-        WORKDIR /opt/closjarjart/closjarjart-main/closjarjart
+        WORKDIR /opt/closjarjart/closjarjart-main
         RUN echo "NODE_ENV=production" >> .env
         RUN echo "PORT=4200" >> .env
         RUN echo "SESSION_SECRET={{ sessionSecret }}" >> .env
@@ -76,7 +76,7 @@
       container_default_behavior: no_defaults
       name: closjarjart
       image: closjarjart
-      hostname: closjarjart_host
+      hostname: "{{ host }}"
       state: started
       restart_policy: always
       exposed_ports :
