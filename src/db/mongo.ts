@@ -1,15 +1,16 @@
 import mongoose from 'mongoose';
+import env from '../core/env';
 
 export async function connectMongo() {
-  const uri = process.env.MONGO_URI || 'mongodb://localhost:27017';
-
-  await mongoose.connect(uri, {
+  await mongoose.connect(env.mongoUri, {
     serverSelectionTimeoutMS: 5000,
     appName: 'closjarjart-app',
   });
+
   mongoose.connection.on('connected', () => {
     console.log('✅ Mongo connecté');
   });
+
   mongoose.connection.on('error', (err) => {
     console.error('❌ Erreur connexion Mongo :', err);
     process.exit(1);

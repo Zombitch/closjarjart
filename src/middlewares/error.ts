@@ -1,24 +1,38 @@
 import { Request, Response, NextFunction } from 'express';
+import env from '../core/env';
+
+type KnownError = Error & {
+  status?: number;
+  publicMessage?: string;
+};
 
 export default function errorHandler(
-  err: any,
+  err: KnownError,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
-  const isProd = process.env.NODE_ENV === 'production';
-  const status = err?.status || 500;
-  const payload: any = { error: true, message: 'Internal Server Error' };
+  const status = err?.status ?? 500;
+  const payload: { error: true; message: string; debug?: { message?: string; stack?: string } } = {
+    error: true,
+    message: 'Internal Server Error',
+  };
 
-  // Message contrôlé si on l’a fixé côté app (ex: validation)
-  if (err?.publicMessage) payload.message = err.publicMessage;
+  if (err?.publicMessage) {
+    payload.message = err.publicMessage;
+  }
 
-  // En dev, aider au debug
-  if (!isProd) {
-    payload.debug = {
-      message: err?.message,
-      stack: err?.stack
-    };
+  if (!env.isProd) {
+    const debug: { message?: string; stack?: string } = {};
+    if (err?.message) {
+      debug.message = err.message;
+    }
+    if (err?.stack) {
+      debug.stack = err.stack;
+    }
+    if (Object.keys(debug).length > 0) {
+      payload.debug = debug;
+    }
   }
 
   res.status(status).json(payload);

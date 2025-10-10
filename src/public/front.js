@@ -88,19 +88,21 @@ function computeNightPriceTotal(){
 // Send data forms
 function submitBooking(){
   const nbGuests = document.getElementById('guests');
-  const token = document.getElementById('_csrf').value;
+  const tokenInput = document.getElementById('_csrf');
   const emailInput = document.getElementById('email');
   const telInput = document.getElementById('tel');
   const lastnameInput = document.getElementById('lastname');
   const firstnameInput = document.getElementById('firstname');
-  
+
   if(dateStartInput && dateEndInput && nbGuests){
-    fetch('/', {
+    if (tokenInput && tokenInput.value) {
+      window.__CSRF_TOKEN__ = tokenInput.value;
+    }
+
+    csrfFetch('/', {
       method: 'POST',
-      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',
-        'x-csrf-token': token
       },
       body: JSON.stringify({
         startDate: dateStartInput.value,
@@ -135,7 +137,7 @@ function submitBooking(){
         updateBlockedDateRange(data.reservations);
       }
     })
-    .catch((err, data)  => {
+    .catch((err)  => {
       showToast('Une erreur est survenue, veuillez de nouveau renseigner le formulaire de réservation', "danger");
     });
   }

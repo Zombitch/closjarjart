@@ -36,9 +36,8 @@ function resetModalForm(){
 }
 
 function deleteReservation(){
-    fetch("/reservation/"+reservation._id, {
+    csrfFetch("/reservation/"+reservation._id, {
       method: 'DELETE',
-      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -58,9 +57,8 @@ function deleteReservation(){
 }
 
 function saveReservation(){
-  fetch('/reservation', {
+  csrfFetch('/reservation', {
       method: 'POST',
-      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -101,9 +99,8 @@ function saveReservation(){
 }
 
 function getReservation(resID){
-    fetch("/reservation/"+resID, {
+    csrfFetch("/reservation/"+resID, {
       method: 'GET',
-      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
       }

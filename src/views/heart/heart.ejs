@@ -2,6 +2,7 @@
 <body class="bg-gray-50 min-h-screen md:p-4">
   <main class="flex-1 pb-10 flex items-center justify-center">
     <form enctype="multipart/form-data" action="/heart" method="post" class="w-full md:max-w-4xl bg-white rounded-2xl shadow p-6 min-h-[calc(100vh-4rem)] flex flex-col">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <!-- Tab navigation -->
       <div class="flex border-b mb-4 overflow-y-auto">
         <a data-tab="price" class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-800">

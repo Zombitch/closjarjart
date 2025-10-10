@@ -1,7 +1,7 @@
 <header class="flex flex-wrap items-center gap-2 mb-3">
   <div class="flex items-center gap-2">
     <% if (photos.length > 1) { %>
-      <a id="deleteAllBtn" class="w-full sm:w-auto px-3 py-1.5 rounded bg-red-500 text-white text-sm hover:bg-red-600" onclick="fetch('/heart/photos',{method:'DELETE'}).then(function(data) {window.location.reload();});">
+      <a id="deleteAllBtn" class="w-full sm:w-auto px-3 py-1.5 rounded bg-red-500 text-white text-sm hover:bg-red-600" onclick="csrfFetch('/heart/photos',{method:'DELETE'}).then(function() {window.location.reload();});">
         Delete all photos
       </a>
     <% } %>
@@ -24,8 +24,8 @@
                 <% if(photo.default == true) { %><span class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-0.5 rounded">Mis en avant</span><% } %>
 
                 <div class="absolute bottom-2 left-1/2 -translate-x-1/2">
-                    <a class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600" onclick="fetch('/heart/photo/<%= photo._id %>',{method:'DELETE'})">Supprimer</a>
-                    <% if(photo.default != true) { %><a class="px-2 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700" onclick="fetch('/heart/photo/setDefault/<%= photo._id %>',{method:'POST'}).then(function(data) {window.location.reload();});">Defaut</a><% } %>
+                    <a class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600" onclick="csrfFetch('/heart/photo/<%= photo._id %>',{method:'DELETE'})">Supprimer</a>
+                    <% if(photo.default != true) { %><a class="px-2 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700" onclick="csrfFetch('/heart/photo/setDefault/<%= photo._id %>',{method:'POST'}).then(function() {window.location.reload();});">Defaut</a><% } %>
                 </div>
             </div>            
         <% }); %>

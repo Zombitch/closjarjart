@@ -1,23 +1,24 @@
-import { doubleCsrf, DoubleCsrfUtilities } from 'csrf-csrf';
-
-const isProd = process.env.NODE_ENV === 'production';
+import { doubleCsrf } from 'csrf-csrf';
+import env from './env';
 
 const {
   doubleCsrfProtection,
   generateCsrfToken,
   invalidCsrfTokenError,
 } = doubleCsrf({
-  // clé(s) secrète(s) forte(s) — idéalement rotation possible
-  getSecret: () => process.env.CSRF_SECRET!,
-  // identifiant unique de session / utilisateur (ex: req.session.id)
-  getSessionIdentifier: (req) => (req.session as any)?.id ?? req.ip,
-  cookieName: "x-csrf-token",            // en dev, pas de préfixe __Host-
+  getSecret: () => env.csrfSecret,
+  getSessionIdentifier: (req) => req.sessionID ?? req.ip,
+  cookieName: 'x-csrf-token',
   cookieOptions: {
     httpOnly: true,
-    sameSite: "lax",
-    secure: isProd,
+    sameSite: 'lax',
+    secure: env.isProd,
+    path: '/',
   },
-  getCsrfTokenFromRequest: (req) => req.headers['x-csrf-token'] || req.body?._csrf || req.query?._csrf
+  getCsrfTokenFromRequest: (req) =>
+    (req.headers['x-csrf-token'] as string | undefined) ||
+    (req.body && (req.body as Record<string, unknown>)._csrf as string | undefined) ||
+    (req.query && req.query._csrf as string | undefined),
 });
 
 const InvalidCsrfErrorClass = invalidCsrfTokenError as unknown as new (...args: any[]) => Error;

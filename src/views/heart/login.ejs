@@ -22,6 +22,7 @@
         <!-- Carte formulaire -->
         <div class="rounded-2xl border border-white/60 backdrop-blur bg-white/80 light:bg-slate-900/70 light:border-white/10 shadow-soft">
           <form id="loginForm" class="p-5 sm:p-6" action="/auth/login" method="post" novalidate>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div class="space-y-4">
               <label class="grid gap-1 text-sm">
                 <span class="text-slate-700 light:text-slate-200">Email</span>
