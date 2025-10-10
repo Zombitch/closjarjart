@@ -36,8 +36,9 @@ const sanitizeValue = (value: unknown, depth = 0): Loggable => {
   return String(value);
 };
 
-const buildLogContext = (req: Request) => ({
+const buildLogContext = (req: Request, res: Response) => ({
   ip: req.ip,
+  status: res.statusCode,
   method: req.method,
   url: req.originalUrl,
   params: sanitizeValue(req.params),
@@ -49,29 +50,11 @@ const buildLogContext = (req: Request) => ({
 const requestLogger = (req: Request, res: Response, next: NextFunction) => {
   const requestId = randomUUID();
   const startTime = process.hrtime.bigint();
-  const startMessage = buildLogContext(req);
+  const startMessage = buildLogContext(req, res);
 
-  console.info(`[Request:${requestId}] Incoming`, startMessage);
-
-  const logCompletion = (event: 'finish' | 'close' | 'error', error?: Error) => {
-    const durationMs = Number(process.hrtime.bigint() - startTime) / 1_000_000;
-    const logBase = {
-      requestId,
-      statusCode: res.statusCode,
-      event,
-      durationMs: Number.isFinite(durationMs) ? Number(durationMs.toFixed(2)) : durationMs,
-    };
-
-    if (error) {
-      console.error(`[Request:${requestId}] Error`, { ...logBase, error: error.message, stack: error.stack });
-    } else {
-      console.info(`[Request:${requestId}] Completed`, logBase);
-    }
-  };
-
-  res.on('finish', () => logCompletion('finish'));
-  res.on('close', () => logCompletion('close'));
-  res.on('error', (err) => logCompletion('error', err));
+  if(!startMessage.url.startsWith("/static")){
+    console.info(`${new Date()} `, startMessage);
+  }
 
   next();
 };
