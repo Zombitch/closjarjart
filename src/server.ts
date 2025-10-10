@@ -15,6 +15,7 @@ import hpp from 'hpp';
 import morgan from 'morgan';
 import mongoSanitize from 'express-mongo-sanitize';
 import { connectMongo, disconnectMongo } from './db/mongo';
+import requestLogger from './middlewares/requestLogger';
 
 import homeRouter from './routes/index';
 import authRouter from './routes/auth';
@@ -48,6 +49,7 @@ app.use(hpp());
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(requestLogger);
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
