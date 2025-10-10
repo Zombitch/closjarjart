@@ -23,7 +23,6 @@
         <div id="tab-price" class="tab-panel">
           <div class="space-y-5">
             <%- include('../partials/heart/tarifs.ejs') %>
-            <%- include('../partials/heart/extras.ejs') %>
           </div>
         </div>
 
@@ -85,7 +84,8 @@
 </body>
 
 <script type="text/javascript">
-  setConfig(JSON.parse('<%- blockedDate %>'), JSON.parse('<%- config.max_guests %>'))
+  setConfig(JSON.parse('<%- blockedDate %>'), JSON.parse('<%- config.max_guests %>'), JSON.parse('<%- config.maintenance %>'))
 </script>
+<script type="text/javascript" src="/static/heart.js" defer></script>
 <script type="text/javascript" src="/static/calendar_dashboard.js" defer></script>
 </html>

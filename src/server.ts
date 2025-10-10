@@ -8,6 +8,7 @@ import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { doubleCsrfProtection, generateCsrfToken, isCsrfError } from './core/csrf';
+import ConfigModel from './models/config';
 import rateLimit from 'express-rate-limit';
 import slowDown from 'express-slow-down';
 import hpp from 'hpp';
@@ -107,6 +108,17 @@ app.use((req, res, next) => {
   next();
 });
 
+connectMongo()
+.then(() => {
+  app.listen(PORT, () => {
+    console.log(`✅ Server on http://localhost:${PORT} (env=${process.env.NODE_ENV})`);
+  });
+})
+.catch((err) => {
+  console.error('❌ Failed to connect Mongo:', err);
+  process.exit(1);
+});
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use('/static', express.static(path.join(__dirname, 'public'), {
@@ -117,6 +129,19 @@ app.use('/static', express.static(path.join(__dirname, 'public'), {
 // Expose le helper à tes vues (EJS)
 app.use((req, res, next) => {
   (res.locals as any).csrfToken = generateCsrfToken(req, res);
+  next();
+});
+
+app.use(async (req, res, next) => {
+  const config = await ConfigModel.findOne().sort({ createdAt: -1 });
+
+  if (req.path.startsWith("/heart") || req.path.startsWith("/auth") || req.path.startsWith("/reservation")) return next();
+
+  if (config?.maintenance == "true") {
+    res.status(503);
+    res.set("Retry-After", "3600");
+    return res.sendFile(path.join(__dirname, "public", "503.html"));
+  }
   next();
 });
 
@@ -154,15 +179,4 @@ process.on('unhandledRejection', (reason) => {
 process.on('SIGINT', async () => {
   await disconnectMongo();
   process.exit(0);
-});
-
-connectMongo()
-.then(() => {
-  app.listen(PORT, () => {
-    console.log(`✅ Server on http://localhost:${PORT} (env=${process.env.NODE_ENV})`);
-  });
-})
-.catch((err) => {
-  console.error('❌ Failed to connect Mongo:', err);
-  process.exit(1);
 });

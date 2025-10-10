@@ -14,7 +14,8 @@ const ConfigSchema = new Schema({
   rules: { type: String, default:''},
   equipments: { type: Array, default:[]},
   games: { type: Array, default:[]},
-  createdAt: { type: Date, default: Date.now, index: true }
+  createdAt: { type: Date, default: Date.now, index: true },
+  maintenance: { type: String, default:  false }
 }, { versionKey: false });
 
 export type Config = InferSchemaType<typeof ConfigSchema>;

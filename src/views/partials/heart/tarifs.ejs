@@ -5,17 +5,20 @@
 
 <section>
     <div class="grid grid-cols-1 gap-3">
-    <label class="text-sm grid gap-1">Prix / nuit (€)
-        <input name="price" id="cfg_price_night" type="number" min="0" step="1" class="rounded-lg border px-3 py-2" placeholder="120" value="<%= config.price %>"/>
-    </label>
-    <label class="text-sm grid gap-1">Frais de ménage (€)
-        <input name="cleaning_fees" id="cfg_cleaning_fees" type="number" min="0" step="1" class="rounded-lg border px-3 py-2" placeholder="35" value="<%= config.cleaning_fees %>"/>
-    </label>
-    <label class="text-sm grid gap-1">Taxe (%)
-        <input name="tax_rate" id="cfg_tax_rate" type="number" min="0" step="0.1" class="rounded-lg border px-3 py-2" placeholder="10" value="<%= config.tax_rate %>"/>
-    </label>
-    <label class="text-sm grid gap-1">Max voyageurs
-        <input name="max_guests" id="cfg_max_guests" type="number" min="0" max="10" step="1" class="rounded-lg border px-3 py-2" placeholder="4" value="<%= config.max_guests %>"/>
-    </label>
+        <label class="text-sm grid gap-1">Prix / nuit (€)
+            <input name="price" id="cfg_price_night" type="number" min="0" step="1" class="rounded-lg border px-3 py-2" placeholder="120" value="<%= config.price %>"/>
+        </label>
+        <label class="text-sm grid gap-1">Max voyageurs
+            <input name="max_guests" id="cfg_max_guests" type="number" min="0" max="10" step="1" class="rounded-lg border px-3 py-2" placeholder="4" value="<%= config.max_guests %>"/>
+        </label>
+        <label class="text-sm grid gap-1">Mainteance
+            <div class="flex items-center gap-4">
+                <input id="toogleMaintenanceInput" name="maintenance" type="hidden" value="<%= config.maintenance %>"/>
+                <span id="toggleMaintenanceLabel" class="text-gray-600 font-medium">Désactivé</span>
+                <a id="toggleMaintenanceBtn" class="relative w-14 h-8 flex items-center rounded-full transition-colors duration-300 bg-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                    <span id="toggleMaintenanceCircle" class="absolute left-1 w-6 h-6 bg-white rounded-full shadow transform transition-transform duration-300"></span>
+                </a>
+            </div>
+        </label>
     </div>
 </section>

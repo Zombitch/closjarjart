@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maintenance — Clos Jarjart</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center text-center text-slate-700 p-6">
+
+  <!-- Logo -->
+  <img src="/static/closjarjart_min.png" alt="Logo Clos Jarjart" class="w-32 h-auto mb-6" />
+
+  <!-- Titre -->
+  <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-slate-800">
+    Le site est actuellement en maintenance
+  </h1>
+
+  <!-- Texte principal -->
+  <p class="text-lg text-slate-600 max-w-lg mb-8">
+    Nous effectuons actuellement une mise à jour afin d’améliorer votre expérience.  
+    Le site sera de retour très bientôt. Merci pour votre patience 💫
+  </p>
+
+  <!-- Footer -->
+  <footer class="mt-10 text-xs text-slate-400">
+    © <span id="year"></span> Clos Jarjart — Tous droits réservés.
+  </footer>
+
+  <script>
+    // Remplit automatiquement l’année
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
