@@ -8,13 +8,17 @@ const {
   invalidCsrfTokenError,
 } = doubleCsrf({
   // clé(s) secrète(s) forte(s) — idéalement rotation possible
-  getSecret: () => process.env.CSRF_SECRET!,
+  getSecret: () => {
+    const secret = process.env.CSRF_SECRET;
+    if (!secret) throw new Error('Missing CSRF_SECRET environment variable.');
+    return secret;
+  },
   // identifiant unique de session / utilisateur (ex: req.session.id)
   getSessionIdentifier: (req) => (req.session as any)?.id ?? req.ip,
   cookieName: "x-csrf-token",            // en dev, pas de préfixe __Host-
   cookieOptions: {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "strict",
     secure: isProd,
   },
   getCsrfTokenFromRequest: (req) => req.headers['x-csrf-token'] || req.body?._csrf || req.query?._csrf

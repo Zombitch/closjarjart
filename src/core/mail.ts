@@ -4,16 +4,16 @@ import { htmlToText } from 'html-to-text';
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
+const transporter = process.env.SMTP_USER && process.env.SMTP_PWD ? nodemailer.createTransport({
     service: "gmail",
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PWD,
     },
-});
+}) : null;
 
 export function sendMail(to: string, replyTo: string, subject: string, html: string){
-    if(process.env.SEND_MAIL == "true"){
+    if(transporter && process.env.SEND_MAIL == "true"){
         return transporter.sendMail({
             from: '"CLOS JARJART" <maxime.vinais.fb@gmail.com>',
             replyTo: replyTo,
