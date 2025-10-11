@@ -82,6 +82,6 @@
       exposed_ports :
         - 4000
       volumes:
-        - closjarjart_data:/opt/closjarjart/closjarjart-main/closjarjart/data
+        - closjarjart_data:/opt/closjarjart/closjarjart-main/src/public/
       networks:
         - name: "{{ network }}"
