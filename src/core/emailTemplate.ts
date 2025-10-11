@@ -89,7 +89,7 @@ export const buildReservationRequestEmail = ({
                       <tr><td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;padding:6px 0;border-top:1px solid #e5e7eb;"><strong style="color:#0092b8">Téléphone:</strong></td><td align="right"><a href="tel:${phoneNumber}" style="color:#0f172a;text-decoration:none;">${phoneNumber}</a></td></tr>
                       <tr><td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;padding:6px 0;border-top:1px solid #e5e7eb;"><strong style="color:#0092b8">Email:</strong></td><td align="right"><a href="mailto:${email}" style="color:#0f172a;text-decoration:none;">${email}</a></td></tr>
                       <tr><td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;padding:6px 0;border-top:1px solid #e5e7eb;"><strong style="color:#0092b8">Nombre de personne:</strong></td><td align="right">${guests}</td></tr>
-                      <tr><td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;padding:6px 0;border-top:1px solid #e5e7eb;"><strong style="color:#0092b8">Nombre de personne:</strong></td><td align="right"><strong style="color:#0092b8">${price}&euro;</strong></td></tr>
+                      <tr><td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;padding:6px 0;border-top:1px solid #e5e7eb;"><strong style="color:#0092b8">Prix (total):</strong></td><td align="right"><strong style="color:#0092b8">${price}&euro;</strong></td></tr>
                     </table>
                   </td>
                 </tr>
