@@ -128,6 +128,15 @@ app.use('/static', express.static(path.join(__dirname, 'public'), {
   maxAge: isProd ? '30d' : 0
 }));
 
+app.get('/robots.txt', (_req, res) => {
+  res.type('text/plain');
+  res.send([
+    'User-agent: *',
+    'Allow: /',
+    'Disallow: /heart'
+  ].join('\n'));
+});
+
 // Expose le helper à tes vues (EJS)
 app.use((req, res, next) => {
   (res.locals as any).csrfToken = generateCsrfToken(req, res);
