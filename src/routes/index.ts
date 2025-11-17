@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import PhotoModel from '../models/photo';
 import ConfigModel from '../models/config';
+import VisitModel from '../models/visit';
 import {ObjectId} from 'mongodb';
 import Reservation from '../models/reservation';
 import { doubleCsrfProtection } from '../core/csrf';
@@ -18,6 +19,8 @@ router.get('/', async (_req, res) => {
   if(!config) config = await ConfigModel.create({});  
   
   const reservationArray = await getReservationsAsArray();
+
+  VisitModel.create({ip:_req.ip});
   
   res.render('index', {photoDefault: photoDefault, photos: photos, config: config, blockedDate:JSON.stringify(reservationArray)});
 });

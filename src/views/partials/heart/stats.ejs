@@ -1,0 +1,41 @@
+<header class="mb-5">
+    <h1 class="text-2xl font-semibold text-slate-800">Statistique du site</h1>
+    <p class="text-sm text-slate-500">Nombre de visites</p>
+</header>
+
+<% if (visits.length === 0) { %>
+    Il n'y a pas eu de visite pour l'instant.
+<% } else { %>
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+          <tr>
+            <th class="px-4 py-3 text-left">Années</th>
+            <th class="px-4 py-3 text-left">Mois</th>
+            <th class="px-4 py-3 text-right">Nb. Visites</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-200">
+          <% if (visits.length === 0) { %>
+            <tr>
+              <td colspan="3" class="px-4 py-4 text-center text-gray-500">
+                Il n'y a pas eu encore de visite.
+              </td>
+            </tr>
+          <% } else { %>
+
+            <% visits.forEach(v => { %>
+              <tr>
+                <td class="px-4 py-3"><%= v.year %></td>
+                <td class="px-4 py-3"><%= v.monthName %></td>
+                <td class="px-4 py-3 text-right font-medium"><%= v.count %></td>
+              </tr>
+            <% }) %>
+
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+<% } %>
+

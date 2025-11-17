@@ -4,6 +4,7 @@ import { requireAuth } from '../middlewares/auth';
 import { makeImageUpload, processImageUploadToDatabase, safeUnlink } from '../core/upload';
 import PhotoModel from '../models/photo';
 import ConfigModel from '../models/config';
+import VisitModel from '../models/visit';
 import {ObjectId} from 'mongodb';
 import { getReservationsAsArray } from '../core/reservation';
 import Reservation from '../models/reservation';
@@ -60,12 +61,37 @@ router.get('/', requireAuth, async (req, res) => {
   // Get all photos
   const photos = await PhotoModel.find().sort({ createdAt: -1 }).limit(50).lean();
   let config = await ConfigModel.findOne().sort({ createdAt: -1 });
+  const monthlyVisits = await VisitModel.aggregate([
+    {
+      $group: {
+        _id: {
+          year: { $year: "$createdAt" },
+          month: { $month: "$createdAt" },
+        },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { "_id.year": 1, "_id.month": 1 },
+    },
+  ]);
+  const monthNames = [
+    "Jan", "Fev", "Mar", "Avr", "Mai", "Juin",
+    "Juil", "Aout", "Sep", "Oct", "Nov", "Dec"
+  ];
+
+  const visits = monthlyVisits.map(({ _id, count }) => ({
+    year: _id.year,
+    month: _id.month,
+    monthName: monthNames[_id.month - 1],
+    count,
+  }));
 
   if(!config) config = await ConfigModel.create({});
 
   const reservationArray = await getReservationsAsArray();
 
-  res.render('heart/heart', { photos: photos, config: config, blockedDate:JSON.stringify(reservationArray)});
+  res.render('heart/heart', { photos: photos, config: config, blockedDate:JSON.stringify(reservationArray), visits:visits});
 });
 
 router.post('/', upload.array('cfg_photos', 6), requireAuth, async (req, res) => {
