@@ -17,6 +17,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import { connectMongo, disconnectMongo } from './db/mongo';
 import requestLogger from './middlewares/requestLogger';
 
+import sitemapRouter from './routes/sitemap';
 import homeRouter from './routes/index';
 import authRouter from './routes/auth';
 import heartRouter from './routes/heart';
@@ -156,6 +157,8 @@ app.use(async (req, res, next) => {
   next();
 });
 
+
+app.use('/sitemap.xml', sitemapRouter);
 app.use('/', homeRouter);
 app.use('/auth', authRouter);
 app.use('/heart', heartRouter);
