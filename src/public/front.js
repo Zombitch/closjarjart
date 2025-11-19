@@ -1,3 +1,66 @@
+
+
+  let currentPhotoIndex = 0;
+  const lightbox = document.getElementById('photoLightbox');
+  const lightboxImage = document.getElementById('lightboxImage');
+  const lightboxCounter = document.getElementById('lightboxCounter');
+
+  function updateLightbox() {
+      if (!getLightboxPhotos().length) return;
+      const photo = getLightboxPhotos()[currentPhotoIndex];
+      if (photo) {
+          lightboxImage.src = photo.url;
+          lightboxCounter.textContent = `${currentPhotoIndex + 1} / ${getLightboxPhotos().length}`;
+      }
+  }
+
+  function openLightbox(index) {
+      if (!getLightboxPhotos().length) return;
+      currentPhotoIndex = index;
+      updateLightbox();
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      document.body.classList.add('overflow-hidden');
+  }
+
+  function closeLightbox() {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.classList.remove('overflow-hidden');
+  }
+
+  function nextPhoto() {
+      currentPhotoIndex = (currentPhotoIndex + 1) % getLightboxPhotos().length;
+      updateLightbox();
+  }
+
+  function previousPhoto() {
+      currentPhotoIndex = (currentPhotoIndex - 1 + getLightboxPhotos().length) % getLightboxPhotos().length;
+      updateLightbox();
+  }
+
+  lightbox?.addEventListener('click', (event) => {
+      if (event.target === lightbox) {
+          closeLightbox();
+      }
+  });
+
+  window.addEventListener('keydown', (event) => {
+      if (lightbox.classList.contains('hidden')) return;
+      if (event.key === 'Escape') {
+          closeLightbox();
+      } else if (event.key === 'ArrowRight') {
+          nextPhoto();
+      } else if (event.key === 'ArrowLeft') {
+          previousPhoto();
+      }
+  });
+
+  window.openLightbox = openLightbox;
+  window.closeLightbox = closeLightbox;
+  window.nextPhoto = nextPhoto;
+  window.previousPhoto = previousPhoto;
+
 // Affiche le toast
 function showToast(msg, type){
   const t = document.getElementById('toast');

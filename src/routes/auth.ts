@@ -6,7 +6,7 @@ import { requireAuth } from '../middlewares/auth';
 const router = Router();
 const SALT_ROUNDS = 12;
 
-router.post('/register', async (req, res, next) => {
+/*router.post('/register', async (req, res, next) => {
   try {
     const { email, password } = req.body as { email: string; password: string };
     if (!email || !password) return res.status(400).json({ error: true, message: 'email et password requis' });
@@ -21,7 +21,7 @@ router.post('/register', async (req, res, next) => {
     req.session.roles = user.roles;
     res.status(201).json({ ok: true, user: { id: user._id, email: user.email } });
   } catch (e) { next(e); }
-});
+});*/
 
 router.post('/login', async (req, res, next) => {
   try {
@@ -34,7 +34,6 @@ router.post('/login', async (req, res, next) => {
     const ok = await bcrypt.compare(password, user.passwordHash);
     if (!ok) return res.status(401).json({ error: true, message: 'Identifiants invalides' });
 
-    console.log(req.session);
     req.session.userId = String(user._id);
     req.session.roles = user.roles;
     res.redirect('/heart');

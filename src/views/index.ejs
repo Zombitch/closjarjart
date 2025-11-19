@@ -157,6 +157,6 @@
   <%- include('./partials/footer.ejs') %>
 </body>
 <script type="text/javascript">
-  setConfig(JSON.parse('<%- blockedDate %>'), JSON.parse('<%- config.max_guests %>'))
+  setConfig(JSON.parse('<%- blockedDate %>'), JSON.parse('<%- config.max_guests %>'), <%- JSON.stringify(photos) %> )
 </script>
 </html>

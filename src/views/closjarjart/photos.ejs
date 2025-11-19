@@ -6,3 +6,28 @@
     <% if(photos.length >= 4){ %><img src="<%= photos[3].url %>" alt="Salle de bain" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(3)"/><% } %>
     <% if(photos.length >= 5){ %><img src="<%= photos[4].url %>" alt="Terrasse" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(4)"/><% } %>
 </div>
+
+<!-- Lightbox / Carousel -->
+<div id="photoLightbox" class="hidden fixed inset-0 z-50 bg-black/90 text-white items-center justify-center px-4 py-8">
+    <button type="button" class="absolute top-5 right-5 rounded-full bg-white/10 p-2 text-white hover:bg-white/20" onclick="closeLightbox()" aria-label="Fermer la galerie">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path d="m6.225 4.811 13 13-1.414 1.414-13-13z"/><path d="m17.811 4.811 1.414 1.414-13 13-1.414-1.414z"/></svg>
+    </button>
+    <div class="relative w-full max-w-4xl flex items-center gap-3">
+        <button type="button" class="hidden sm:flex p-3 rounded-full bg-white/10 hover:bg-white/20" onclick="previousPhoto()" aria-label="Photo précédente">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
+        </button>
+        <div class="flex-1">
+            <img id="lightboxImage" src="" alt="Galerie Closjarjart" class="w-full max-h-[75vh] object-contain rounded-2xl shadow-soft" />
+            <div class="mt-4 flex justify-between text-xs uppercase tracking-wide opacity-80">
+                <span id="lightboxCounter"></span>
+            </div>
+        </div>
+        <button type="button" class="hidden sm:flex p-3 rounded-full bg-white/10 hover:bg-white/20" onclick="nextPhoto()" aria-label="Photo suivante">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
+        </button>
+    </div>
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 sm:hidden">
+        <button type="button" class="px-4 py-2 rounded-full bg-white/10" onclick="previousPhoto()">Précédente</button>
+        <button type="button" class="px-4 py-2 rounded-full bg-white/10" onclick="nextPhoto()">Suivante</button>
+    </div>
+</div>
