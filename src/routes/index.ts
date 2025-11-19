@@ -14,6 +14,7 @@ const router = Router();
 router.get('/', async (_req, res) => {
   const photoDefault = await PhotoModel.findOne({ default: true }).sort({ createdAt: -1 }).limit(50).lean();
   const photos = await PhotoModel.find({ default: false }).sort({ createdAt: 1 }).limit(50).lean();
+  const lightboxPhotos = await PhotoModel.find().sort({ createdAt: 1 }).limit(50).lean();
   let config = await ConfigModel.findOne().sort({ createdAt: -1 });
   
   if(!config) config = await ConfigModel.create({});  
@@ -22,7 +23,7 @@ router.get('/', async (_req, res) => {
 
   VisitModel.create({ip:_req.ip});
   
-  res.render('index', {photoDefault: photoDefault, photos: photos, config: config, blockedDate:JSON.stringify(reservationArray)});
+  res.render('index', {photoDefault: photoDefault, photos: photos, lightboxPhotos:lightboxPhotos, config: config, blockedDate:JSON.stringify(reservationArray)});
 });
 
 router.post('/', doubleCsrfProtection, async (req, res, next) => {
