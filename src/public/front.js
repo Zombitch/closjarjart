@@ -48,7 +48,7 @@ if(dateEnd){
     if(dateStartInput && dateEndInput && nights){
       const totalNightPrice = computeNightPriceTotal();
       nights.innerText = computeNight(dateStartInput.value, dateEndInput.value);
-      fees_management.innerText = computeFees(totalNightPrice);
+      if(fees_management) fees_management.innerText = computeFees(totalNightPrice);
       total_price.innerText = computeTotal();
     }
   });
@@ -66,13 +66,13 @@ function computeNight(dateStringStart, dateStringEnd){
 }
 
 function computeFees(totalPrice){
-  return totalPrice;
-  //return ((totalPrice * 1.25/100) + 0.25);
+  return ((totalPrice * 1.25/100) + 0.25);
 }
 
 function computeTotal(){
   const totalNightPrice = computeNightPriceTotal();
-  return totalNightPrice+computeFees(totalNightPrice);
+  return totalNightPrice;
+  //return totalNightPrice+computeFees(totalNightPrice);
 }
 
 function computeNightPriceTotal(){

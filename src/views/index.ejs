@@ -115,11 +115,11 @@
             </div>
             <div class="mt-2 space-y-1 text-sm">
               <div class="flex justify-between"><span>Nuits</span><span id="nights">0</span></div>
-              <div class="flex justify-between"><span>Frais de gestion</span><span id="fees_management">0</span></div>
+              <!--<div class="flex justify-between"><span>Frais de gestion</span><span id="fees_management">0</span></div>-->
               <% if(config.cleaning_fees > 0){ %><div class="flex justify-between"><span>Sous‑total</span><span>€<span id="subtotal">0</span></span></div><% } %>
               <% if(config.cleaning_fees > 0){ %><div class="flex justify-between"><span>Frais de ménage</span><span>€<span id="cleaning"><%= config.cleaning_fees %></span></span></div><% } %>
               <hr>
-              <div class="flex justify-between font-semibold text-lg"><span>Total</span><span>€<span id="total">0</span></span></div>
+              <div class="flex justify-between font-semibold text-lg"><span>Total</span><span><span id="total">0</span>€</span></div>
             </div>
             <button class="mt-3 w-full rounded-xl bg-cyan-600 text-white py-3 font-medium hover:bg-cyan-700 transition" type="submit">Réserver maintenant</button>
             <p class="text-xs text-center opacity-70">Vous ne serez pas encore débité.</p>
