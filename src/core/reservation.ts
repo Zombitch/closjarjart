@@ -13,7 +13,8 @@ export function computeNight(dateStart: Date, dateEnd: Date){
 }
 
 export function computeFees(totalPrice: number){
-  return ((totalPrice * 1.25/100) + 0.25);
+  return totalPrice;
+  //return ((totalPrice * 1.25/100) + 0.25);
 }
 
 export async function computeNightPriceTotal(dateStart: Date, dateEnd: Date){

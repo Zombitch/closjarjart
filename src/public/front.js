@@ -66,7 +66,8 @@ function computeNight(dateStringStart, dateStringEnd){
 }
 
 function computeFees(totalPrice){
-  return ((totalPrice * 1.25/100) + 0.25);
+  return totalPrice;
+  //return ((totalPrice * 1.25/100) + 0.25);
 }
 
 function computeTotal(){
