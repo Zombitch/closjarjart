@@ -21,7 +21,19 @@ router.get('/', async (_req, res) => {
   
   const reservationArray = await getReservationsAsArray();
 
-  VisitModel.create({ip:_req.ip});
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const visitExists = await VisitModel.exists({
+    ip: _req.ip,
+    createdAt: { $gte: startOfDay, $lte: endOfDay }
+  });
+
+  if (!visitExists) {
+    await VisitModel.create({ ip: _req.ip });
+  }
   
   res.render('index', {photoDefault: photoDefault, photos: photos, lightboxPhotos:lightboxPhotos, config: config, blockedDate:JSON.stringify(reservationArray)});
 });
