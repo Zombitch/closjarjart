@@ -14,7 +14,7 @@ const router = Router();
 router.get('/', async (_req, res) => {
   const photoDefault = await PhotoModel.findOne({ default: true }).sort({ createdAt: -1 }).limit(50).lean();
   const photos = await PhotoModel.find({ default: false }).sort({ createdAt: 1 }).limit(50).lean();
-  const lightboxPhotos = await PhotoModel.find().sort({ createdAt: 1 }).limit(50).lean();
+  const lightboxPhotos = await PhotoModel.find().sort({default:-1, createdAt: 1 }).limit(50).lean();
   let config = await ConfigModel.findOne().sort({ createdAt: -1 });
   
   if(!config) config = await ConfigModel.create({});  
