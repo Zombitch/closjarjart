@@ -175,15 +175,9 @@ function renderVisitTable(visits){
         origin.className = 'px-4 py-3';
         origin.textContent = v.origin || '-';
 
-        const agent = document.createElement('td');
-        agent.className = 'px-4 py-3 max-w-[280px] truncate';
-        agent.title = v.agent || '';
-        agent.textContent = v.agent || '-';
-
         row.appendChild(date);
         row.appendChild(ip);
         row.appendChild(origin);
-        row.appendChild(agent);
         visitTableBody.appendChild(row);
     });
 }
