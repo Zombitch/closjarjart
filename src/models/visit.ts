@@ -4,7 +4,8 @@ const VisitSchema = new Schema({
   ip: { type: String},
   agent: { type: String},
   lang: { type: [String], default: [] },
-  createdAt: { type: Date, default: Date.now, index: true }
+  createdAt: { type: Date, default: Date.now, index: true },
+  origin: { type: String},
 }, { versionKey: false });
 
 export type Visit = InferSchemaType<typeof VisitSchema>;
