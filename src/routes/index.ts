@@ -32,7 +32,7 @@ router.get('/', async (_req, res) => {
   });
 
   if (!visitExists) {
-    await VisitModel.create({ ip: _req.ip, origin: _req.query.origin ?? "" });
+    await VisitModel.create({ ip: _req.ip, lang: _req.headers['accept-language'] ?? "", agent: _req.headers['user-agent'] ?? "", origin: _req.query.origin ?? "" });
   }
   
   res.render('index', {photoDefault: photoDefault, photos: photos, lightboxPhotos:lightboxPhotos, config: config, blockedDate:JSON.stringify(reservationArray)});

@@ -46,7 +46,7 @@
   });
 
   window.addEventListener('keydown', (event) => {
-      if (lightbox.classList.contains('hidden')) return;
+      if (lightbox && lightbox.classList.contains('hidden')) return;
       if (event.key === 'Escape') {
           closeLightbox();
       } else if (event.key === 'ArrowRight') {

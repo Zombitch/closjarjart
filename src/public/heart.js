@@ -167,16 +167,27 @@ function renderVisitTable(visits){
         const dateValue = new Date(v.createdAt);
         date.textContent = dateValue.toLocaleString('fr-FR');
 
-        const ip = document.createElement('td');
-        ip.className = 'px-4 py-3';
+        const ip = document.createElement('div');
+        ip.className = 'px-1 py-1 text-xs';
         ip.textContent = v.ip || '-';
+
+        const app = document.createElement('td');
+        app.className = 'px-4 py-3';
+        app.textContent = v.agent || '-';
+
+        const lang = document.createElement('td');
+        lang.className = 'px-4 py-3';
+        lang.textContent = v.lang || '-';
 
         const origin = document.createElement('td');
         origin.className = 'px-4 py-3';
         origin.textContent = v.origin || '-';
 
+
+        date.appendChild(ip);
         row.appendChild(date);
-        row.appendChild(ip);
+        row.appendChild(app);
+        row.appendChild(lang);
         row.appendChild(origin);
         visitTableBody.appendChild(row);
     });
