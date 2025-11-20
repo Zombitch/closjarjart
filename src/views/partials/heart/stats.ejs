@@ -26,7 +26,12 @@
           <% } else { %>
 
             <% visits.forEach(v => { %>
-              <tr>
+              <tr
+                class="hover:bg-gray-50 cursor-pointer monthly-visit-row"
+                data-year="<%= v.year %>"
+                data-month="<%= v.month %>"
+                data-month-name="<%= v.monthName %>"
+              >
                 <td class="px-4 py-3"><%= v.year %></td>
                 <td class="px-4 py-3"><%= v.monthName %></td>
                 <td class="px-4 py-3 text-right font-medium"><%= v.count %></td>
@@ -36,6 +41,46 @@
           <% } %>
         </tbody>
       </table>
+    </div>
+    <div id="visitDetails" class="mt-6 hidden">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <p class="text-sm text-gray-500">Détails des visites</p>
+          <h2 class="text-xl font-semibold text-gray-800" id="visitDetailsTitle"></h2>
+        </div>
+        <button
+          id="closeVisitDetails"
+          type="button"
+          class="text-sm text-gray-600 hover:text-gray-800 px-3 py-2 rounded-lg hover:bg-gray-100"
+        >
+          Fermer
+        </button>
+      </div>
+
+      <div class="bg-white shadow rounded-lg p-4 space-y-2">
+        <h3 class="text-sm font-semibold text-gray-700">Nombre de visites par jour</h3>
+        <div id="visitChart" class="space-y-2"></div>
+        <p id="visitChartHint" class="text-xs text-gray-500"></p>
+      </div>
+
+      <div class="bg-white shadow rounded-lg mt-4 overflow-hidden">
+        <div class="px-4 py-3 border-b">
+          <h3 class="text-sm font-semibold text-gray-700">Toutes les visites</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+              <tr>
+                <th class="px-4 py-3 text-left">Date</th>
+                <th class="px-4 py-3 text-left">IP</th>
+                <th class="px-4 py-3 text-left">Origine</th>
+                <th class="px-4 py-3 text-left">Agent</th>
+              </tr>
+            </thead>
+            <tbody id="visitTableBody" class="divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 <% } %>
 

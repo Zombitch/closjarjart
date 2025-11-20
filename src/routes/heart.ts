@@ -108,4 +108,40 @@ router.post('/', upload.array('cfg_photos', 6), requireAuth, async (req, res) =>
   res.redirect('/heart');
 });
 
+router.get('/visits/:year/:month', requireAuth, async (req, res) => {
+  const year = Number(req.params.year);
+  const month = Number(req.params.month);
+
+  if (!year || !month || month < 1 || month > 12) {
+    res.status(400).json({ ok: false, message: 'Invalid month or year' });
+    return;
+  }
+
+  const startDate = new Date(Date.UTC(year, month - 1, 1));
+  const endDate = new Date(Date.UTC(year, month, 1));
+
+  const dailyCounts = await VisitModel.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: startDate, $lt: endDate }
+      }
+    },
+    {
+      $group: {
+        _id: { day: { $dayOfMonth: '$createdAt' } },
+        count: { $sum: 1 }
+      }
+    },
+    { $sort: { '_id.day': 1 } }
+  ]);
+
+  const visits = await VisitModel.find({ createdAt: { $gte: startDate, $lt: endDate } }).sort({ createdAt: -1 }).lean();
+
+  res.json({
+    ok: true,
+    days: dailyCounts.map(({ _id, count }) => ({ day: _id.day, count })),
+    visits
+  });
+});
+
 export default router;
