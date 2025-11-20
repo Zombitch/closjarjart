@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
   if (req.session && (req.session as any).userId) return next();
-  return res.status(401).json({ error: true, message: 'Non authentifié' });
+  return res.redirect("/heart/login");
 }
 
 export function requireRole(roles: string[]) {
