@@ -31,6 +31,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const ORIGIN = process.env.ORIGIN || 'http://localhost:5173';
 const PORT = Number(process.env.PORT) || 3000;
 const SESSION_NAME = process.env.COOKIE_NAME || process.env.SESSION_NAME || 'sid'
+const SITE_URL = (process.env.SITE_URL || 'https://closjarjart.fr').replace(/\/$/, '');
 
 app.disable('x-powered-by');          // cache l’info de stack
 app.set('trust proxy', 1); // requis pour TLS/redirect derrière un proxy
@@ -141,6 +142,8 @@ app.get('/robots.txt', (_req, res) => {
 // Expose le helper à tes vues (EJS)
 app.use((req, res, next) => {
   (res.locals as any).csrfToken = generateCsrfToken(req, res);
+  (res.locals as any).siteUrl = SITE_URL;
+  (res.locals as any).canonicalUrl = `${SITE_URL}${req.path === '/' ? '' : req.path}`;
   next();
 });
 
