@@ -5,6 +5,7 @@ import ConfigModel from '../models/config';
 import {ObjectId} from 'mongodb';
 import { getReservations, getReservationsAsArray, proceedReservation } from '../core/reservation';
 import Reservation from '../models/reservation';
+import { doubleCsrfProtection } from '../core/csrf';
 
 const router = Router();
 
@@ -16,14 +17,14 @@ router.get('/:id', requireAuth, async (req, res) => {
   res.json(reservation);
 });
 
-router.delete('/:id', requireAuth, async (_req, res) => {
+router.delete('/:id', requireAuth, doubleCsrfProtection, async (_req, res) => {
   const id = _req.params.id;
   const reservation = await Reservation.findByIdAndUpdate(new ObjectId(id as unknown as string), { archived: true });
   const reservationList = await getReservationsAsArray();
   return res.status(201).json({ok:true, reservations: reservationList});
 });
 
-router.post('/', requireAuth, async (req, res) => {
+router.post('/', requireAuth, doubleCsrfProtection, async (req, res) => {
   const { id, guests, lastname, firstname, email, tel, totalPrice, type} = req.body as { id:string, guests: number, lastname: string, firstname: string, email: string, tel: string, totalPrice: number, type: string };
   const { startDate, endDate } = req.body as { startDate: Date; endDate: Date };
   if (!guests || !lastname || !firstname || !totalPrice) return res.status(400).json({ error: true, ok:false, message: 'Données requises' });
