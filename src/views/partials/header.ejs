@@ -25,16 +25,16 @@
   <% if(typeof photoDefault !== 'undefined') { %><meta name="twitter:image" content="<%= photoDefault?.url || siteUrl + '/static/closjarjart_min.png' %>" /><% } %>
   <meta name="theme-color" content="#0e7490" />
   <link rel="icon" type="image/png" href="/static/favicon.ico" />
-  <link rel="stylesheet" href="/static/styles.css" />
+  <link rel="stylesheet" href="/static/styles.css?v=<%= assetVersion %>" />
   <style>
     /* Masquer les flèches des <input type=number> pour un look plus propre */
     input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     input[type=number] { -moz-appearance: textfield; }
   </style>
-  <script type="text/javascript" src="/static/config.js"></script>
-  <script type="text/javascript" src="/static/front.js" defer></script>
-  <script type="text/javascript" src="/static/calendar_form.js" defer></script>
+  <script type="text/javascript" src="/static/config.js?v=<%= assetVersion %>"></script>
+  <script type="text/javascript" src="/static/front.js?v=<%= assetVersion %>" defer></script>
+  <script type="text/javascript" src="/static/calendar_form.js?v=<%= assetVersion %>" defer></script>
 
   <% if(typeof config !== 'undefined' && typeof lightboxPhotos !== 'undefined') { %>
   <script type="application/ld+json">

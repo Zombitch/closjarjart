@@ -94,6 +94,6 @@
 <script type="text/javascript">
   setConfig(JSON.parse('<%- blockedDate %>'), JSON.parse('<%- config.max_guests %>'), JSON.parse('<%- config.maintenance %>'))
 </script>
-<script type="text/javascript" src="/static/heart.js" defer></script>
-<script type="text/javascript" src="/static/calendar_dashboard.js" defer></script>
+<script type="text/javascript" src="/static/heart.js?v=<%= assetVersion %>" defer></script>
+<script type="text/javascript" src="/static/calendar_dashboard.js?v=<%= assetVersion %>" defer></script>
 </html>

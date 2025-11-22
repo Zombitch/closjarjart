@@ -23,10 +23,13 @@ import authRouter from './routes/auth';
 import heartRouter from './routes/heart';
 import reservationRouter from './routes/reservation';
 import errorHandler from './middlewares/error';
+import pkg from '../package.json';
 
 dotenv.config();
 
 const app = express();
+app.locals.assetVersion = process.env.APP_VERSION || pkg.version;
+
 const isProd = process.env.NODE_ENV === 'production';
 const ORIGIN = process.env.ORIGIN || 'http://localhost:5173';
 const PORT = Number(process.env.PORT) || 3000;
