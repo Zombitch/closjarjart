@@ -73,6 +73,7 @@ const visitDetailsTitle = document.getElementById('visitDetailsTitle');
 const visitChart = document.getElementById('visitChart');
 const visitChartHint = document.getElementById('visitChartHint');
 const visitTableBody = document.getElementById('visitTableBody');
+const visitCards = document.getElementById('visitCards');
 const closeVisitDetails = document.getElementById('closeVisitDetails');
 
 function buildDayMap(days, month, year){
@@ -145,51 +146,115 @@ function renderVisitChart(days, month, year){
 }
 
 function renderVisitTable(visits){
-    if(!visitTableBody) return;
-    visitTableBody.innerHTML = '';
+    if(visitTableBody) visitTableBody.innerHTML = '';
+    if(visitCards) visitCards.innerHTML = '';
 
     if(!visits || visits.length === 0){
-        const row = document.createElement('tr');
-        const cell = document.createElement('td');
-        cell.colSpan = 4;
-        cell.className = 'px-4 py-3 text-center text-gray-500';
-        cell.textContent = "Aucune visite pour ce mois.";
-        row.appendChild(cell);
-        visitTableBody.appendChild(row);
+        if(visitTableBody){
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.colSpan = 4;
+            cell.className = 'px-4 py-3 text-center text-gray-500';
+            cell.textContent = "Aucune visite pour ce mois.";
+            row.appendChild(cell);
+            visitTableBody.appendChild(row);
+        }
+
+        if(visitCards){
+            const empty = document.createElement('div');
+            empty.className = 'px-4 py-4 text-sm text-gray-500';
+            empty.textContent = "Aucune visite pour ce mois.";
+            visitCards.appendChild(empty);
+        }
         return;
     }
 
     visits.forEach(v => {
-        const row = document.createElement('tr');
-
-        const date = document.createElement('td');
-        date.className = 'px-4 py-3 whitespace-nowrap';
         const dateValue = new Date(v.createdAt);
-        date.textContent = dateValue.toLocaleString('fr-FR');
+        const formattedDate = dateValue.toLocaleString('fr-FR');
+        const originValue = v.origin || '-';
+        const agentValue = v.agent || '-';
+        const ipValue = v.ip || '-';
+        const langValue = v.lang;
 
-        const ip = document.createElement('div');
-        ip.className = 'px-1 py-1 text-xs';
-        ip.textContent = v.ip || '-';
+        if(visitCards){
+            const card = document.createElement('div');
+            card.className = 'px-4 py-3';
 
-        const app = document.createElement('td');
-        app.className = 'px-4 py-3';
-        app.textContent = v.agent || '-';
+            const header = document.createElement('div');
+            header.className = 'flex items-center justify-between gap-2';
 
-        const lang = document.createElement('td');
-        lang.className = 'px-4 py-3';
-        lang.textContent = v.lang || '-';
+            const date = document.createElement('div');
+            date.className = 'text-sm font-semibold text-gray-900';
+            date.textContent = formattedDate;
 
-        const origin = document.createElement('td');
-        origin.className = 'px-4 py-3';
-        origin.textContent = v.origin || '-';
+            const origin = document.createElement('span');
+            origin.className = 'inline-flex items-center rounded-full border border-cyan-100 bg-cyan-50 px-2 py-1 text-[11px] font-medium text-cyan-800';
+            origin.textContent = originValue;
 
+            header.appendChild(date);
+            header.appendChild(origin);
 
-        date.appendChild(ip);
-        row.appendChild(date);
-        row.appendChild(app);
-        row.appendChild(lang);
-        row.appendChild(origin);
-        visitTableBody.appendChild(row);
+            const details = document.createElement('div');
+            details.className = 'mt-2 space-y-1 text-sm text-gray-800 hidden';
+
+            const agent = document.createElement('p');
+            agent.textContent = agentValue;
+            details.appendChild(agent);
+
+            if(langValue){
+                const langTag = document.createElement('p');
+                langTag.className = 'text-xs text-gray-600';
+                langTag.textContent = `Langue : ${langValue}`;
+                details.appendChild(langTag);
+            }
+
+            const ip = document.createElement('p');
+            ip.className = 'text-xs font-mono text-gray-700';
+            ip.textContent = `IP : ${ipValue}`;
+            details.appendChild(ip);
+
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'mt-2 inline-flex items-center gap-1 text-xs font-medium text-cyan-700';
+            toggleBtn.textContent = 'Afficher les détails';
+            toggleBtn.addEventListener('click', () => {
+                const isHidden = details.classList.contains('hidden');
+                details.classList.toggle('hidden', !isHidden);
+                toggleBtn.textContent = isHidden ? 'Masquer les détails' : 'Afficher les détails';
+            });
+
+            card.appendChild(header);
+            card.appendChild(toggleBtn);
+            card.appendChild(details);
+            visitCards.appendChild(card);
+        }
+
+        if(visitTableBody){
+            const row = document.createElement('tr');
+
+            const dateCell = document.createElement('td');
+            dateCell.className = 'px-4 py-3 whitespace-nowrap';
+            dateCell.textContent = formattedDate;
+
+            const originCell = document.createElement('td');
+            originCell.className = 'px-4 py-3';
+            originCell.textContent = originValue;
+
+            const agentCell = document.createElement('td');
+            agentCell.className = 'px-4 py-3';
+            agentCell.textContent = agentValue;
+
+            const ipCell = document.createElement('td');
+            ipCell.className = 'px-4 py-3 font-mono text-xs text-gray-700';
+            ipCell.textContent = ipValue;
+
+            row.appendChild(dateCell);
+            row.appendChild(originCell);
+            row.appendChild(agentCell);
+            row.appendChild(ipCell);
+            visitTableBody.appendChild(row);
+        }
     });
 }
 

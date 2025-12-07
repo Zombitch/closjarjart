@@ -64,17 +64,22 @@
       </div>
 
       <div class="bg-white shadow rounded-lg mt-4 overflow-hidden">
-        <div class="px-4 py-3 border-b">
-          <h3 class="text-sm font-semibold text-gray-700">Toutes les visites</h3>
+        <div class="px-4 py-3 border-b flex items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm font-semibold text-gray-700">Toutes les visites</h3>
+            <p class="text-xs text-gray-500">Triées par date (les plus récentes en haut)</p>
+          </div>
+          <span class="text-[11px] text-gray-500">Date · Origine · Agent · IP</span>
         </div>
-        <div class="overflow-x-auto">
+        <div id="visitCards" class="divide-y divide-gray-100 md:hidden"></div>
+        <div class="overflow-x-auto hidden md:block">
           <table class="min-w-full text-sm">
             <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
               <tr>
                 <th class="px-4 py-3 text-left">Date</th>
-                <th class="px-4 py-3 text-left">Appareil</th>
-                <th class="px-4 py-3 text-left">Langage</th>
                 <th class="px-4 py-3 text-left">Origine</th>
+                <th class="px-4 py-3 text-left">Agent</th>
+                <th class="px-4 py-3 text-left">IP</th>
               </tr>
             </thead>
             <tbody id="visitTableBody" class="divide-y divide-gray-200"></tbody>
@@ -83,4 +88,3 @@
       </div>
     </div>
 <% } %>
-
