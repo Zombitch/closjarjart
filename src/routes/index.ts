@@ -32,7 +32,9 @@ router.get('/', async (_req, res) => {
   });
 
   if (!visitExists) {
-    await VisitModel.create({ ip: _req.ip, lang: _req.headers['accept-language'] ?? "", agent: _req.headers['user-agent'] ?? "", origin: _req.query.origin ?? "" });
+    const agent = _req.headers['user-agent'] ?? "";
+    const isRobot = agent.toLowerCase().includes('bot') || agent.toLowerCase().includes('crawl') || agent.toLowerCase().includes('facebook.com/externalhit');
+    await VisitModel.create({ ip: _req.ip, lang: _req.headers['accept-language'] ?? "", agent: agent, origin: _req.query.origin ?? "", isRobot: isRobot });
   }
   
   res.render('index', {photoDefault: photoDefault, photos: photos, lightboxPhotos:lightboxPhotos, config: config, blockedDate:JSON.stringify(reservationArray)});

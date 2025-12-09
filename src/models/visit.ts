@@ -6,6 +6,7 @@ const VisitSchema = new Schema({
   lang: { type: [String], default: [] },
   createdAt: { type: Date, default: Date.now, index: true },
   origin: { type: String},
+  isRobot: { type: Boolean, default: false}
 }, { versionKey: false });
 
 export type Visit = InferSchemaType<typeof VisitSchema>;

@@ -13,6 +13,19 @@ const router = Router();
 const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
 const upload = makeImageUpload(uploadsDir);
 
+router.get('/update', requireAuth, async (req, res) => {
+  const visits = await VisitModel.find();
+
+  visits.forEach(v =>{    
+    const agent = v.agent ?? "";
+    const isRobot = agent.toLowerCase().includes('bot') || agent.toLowerCase().includes('crawl') || agent.toLowerCase().includes('facebook.com/externalhit');
+    v.isRobot = isRobot;
+    v.save();
+  })
+
+  res.json({ok:true});
+});
+
 router.get('/login', async (req, res) => {
   res.render('heart/login');
 });
