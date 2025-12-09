@@ -176,6 +176,7 @@ function renderVisitTable(visits){
         const agentValue = v.agent || '-';
         const ipValue = v.ip || '-';
         const langValue = v.lang;
+        const isRobot = Boolean(v.isRobot);
 
         if(visitCards){
             const card = document.createElement('div');
@@ -185,8 +186,11 @@ function renderVisitTable(visits){
             header.className = 'flex items-center justify-between gap-2';
 
             const date = document.createElement('div');
-            date.className = 'text-sm font-semibold text-gray-900';
-            date.textContent = formattedDate;
+            date.className = 'flex items-center gap-2 text-sm font-semibold text-gray-900';
+            date.appendChild(createVisitIcon(isRobot));
+            const dateText = document.createElement('span');
+            dateText.textContent = formattedDate;
+            date.appendChild(dateText);
 
             const origin = document.createElement('span');
             origin.className = 'inline-flex items-center rounded-full border border-cyan-100 bg-cyan-50 px-2 py-1 text-[11px] font-medium text-cyan-800';
@@ -235,7 +239,13 @@ function renderVisitTable(visits){
 
             const dateCell = document.createElement('td');
             dateCell.className = 'px-4 py-3 whitespace-nowrap';
-            dateCell.textContent = formattedDate;
+            const dateContent = document.createElement('div');
+            dateContent.className = 'flex items-center gap-2';
+            dateContent.appendChild(createVisitIcon(isRobot));
+            const dateText = document.createElement('span');
+            dateText.textContent = formattedDate;
+            dateContent.appendChild(dateText);
+            dateCell.appendChild(dateContent);
 
             const originCell = document.createElement('td');
             originCell.className = 'px-4 py-3';
@@ -256,6 +266,72 @@ function renderVisitTable(visits){
             visitTableBody.appendChild(row);
         }
     });
+}
+
+function createVisitIcon(isRobot){
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('class', `h-4 w-4 ${isRobot ? 'text-amber-600' : 'text-gray-600'}`);
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '1.6');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+    svg.setAttribute('aria-hidden', 'true');
+
+    if(isRobot){
+        const antenna = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        antenna.setAttribute('x1', '12');
+        antenna.setAttribute('y1', '3');
+        antenna.setAttribute('x2', '12');
+        antenna.setAttribute('y2', '5');
+
+        const head = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        head.setAttribute('x', '5');
+        head.setAttribute('y', '7.5');
+        head.setAttribute('width', '14');
+        head.setAttribute('height', '10');
+        head.setAttribute('rx', '2');
+
+        const eyeLeft = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        eyeLeft.setAttribute('cx', '10');
+        eyeLeft.setAttribute('cy', '12');
+        eyeLeft.setAttribute('r', '0.9');
+
+        const eyeRight = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        eyeRight.setAttribute('cx', '14');
+        eyeRight.setAttribute('cy', '12');
+        eyeRight.setAttribute('r', '0.9');
+
+        const mouth = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        mouth.setAttribute('x1', '9');
+        mouth.setAttribute('y1', '15');
+        mouth.setAttribute('x2', '15');
+        mouth.setAttribute('y2', '15');
+
+        svg.appendChild(antenna);
+        svg.appendChild(head);
+        svg.appendChild(eyeLeft);
+        svg.appendChild(eyeRight);
+        svg.appendChild(mouth);
+        return svg;
+    }
+
+    const head = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    head.setAttribute('cx', '12');
+    head.setAttribute('cy', '8');
+    head.setAttribute('r', '3');
+
+    const shoulders = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    shoulders.setAttribute('d', 'M6 19c0-3.3137 2.6863-6 6-6s6 2.6863 6 6');
+
+    const body = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    body.setAttribute('d', 'M9.5 18.5c0-1.3807 1.1193-2.5 2.5-2.5s2.5 1.1193 2.5 2.5');
+
+    svg.appendChild(head);
+    svg.appendChild(shoulders);
+    svg.appendChild(body);
+    return svg;
 }
 
 async function handleMonthlyVisitClick(year, month, monthName){
