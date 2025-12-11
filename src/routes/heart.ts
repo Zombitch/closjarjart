@@ -2,6 +2,7 @@ import { Router } from 'express';
 import path from 'path';
 import { requireAuth } from '../middlewares/auth';
 import { makeImageUpload, processImageUploadToDatabase, safeUnlink } from '../core/upload';
+import { doubleCsrfProtection } from '../core/csrf';
 import PhotoModel from '../models/photo';
 import ConfigModel from '../models/config';
 import VisitModel from '../models/visit';
@@ -30,7 +31,7 @@ router.get('/login', async (req, res) => {
   res.render('heart/login');
 });
 
-router.delete('/photos', requireAuth, async (req, res) => {
+router.delete('/photos', requireAuth, doubleCsrfProtection, async (req, res) => {
   try {
     const items = await PhotoModel.find().lean();
     await Promise.all(items.map(i => i.path ? safeUnlink(i.path, uploadsDir) : Promise.resolve()));
@@ -40,7 +41,7 @@ router.delete('/photos', requireAuth, async (req, res) => {
   res.json({ok:true});
 });
 
-router.delete('/photo/:id', requireAuth, async (req, res) => {
+router.delete('/photo/:id', requireAuth, doubleCsrfProtection, async (req, res) => {
   try {
     const id = req.params.id;
     const item = await PhotoModel.findById(new ObjectId(id as unknown as string));
@@ -54,7 +55,7 @@ router.delete('/photo/:id', requireAuth, async (req, res) => {
   res.redirect('/heart');
 });
 
-router.post('/photo/setDefault/:id', requireAuth, async (req, res) => {
+router.post('/photo/setDefault/:id', requireAuth, doubleCsrfProtection, async (req, res) => {
   try {
       const items = await PhotoModel.find();
       await Promise.all(items.map(photo => {
@@ -107,7 +108,7 @@ router.get('/', requireAuth, async (req, res) => {
   res.render('heart/heart', { photos: photos, config: config, blockedDate:JSON.stringify(reservationArray), visits:visits});
 });
 
-router.post('/', upload.array('cfg_photos', 6), requireAuth, async (req, res) => {
+router.post('/', upload.array('cfg_photos', 6), requireAuth, doubleCsrfProtection, async (req, res) => {
   try {
     const files = req.files as Express.Multer.File[] | undefined;
     files?.map(file => processImageUploadToDatabase(req, file));

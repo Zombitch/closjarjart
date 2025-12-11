@@ -33,7 +33,8 @@ app.locals.assetVersion = process.env.APP_VERSION || pkg.version;
 const isProd = process.env.NODE_ENV === 'production';
 const ORIGIN = process.env.ORIGIN || 'http://localhost:5173';
 const PORT = Number(process.env.PORT) || 3000;
-const SESSION_NAME = process.env.COOKIE_NAME || process.env.SESSION_NAME || 'sid'
+const SESSION_NAME = process.env.COOKIE_NAME || process.env.SESSION_NAME || 'sid';
+const SESSION_SECRET = process.env.SESSION_SECRET;
 const SITE_URL = (process.env.SITE_URL || 'https://closjarjart.fr').replace(/\/$/, '');
 
 app.disable('x-powered-by');          // cache l’info de stack
@@ -54,14 +55,19 @@ app.use(hpp());
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(mongoSanitize());
 app.use(requestLogger);
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
+if (!SESSION_SECRET) {
+  throw new Error('Missing SESSION_SECRET environment variable.');
+}
+
 app.use(session({
   name: SESSION_NAME,
-  secret: process.env.SESSION_SECRET!,
+  secret: SESSION_SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     httpOnly: true,
     sameSite: 'strict',
@@ -93,20 +99,20 @@ app.use(
     }
   })
 );
-/*
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  message: { error: true, message: 'Trop de requêtes, réessayez plus tard.' }
 });
 const speedLimiter = slowDown({
   windowMs: 60 * 1000,
   delayAfter: 60,
-  delayMs:(hits) => hits * 100
+  delayMs: (hits) => hits * 100
 });
 app.use(limiter);
-app.use(speedLimiter);*/
+app.use(speedLimiter);
 
 app.use((req, res, next) => {
   if (isProd && req.headers['x-forwarded-proto'] !== 'https') {
@@ -179,8 +185,6 @@ app.use(((err, _req, res, next) => {
   }
   next(err);
 }) as ErrorRequestHandler);
-
-app.use(mongoSanitize());
 
 const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(UPLOADS_DIR)) {
