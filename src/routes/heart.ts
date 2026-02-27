@@ -76,6 +76,9 @@ router.get('/', requireAuth, async (req, res) => {
   let config = await ConfigModel.findOne().sort({ createdAt: -1 });
   const monthlyVisits = await VisitModel.aggregate([
     {
+      $match: {
+        isRobot: false
+      },
       $group: {
         _id: {
           year: { $year: "$createdAt" },
