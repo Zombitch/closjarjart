@@ -78,7 +78,9 @@ router.get('/', requireAuth, async (req, res) => {
     {
       $match: {
         isRobot: false
-      },
+      }
+    },
+    {
       $group: {
         _id: {
           year: { $year: "$createdAt" },
