@@ -1,13 +1,13 @@
 <!-- Galerie -->
 <div class="grid grid-cols-3 gap-2 rounded-2xl overflow-hidden shadow-soft bg-white">
-    <% if(photos.length >= 1){ %><img src="<%= photos[0].url %>" alt="Salon" class="col-span-2 h-60 sm:h-80 w-full object-cover cursor-pointer" onclick="openLightbox(1)"/><% } %>
-    <% if(photos.length >= 2){ %><img src="<%= photos[1].url %>" alt="Cuisine" class="h-60 sm:h-80 w-full object-cover cursor-pointer" onclick="openLightbox(2)"/><% } %>
-    <% if(photos.length >= 3){ %><img src="<%= photos[2].url %>" alt="Chambre" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(3)"/><% } %>
-    <% if(photos.length >= 4){ %><img src="<%= photos[3].url %>" alt="Salle de bain" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(4)"/><% } %>
+    <% if(photos.length >= 1){ %><img src="<%= photos[0].url %>" alt="Salon" class="col-span-2 h-60 sm:h-80 w-full object-cover cursor-pointer" onclick="openLightbox(0)" loading="lazy" decoding="async"/><% } %>
+    <% if(photos.length >= 2){ %><img src="<%= photos[1].url %>" alt="Cuisine" class="h-60 sm:h-80 w-full object-cover cursor-pointer" onclick="openLightbox(1)" loading="lazy" decoding="async"/><% } %>
+    <% if(photos.length >= 3){ %><img src="<%= photos[2].url %>" alt="Chambre" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(2)" loading="lazy" decoding="async"/><% } %>
+    <% if(photos.length >= 4){ %><img src="<%= photos[3].url %>" alt="Salle de bain" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(3)" loading="lazy" decoding="async"/><% } %>
     <% if(photos.length >= 5){ %>
         <div class="relative">
-            <span class="absolute bottom-2 right-2 z-10 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold uppercase text-gray-700 shadow cursor-pointer" onclick="openLightbox(5)">voir plus</span>
-            <img src="<%= photos[4].url %>" alt="Terrasse" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(5)"/>
+            <button type="button" class="absolute bottom-2 right-2 z-10 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold uppercase text-gray-700 shadow cursor-pointer" onclick="openLightbox(4)">voir plus</button>
+            <img src="<%= photos[4].url %>" alt="Terrasse" class="h-40 w-full object-cover cursor-pointer" onclick="openLightbox(4)" loading="lazy" decoding="async"/>
         </div>
     <% } %>
 </div>

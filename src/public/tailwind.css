@@ -9,6 +9,23 @@
 a, button{
     cursor: pointer;
 }
+/*
+html:focus-within {
+    scroll-behavior: smooth;
+}
+
+body {
+    text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
 
 /* Calendar */
 .cal-grid { display:grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap:.25rem; }
