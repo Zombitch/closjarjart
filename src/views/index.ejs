@@ -69,6 +69,9 @@
           <div class="flex items-center text-center justify-between">
             <div class="m-auto"><span class="text-2xl font-semibold">€<span id="pricePerNight"><%= config.price %></span></span> <span class="text-sm opacity-70">/ nuit</span></div>
           </div>
+          <div class="flex items-center text-center justify-between">
+            <div class=""><span class="text-sm opacity-70">Prix dégressif en fonction du nombre de nuit</span></div>
+          </div>
           <form id="bookingForm" class="mt-4 grid gap-3" onsubmit="event.preventDefault(); submitBooking();">
             <input type="hidden" id="_csrf" name="_csrf" value="<%= csrfToken %>">
             <label class="text-sm">Dates</label>
