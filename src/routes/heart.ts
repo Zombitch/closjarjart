@@ -136,7 +136,8 @@ router.get('/visits/:year/:month', requireAuth, async (req, res) => {
   const dailyCounts = await VisitModel.aggregate([
     {
       $match: {
-        createdAt: { $gte: startDate, $lt: endDate }
+        createdAt: { $gte: startDate, $lt: endDate }, 
+        isRobot: false
       }
     },
     {
@@ -148,7 +149,7 @@ router.get('/visits/:year/:month', requireAuth, async (req, res) => {
     { $sort: { '_id.day': 1 } }
   ]);
 
-  const visits = await VisitModel.find({ createdAt: { $gte: startDate, $lt: endDate } }).sort({ createdAt: -1 }).lean();
+  const visits = await VisitModel.find({ createdAt: { $gte: startDate, $lt: endDate }, isRobot: false }).sort({ createdAt: -1 }).lean();
 
   res.json({
     ok: true,
