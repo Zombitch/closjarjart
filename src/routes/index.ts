@@ -2,11 +2,8 @@ import { Router } from 'express';
 import PhotoModel from '../models/photo';
 import ConfigModel from '../models/config';
 import VisitModel from '../models/visit';
-import {ObjectId} from 'mongodb';
-import Reservation from '../models/reservation';
 import { doubleCsrfProtection } from '../core/csrf';
-import { checkReservationConflict, computeNight, computeTotalPrice, getReservations, getReservationsAsArray, proceedReservation } from '../core/reservation';
-import { start } from 'repl';
+import { getReservationsAsArray, proceedReservation } from '../core/reservation';
 
 const router = Router();
 
@@ -32,16 +29,15 @@ router.get('/', async (_req, res) => {
   });
 
   if (!visitExists) {
-    const agent = _req.headers['user-agent'] ?? "";
-    const isRobot = agent.toLowerCase().includes('bot') || agent.toLowerCase().includes('crawl') || agent.toLowerCase().includes('facebook.com/externalhit');
+    const agent = String(_req.headers['user-agent'] ?? "");
+    const isRobot = /(bot|crawl|spider|slurp|facebookexternalhit)/i.test(agent);
     await VisitModel.create({ ip: _req.ip, lang: _req.headers['accept-language'] ?? "", agent: agent, origin: _req.query.origin ?? "", isRobot: isRobot });
   }
   
   res.render('index', {photoDefault: photoDefault, photos: photos, lightboxPhotos:lightboxPhotos, config: config, blockedDate:JSON.stringify(reservationArray)});
 });
 
-router.post('/', doubleCsrfProtection, async (req, res, next) => {
-  const config = await ConfigModel.findOne().sort({ createdAt: -1 });
+router.post('/', doubleCsrfProtection, async (req, res) => {
   const { startDate, endDate, guests, lastname, firstname, email, tel } = req.body as { startDate: Date; endDate: Date, guests: number, lastname: string, firstname: string, email: string, tel: string };
   if (!startDate || !endDate || !guests || !lastname || !firstname || !email || !tel) return res.status(400).json({ error: true, ok:false, message: 'Données requises' });
 

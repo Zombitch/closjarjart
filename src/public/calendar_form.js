@@ -37,7 +37,6 @@ function updateBlockedDateRange(dateRange){
 }
 
 function isBlocked(d){
-  const iso = toISO(d);
   for(const [a,b] of blockedRangeObjs){ if(inRange(d,a,b)) return true; }
   return false;
 }
@@ -73,7 +72,6 @@ const prevBtn    = document.getElementById('prevBtn');
 const nextBtn    = document.getElementById('nextBtn');
 const hint       = document.getElementById('hint');
 
-let anchorInput = null; // champ qui a ouvert le calendrier
 let selectingStart = true;
 let selStart = null, selEnd = null;
 let viewYear, viewMonth; // 0-11
@@ -83,13 +81,11 @@ function setViewDate(d){
   viewMonth = d.getMonth();
 }
 
-function openPicker(forInput){
-  anchorInput = forInput;
+function openPicker(forInput){ 
+  picker.classList.remove('hidden');
   const rect = forInput.getBoundingClientRect();
   picker.style.left = rect.left;
-  picker.style.top  = rect.bottom;
-  picker.classList.remove('hidden');
-  // Base sur date existante ou aujourd'hui
+  picker.style.top  = rect.bottom;  // Base sur date existante ou aujourd'hui
   const base = forInput === startInput && startISO.value ? fromISO(startISO.value)
              : forInput === endInput   && endISO.value   ? fromISO(endISO.value)
              : new Date();
@@ -120,6 +116,7 @@ function renderCalendar(){
   const first = new Date(viewYear, viewMonth, 1);
   const startWeekday = (first.getDay()+6)%7; // Lundi=0
   const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+  const today = atMidnight(new Date());
   monthLabel.textContent = first.toLocaleDateString('fr-FR', { month:'long', year:'numeric' });
 
   calWrap.innerHTML = '';
@@ -133,7 +130,7 @@ function renderCalendar(){
     cell.className = 'cal-cell rounded-md text-sm px-0.5 ';
 
     // State classes
-    const disabled = isBlocked(d) || d < new Date();
+    const disabled = isBlocked(d) || atMidnight(d) < today;
     const disabledAM = isBlockedAM(d);
     const disabledPM = isBlockedPM(d);
     const disabledAMPM = isBlockedAM(d) && isBlockedPM(d);
@@ -152,6 +149,8 @@ function renderCalendar(){
     cell.className += ' ' + cls;
     cell.innerHTML = '<div>'+day+'</div>';
     cell.title = frFormat(d);
+    cell.setAttribute('aria-label', frFormat(d));
+    cell.setAttribute('aria-selected', String(Boolean(isSelStart || isSelEnd)));
 
     if(disabledAMPM) cell.title = 'Date indisponible';
     else if(disabledAM) cell.title = 'Disponible à partir de l\'après-midi';

@@ -6,6 +6,35 @@
 @source "../views/**/*.ejs";
 @source "../public/**/*.js";
 
+@font-face {
+  font-family: "UniversityRoman";
+  src: url("/public/UniversityRomanStdRegular.OTF") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "UniversityRoman";
+  src: url("/public/UniversityRomanStdItalic.OTF") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "UniversityRoman";
+  src: url("/public/UniversityRomanStdBold.OTF") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+body{
+    font-family: "UniversityRoman";
+    font-style: italic;
+}
+
 a, button{
     cursor: pointer;
 }

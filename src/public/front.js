@@ -1,69 +1,71 @@
+let currentPhotoIndex = 0;
+const lightbox = document.getElementById('photoLightbox');
+const lightboxImage = document.getElementById('lightboxImage');
+const lightboxCounter = document.getElementById('lightboxCounter');
 
+function updateLightbox() {
+  const photos = getLightboxPhotos();
+  if (!photos.length || !lightboxImage || !lightboxCounter) return;
 
-  let currentPhotoIndex = 0;
-  const lightbox = document.getElementById('photoLightbox');
-  const lightboxImage = document.getElementById('lightboxImage');
-  const lightboxCounter = document.getElementById('lightboxCounter');
+  const safeIndex = Math.max(0, Math.min(currentPhotoIndex, photos.length - 1));
+  currentPhotoIndex = safeIndex;
 
-  function updateLightbox() {
-      if (!getLightboxPhotos().length) return;
-      const photo = getLightboxPhotos()[currentPhotoIndex];
-      if (photo) {
-          lightboxImage.src = photo.url;
-          lightboxCounter.textContent = `${currentPhotoIndex + 1} / ${getLightboxPhotos().length}`;
-      }
-  }
+  const photo = photos[safeIndex];
+  lightboxImage.src = photo.url;
+  lightboxCounter.textContent = `${safeIndex + 1} / ${photos.length}`;
+}
 
-  function openLightbox(index) {
-      if (!getLightboxPhotos().length) return;
-      currentPhotoIndex = index;
-      updateLightbox();
-      lightbox.classList.remove('hidden');
-      lightbox.classList.add('flex');
-      document.body.classList.add('overflow-hidden');
-  }
+function openLightbox(index) {
+  const photos = getLightboxPhotos();
+  if (!photos.length || !lightbox) return;
+  currentPhotoIndex = Number.isInteger(index) ? index : 0;
+  updateLightbox();
+  lightbox.classList.remove('hidden');
+  lightbox.classList.add('flex');
+  document.body.classList.add('overflow-hidden');
+}
 
-  function closeLightbox() {
-      lightbox.classList.add('hidden');
-      lightbox.classList.remove('flex');
-      document.body.classList.remove('overflow-hidden');
-  }
+function closeLightbox() {
+  if (!lightbox) return;
+  lightbox.classList.add('hidden');
+  lightbox.classList.remove('flex');
+  document.body.classList.remove('overflow-hidden');
+}
 
-  function nextPhoto() {
-      currentPhotoIndex = (currentPhotoIndex + 1) % getLightboxPhotos().length;
-      updateLightbox();
-  }
+function nextPhoto() {
+  const photos = getLightboxPhotos();
+  if (!photos.length) return;
+  currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+  updateLightbox();
+}
 
-  function previousPhoto() {
-      currentPhotoIndex = (currentPhotoIndex - 1 + getLightboxPhotos().length) % getLightboxPhotos().length;
-      updateLightbox();
-  }
+function previousPhoto() {
+  const photos = getLightboxPhotos();
+  if (!photos.length) return;
+  currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+  updateLightbox();
+}
 
-  lightbox?.addEventListener('click', (event) => {
-      if (event.target === lightbox) {
-          closeLightbox();
-      }
-  });
+lightbox?.addEventListener('click', (event) => {
+  if (event.target === lightbox) closeLightbox();
+});
 
-  window.addEventListener('keydown', (event) => {
-      if (lightbox && lightbox.classList.contains('hidden')) return;
-      if (event.key === 'Escape') {
-          closeLightbox();
-      } else if (event.key === 'ArrowRight') {
-          nextPhoto();
-      } else if (event.key === 'ArrowLeft') {
-          previousPhoto();
-      }
-  });
+window.addEventListener('keydown', (event) => {
+  if (lightbox && lightbox.classList.contains('hidden')) return;
+  if (event.key === 'Escape') closeLightbox();
+  else if (event.key === 'ArrowRight') nextPhoto();
+  else if (event.key === 'ArrowLeft') previousPhoto();
+});
 
-  window.openLightbox = openLightbox;
-  window.closeLightbox = closeLightbox;
-  window.nextPhoto = nextPhoto;
-  window.previousPhoto = previousPhoto;
+window.openLightbox = openLightbox;
+window.closeLightbox = closeLightbox;
+window.nextPhoto = nextPhoto;
+window.previousPhoto = previousPhoto;
 
 // Affiche le toast
 function showToast(msg, type){
   const t = document.getElementById('toast');
+  if(!t) return;
   let bgClass;
 
   if(type == "danger") bgClass= "bg-red-600";
@@ -92,6 +94,7 @@ if(togglePwd){
 }
 
 function togglePassword(openState, closeState){  
+  if(!password || !openState || !closeState) return;
   const isPwd = password.getAttribute('type') === 'password';
   password.setAttribute('type', isPwd ? 'text' : 'password');
   openState.classList.toggle('hidden', isPwd);
@@ -105,27 +108,35 @@ const dateEndInput = document.getElementById('dateEndISO');
 const nights = document.getElementById('nights');
 const fees_management = document.getElementById('fees_management');
 const total_price = document.getElementById('total');
+const bookingForm = document.getElementById('bookingForm');
+const guestsInput = document.getElementById('guests');
 
 if(dateEnd){
-  dateEnd.addEventListener('change', ()=>{
-    if(dateStartInput && dateEndInput && nights){
-      const totalNightPrice = computeNightPriceTotal();
-      nights.innerText = computeNight(dateStartInput.value, dateEndInput.value);
-      if(fees_management) fees_management.innerText = computeFees(totalNightPrice);
-      total_price.innerText = computeTotal();
-    }
+  dateEnd.addEventListener('change', recalcBookingSummary);
+}
+
+if(dateStartInput){
+  dateStartInput.addEventListener('change', recalcBookingSummary);
+}
+
+if(guestsInput){
+  guestsInput.addEventListener('change', () => {
+    const val = Math.min(getMaxGuests(), Math.max(1, Number(guestsInput.value) || 1));
+    guestsInput.value = String(val);
   });
 }
 
 function computeNight(dateStringStart, dateStringEnd){
+  if(!dateStringStart || !dateStringEnd) return 0;
   const dateStart = new Date(dateStringStart);
   const dateEnd = new Date(dateStringEnd);
+  if(Number.isNaN(dateStart.getTime()) || Number.isNaN(dateEnd.getTime())) return 0;
 
   const msPerDay = 1000 * 60 * 60 * 24;
   const utcA = Date.UTC(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate());
   const utcB = Date.UTC(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate());
 
-  return Math.round((utcB - utcA) / msPerDay);
+  return Math.max(0, Math.round((utcB - utcA) / msPerDay));
 }
 
 function computeFees(totalPrice){
@@ -139,12 +150,23 @@ function computeTotal(){
 }
 
 function computeNightPriceTotal(){
-  const pricePerNight = document.getElementById('pricePerNight').innerText;
-  return pricePerNight*computeNight(dateStartInput.value, dateEndInput.value);
+  const priceNode = document.getElementById('pricePerNight');
+  if(!priceNode || !dateStartInput || !dateEndInput) return 0;
+  const pricePerNight = Number(priceNode.innerText) || 0;
+  return pricePerNight * computeNight(dateStartInput.value, dateEndInput.value);
 }
 
- function stepGuests(delta){
+function recalcBookingSummary(){
+  if(!dateStartInput || !dateEndInput || !nights || !total_price) return;
+  const totalNightPrice = computeNightPriceTotal();
+  nights.innerText = String(computeNight(dateStartInput.value, dateEndInput.value));
+  if(fees_management) fees_management.innerText = String(computeFees(totalNightPrice));
+  total_price.innerText = String(computeTotal());
+}
+
+function stepGuests(delta){
   const input = document.getElementById('guests');
+  if(!input) return;
   const val = Math.min(getMaxGuests(), Math.max(1, Number(input.value) + delta));
   input.value = val;
 }
@@ -152,13 +174,22 @@ function computeNightPriceTotal(){
 // Send data forms
 function submitBooking(){
   const nbGuests = document.getElementById('guests');
-  const token = document.getElementById('_csrf').value;
+  const token = document.getElementById('_csrf')?.value;
   const emailInput = document.getElementById('email');
   const telInput = document.getElementById('tel');
   const lastnameInput = document.getElementById('lastname');
   const firstnameInput = document.getElementById('firstname');
   
-  if(dateStartInput && dateEndInput && nbGuests){
+  if(!bookingForm?.checkValidity()){
+    bookingForm?.reportValidity();
+    return;
+  }
+
+  if(dateStartInput && dateEndInput && nbGuests && emailInput && telInput && lastnameInput && firstnameInput && token){
+    if(computeNight(dateStartInput.value, dateEndInput.value) <= 0){
+      showToast('Une erreur est survenue, veuillez de nouveau renseigner le formulaire de réservation', "danger");
+      return;
+    }
     fetch('/', {
       method: 'POST',
       credentials: 'same-origin',
@@ -176,12 +207,13 @@ function submitBooking(){
         tel: telInput.value
       })
     })
-    .then(res => {
+    .then(async (res) => {
+      const data = await res.json().catch(() => ({}));
       if (!res.ok){
-        showToast(res.message, "danger");
+        showToast(data.message || 'Une erreur est survenue, veuillez de nouveau renseigner le formulaire de réservation', "danger");
         throw new Error('Erreur réseau');
       }
-      return res.json();
+      return data;
     })
     .then(data => {
       if (!data.ok)showToast(data.message, "danger");
@@ -197,11 +229,12 @@ function submitBooking(){
         lastnameInput.value = "";
         firstnameInput.value = "";
         updateBlockedDateRange(data.reservations);
+        recalcBookingSummary();
       }
     })
-    .catch((err, data)  => {
+    .catch(()  => {
       showToast('Une erreur est survenue, veuillez de nouveau renseigner le formulaire de réservation', "danger");
-    });
+    })
   }
 
   // Ici vous pourriez faire un fetch/POST vers votre backend
