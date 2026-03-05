@@ -46,7 +46,7 @@
         </details>
       </div>
 
-      <button type="button" onclick="addEquipment()" class="px-5 py-2 rounded-lg bg-cyan-600 text-white text-sm font-medium hover:bg-cyan-700 active:scale-[.98] transition">
+      <button type="button" onclick="addEquipment()" class="block mx-auto px-5 py-2 rounded-lg bg-cyan-600 text-white text-sm font-medium hover:bg-cyan-700 active:scale-[.98] transition">
         + Ajouter
       </button>
     </div>
@@ -308,10 +308,11 @@
       const icon = ICONS.find(function(i){ return i.id === selectedIconId; });
       if (icon) svg = icon.svg;
     }
-    if (!svg) { alert('Veuillez choisir une icône ou coller du SVG.'); return; }
 
-    equipments.push({ svg: svg, label: label });
-    persist();
+    if (label && svg) {
+      equipments.push({ svg: svg, label: label });
+      persist();
+    }
     renderList();
 
     document.getElementById('newEquipLabel').value = '';
