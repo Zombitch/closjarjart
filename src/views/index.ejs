@@ -1,19 +1,27 @@
 <%- include('./partials/header.ejs') %>
 
 <body class="h-full bg-gray-50 text-gray-800 ">
-  <!-- Falling leaves animation -->
-  <div class="leaves-container">
-    <div class="leaf"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C20 2 8 12 8 24c0 6 5 12 12 14 7-2 12-8 12-14C32 12 20 2 20 2z" fill="#4ade80"/><path d="M20 8v24M20 14l-5 4M20 20l5 4" stroke="#16a34a" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-    <div class="leaf"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C20 2 8 12 8 24c0 6 5 12 12 14 7-2 12-8 12-14C32 12 20 2 20 2z" fill="#22c55e"/><path d="M20 8v24M20 14l-5 4M20 20l5 4" stroke="#15803d" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-    <div class="leaf"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C20 2 8 12 8 24c0 6 5 12 12 14 7-2 12-8 12-14C32 12 20 2 20 2z" fill="#86efac"/><path d="M20 8v24M20 14l-5 4M20 20l5 4" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-    <div class="leaf"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C20 2 8 12 8 24c0 6 5 12 12 14 7-2 12-8 12-14C32 12 20 2 20 2z" fill="#4ade80"/><path d="M20 8v24M20 14l-5 4M20 20l5 4" stroke="#16a34a" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-    <div class="leaf"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C20 2 8 12 8 24c0 6 5 12 12 14 7-2 12-8 12-14C32 12 20 2 20 2z" fill="#22c55e"/><path d="M20 8v24M20 14l-5 4M20 20l5 4" stroke="#15803d" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-    <div class="leaf"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C20 2 8 12 8 24c0 6 5 12 12 14 7-2 12-8 12-14C32 12 20 2 20 2z" fill="#86efac"/><path d="M20 8v24M20 14l-5 4M20 20l5 4" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-    <div class="leaf"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C20 2 8 12 8 24c0 6 5 12 12 14 7-2 12-8 12-14C32 12 20 2 20 2z" fill="#4ade80"/><path d="M20 8v24M20 14l-5 4M20 20l5 4" stroke="#16a34a" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-    <div class="leaf"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C20 2 8 12 8 24c0 6 5 12 12 14 7-2 12-8 12-14C32 12 20 2 20 2z" fill="#22c55e"/><path d="M20 8v24M20 14l-5 4M20 20l5 4" stroke="#15803d" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-    <div class="leaf"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C20 2 8 12 8 24c0 6 5 12 12 14 7-2 12-8 12-14C32 12 20 2 20 2z" fill="#86efac"/><path d="M20 8v24M20 14l-5 4M20 20l5 4" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-    <div class="leaf"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C20 2 8 12 8 24c0 6 5 12 12 14 7-2 12-8 12-14C32 12 20 2 20 2z" fill="#4ade80"/><path d="M20 8v24M20 14l-5 4M20 20l5 4" stroke="#16a34a" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+  <% if (config.animation && config.animation !== 'none') { %>
+  <div class="anim-container anim-<%= config.animation %>">
+    <% if (config.animation === 'leaves') { %>
+      <% for (let i = 0; i < 10; i++) { const fills = ['#4ade80','#22c55e','#86efac']; const strokes = ['#16a34a','#15803d','#22c55e']; %>
+        <div class="anim-item"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C20 2 8 12 8 24c0 6 5 12 12 14 7-2 12-8 12-14C32 12 20 2 20 2z" fill="<%= fills[i % 3] %>"/><path d="M20 8v24M20 14l-5 4M20 20l5 4" stroke="<%= strokes[i % 3] %>" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      <% } %>
+    <% } else if (config.animation === 'hearts') { %>
+      <% for (let i = 0; i < 10; i++) { const colors = ['#f43f5e','#e11d48','#fb7185']; %>
+        <div class="anim-item"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 35S4 24 4 14a8 8 0 0 1 16 0 8 8 0 0 1 16 0c0 10-16 21-16 21z" fill="<%= colors[i % 3] %>"/></svg></div>
+      <% } %>
+    <% } else if (config.animation === 'snow') { %>
+      <% for (let i = 0; i < 10; i++) { const opacities = ['1','0.8','0.6']; %>
+        <div class="anim-item"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="white" stroke-width="2" stroke-linecap="round" opacity="<%= opacities[i % 3] %>"><line x1="20" y1="4" x2="20" y2="36"/><line x1="4" y1="20" x2="36" y2="20"/><line x1="8" y1="8" x2="32" y2="32"/><line x1="32" y1="8" x2="8" y2="32"/><line x1="20" y1="8" x2="17" y2="5"/><line x1="20" y1="8" x2="23" y2="5"/><line x1="20" y1="32" x2="17" y2="35"/><line x1="20" y1="32" x2="23" y2="35"/></g></svg></div>
+      <% } %>
+    <% } else if (config.animation === 'autumn') { %>
+      <% for (let i = 0; i < 10; i++) { const fills = ['#f97316','#dc2626','#eab308']; const strokes = ['#c2410c','#991b1b','#a16207']; %>
+        <div class="anim-item"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 2C14 8 4 14 6 26c2 8 8 12 14 12s12-4 14-12C36 14 26 8 20 2z" fill="<%= fills[i % 3] %>"/><path d="M20 8v24M20 14l-6 5M20 20l6 5M20 16l5-3M20 24l-5 3" stroke="<%= strokes[i % 3] %>" stroke-width="1" stroke-linecap="round"/></svg></div>
+      <% } %>
+    <% } %>
   </div>
+  <% } %>
 
   <header class="relative">
     <img src="<%= photoDefault.url %>" alt="Vue du loft Clos Jarjart avec sauna privatif" class="h-[52vh] w-full object-cover" />

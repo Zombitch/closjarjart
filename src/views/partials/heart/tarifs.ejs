@@ -11,6 +11,15 @@
         <label class="text-sm grid gap-1">Max voyageurs
             <input name="max_guests" id="cfg_max_guests" type="number" min="0" max="10" step="1" class="rounded-lg border px-3 py-2" placeholder="4" value="<%= config.max_guests %>"/>
         </label>
+        <label class="text-sm grid gap-1">Animation
+            <select name="animation" class="rounded-lg border px-3 py-2 text-sm">
+                <option value="none" <%= config.animation === 'none' ? 'selected' : '' %>>Désactivé</option>
+                <option value="leaves" <%= config.animation === 'leaves' ? 'selected' : '' %>>Feuilles vertes</option>
+                <option value="hearts" <%= config.animation === 'hearts' ? 'selected' : '' %>>Coeurs</option>
+                <option value="snow" <%= config.animation === 'snow' ? 'selected' : '' %>>Flocons de neige</option>
+                <option value="autumn" <%= config.animation === 'autumn' ? 'selected' : '' %>>Feuilles d'automne</option>
+            </select>
+        </label>
         <label class="text-sm grid gap-1">Mainteance
             <div class="flex items-center gap-4">
                 <input id="toogleMaintenanceInput" name="maintenance" type="hidden" value="<%= config.maintenance %>"/>

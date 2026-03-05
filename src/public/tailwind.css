@@ -57,8 +57,8 @@ a, button{
     left: 0;
 }
 
-/* Falling leaves animation */
-.leaves-container {
+/* ===== Falling animations (shared) ===== */
+.anim-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -69,56 +69,80 @@ a, button{
     z-index: 50;
 }
 
-.leaf {
+.anim-item {
     position: absolute;
     top: -40px;
     width: 20px;
     height: 20px;
     opacity: 0;
-    animation: leafFall linear infinite;
 }
 
-.leaf svg {
+.anim-item svg {
     width: 100%;
     height: 100%;
     filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
 }
 
-.leaf:nth-child(1)  { left: 5%;  animation-duration: 8s;  animation-delay: 0s;   }
-.leaf:nth-child(2)  { left: 15%; animation-duration: 10s; animation-delay: 1.5s; }
-.leaf:nth-child(3)  { left: 25%; animation-duration: 9s;  animation-delay: 3s;   }
-.leaf:nth-child(4)  { left: 35%; animation-duration: 11s; animation-delay: 0.5s; }
-.leaf:nth-child(5)  { left: 45%; animation-duration: 8.5s;animation-delay: 2s;   }
-.leaf:nth-child(6)  { left: 55%; animation-duration: 10.5s;animation-delay: 4s;  }
-.leaf:nth-child(7)  { left: 65%; animation-duration: 9.5s;animation-delay: 1s;   }
-.leaf:nth-child(8)  { left: 75%; animation-duration: 7.5s;animation-delay: 3.5s; }
-.leaf:nth-child(9)  { left: 85%; animation-duration: 11.5s;animation-delay: 2.5s;}
-.leaf:nth-child(10) { left: 92%; animation-duration: 8s;  animation-delay: 5s;   }
+.anim-item:nth-child(1)  { left: 5%;  animation-duration: 8s;   animation-delay: 0s;   }
+.anim-item:nth-child(2)  { left: 15%; animation-duration: 10s;  animation-delay: 1.5s; }
+.anim-item:nth-child(3)  { left: 25%; animation-duration: 9s;   animation-delay: 3s;   }
+.anim-item:nth-child(4)  { left: 35%; animation-duration: 11s;  animation-delay: 0.5s; }
+.anim-item:nth-child(5)  { left: 45%; animation-duration: 8.5s; animation-delay: 2s;   }
+.anim-item:nth-child(6)  { left: 55%; animation-duration: 10.5s;animation-delay: 4s;   }
+.anim-item:nth-child(7)  { left: 65%; animation-duration: 9.5s; animation-delay: 1s;   }
+.anim-item:nth-child(8)  { left: 75%; animation-duration: 7.5s; animation-delay: 3.5s; }
+.anim-item:nth-child(9)  { left: 85%; animation-duration: 11.5s;animation-delay: 2.5s; }
+.anim-item:nth-child(10) { left: 92%; animation-duration: 8s;   animation-delay: 5s;   }
+
+/* --- Green leaves --- */
+.anim-leaves .anim-item { animation: leafFall linear infinite; }
 
 @keyframes leafFall {
-    0% {
-        top: -40px;
-        opacity: 0;
-        transform: rotate(0deg) translateX(0px);
-    }
-    5% {
-        opacity: 0.8;
-    }
-    25% {
-        transform: rotate(90deg) translateX(30px);
-    }
-    50% {
-        transform: rotate(180deg) translateX(-20px);
-    }
-    75% {
-        transform: rotate(270deg) translateX(40px);
-    }
-    90% {
-        opacity: 0.6;
-    }
-    100% {
-        top: 100vh;
-        opacity: 0;
-        transform: rotate(360deg) translateX(-10px);
-    }
+    0%   { top: -40px; opacity: 0; transform: rotate(0deg) translateX(0px); }
+    5%   { opacity: 0.8; }
+    25%  { transform: rotate(90deg) translateX(30px); }
+    50%  { transform: rotate(180deg) translateX(-20px); }
+    75%  { transform: rotate(270deg) translateX(40px); }
+    90%  { opacity: 0.6; }
+    100% { top: 100vh; opacity: 0; transform: rotate(360deg) translateX(-10px); }
+}
+
+/* --- Falling hearts --- */
+.anim-hearts .anim-item { animation: heartFall ease-in infinite; }
+
+@keyframes heartFall {
+    0%   { top: -40px; opacity: 0; transform: scale(0.6) rotate(0deg); }
+    5%   { opacity: 0.9; }
+    25%  { transform: scale(1) rotate(15deg) translateX(20px); }
+    50%  { transform: scale(0.8) rotate(-10deg) translateX(-15px); }
+    75%  { transform: scale(1) rotate(10deg) translateX(25px); }
+    90%  { opacity: 0.7; }
+    100% { top: 100vh; opacity: 0; transform: scale(0.6) rotate(-5deg) translateX(0); }
+}
+
+/* --- Snowflakes --- */
+.anim-snow .anim-item { animation: snowFall linear infinite; width: 12px; height: 12px; }
+
+@keyframes snowFall {
+    0%   { top: -20px; opacity: 0; transform: translateX(0) rotate(0deg); }
+    5%   { opacity: 0.9; }
+    25%  { transform: translateX(15px) rotate(90deg); }
+    50%  { transform: translateX(-10px) rotate(180deg); }
+    75%  { transform: translateX(12px) rotate(270deg); }
+    90%  { opacity: 0.7; }
+    100% { top: 100vh; opacity: 0; transform: translateX(-5px) rotate(360deg); }
+}
+
+/* --- Autumn leaves --- */
+.anim-autumn .anim-item { animation: autumnFall ease-in-out infinite; width: 22px; height: 22px; }
+
+@keyframes autumnFall {
+    0%   { top: -40px; opacity: 0; transform: rotate(0deg) translateX(0); }
+    5%   { opacity: 0.85; }
+    20%  { transform: rotate(60deg) translateX(40px); }
+    40%  { transform: rotate(150deg) translateX(-30px); }
+    60%  { transform: rotate(240deg) translateX(35px); }
+    80%  { transform: rotate(310deg) translateX(-20px); }
+    90%  { opacity: 0.5; }
+    100% { top: 100vh; opacity: 0; transform: rotate(380deg) translateX(10px); }
 }
