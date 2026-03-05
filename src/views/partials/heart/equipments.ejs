@@ -4,32 +4,50 @@
   <!-- Current equipment list -->
   <div>
     <h3 class="font-semibold mb-3">Équipements actuels</h3>
-    <div id="equipmentList" class="space-y-2">
+    <div id="equipmentList" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
       <!-- Populated by JS -->
     </div>
-    <p id="noEquipmentMsg" class="text-sm text-gray-400 hidden">Aucun équipement ajouté.</p>
+    <p id="noEquipmentMsg" class="text-sm text-gray-400 italic">Aucun équipement ajouté.</p>
   </div>
 
   <!-- Add new equipment -->
-  <div class="border-t pt-4">
-    <h3 class="font-semibold mb-3">Ajouter un équipement</h3>
-    <div class="space-y-3">
+  <div class="border-t pt-5">
+    <h3 class="font-semibold mb-4">Ajouter un équipement</h3>
+    <div class="space-y-4">
+
+      <!-- Label -->
       <div>
-        <label class="text-sm text-gray-600 block mb-1">Libellé</label>
-        <input type="text" id="newEquipLabel" class="w-full rounded-lg border px-3 py-2 text-sm" placeholder="Ex. Sauna privatif" />
+        <label class="text-sm font-medium text-gray-700 block mb-1">Libellé</label>
+        <input type="text" id="newEquipLabel" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400" placeholder="Ex. Sauna privatif" />
       </div>
+
+      <!-- Icon picker -->
       <div>
-        <label class="text-sm text-gray-600 block mb-1">Icône</label>
-        <div class="grid grid-cols-4 sm:grid-cols-6 gap-2 mb-2" id="iconPicker">
-          <!-- Icons rendered by JS -->
+        <label class="text-sm font-medium text-gray-700 block mb-2">Icône</label>
+
+        <!-- Search -->
+        <input type="text" id="iconSearch" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-cyan-400" placeholder="Rechercher une icône…" oninput="filterIcons(this.value)" />
+
+        <!-- Category tabs -->
+        <div class="flex flex-wrap gap-1 mb-3" id="categoryTabs"></div>
+
+        <!-- Icons grid -->
+        <div class="border rounded-xl p-3 bg-gray-50 max-h-72 overflow-y-auto">
+          <div id="iconPicker" class="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-1.5">
+            <!-- Populated by JS -->
+          </div>
+          <p id="noIconResults" class="text-xs text-gray-400 text-center py-4 hidden">Aucune icône trouvée.</p>
         </div>
-        <div class="mt-2">
-          <label class="text-xs text-gray-500 block mb-1">Ou coller du SVG personnalisé</label>
-          <textarea id="newEquipSvg" rows="3" class="w-full rounded-lg border px-3 py-2 text-xs font-mono" placeholder='<svg viewBox="0 0 24 24" fill="currentColor">...</svg>'></textarea>
-        </div>
+
+        <!-- Custom SVG -->
+        <details class="mt-3">
+          <summary class="text-xs text-gray-500 cursor-pointer select-none hover:text-gray-700">SVG personnalisé</summary>
+          <textarea id="newEquipSvg" rows="3" class="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-cyan-400" placeholder='<svg viewBox="0 0 24 24" fill="currentColor">...</svg>'></textarea>
+        </details>
       </div>
-      <button type="button" onclick="addEquipment()" class="px-4 py-2 rounded-lg bg-cyan-600 text-white text-sm font-medium hover:bg-cyan-700 transition">
-        Ajouter
+
+      <button type="button" onclick="addEquipment()" class="px-5 py-2 rounded-lg bg-cyan-600 text-white text-sm font-medium hover:bg-cyan-700 active:scale-[.98] transition">
+        + Ajouter
       </button>
     </div>
   </div>
@@ -38,27 +56,88 @@
 <script>
 (function() {
   const ICONS = [
-    { id: 'kitchen',   label: 'Cuisine',         svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z"/><path d="M6 8h12v2H6z"/></svg>' },
-    { id: 'heating',  label: 'Chauffage',       svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v4H4zM4 10h16v10H4z"/></svg>' },
-    { id: 'tv',       label: 'TV',              svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v12H3z"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/></svg>' },
-    { id: 'linen',    label: 'Linge',           svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3h14v18H5z"/><path d="M8 7h8v2H8zM8 11h8v2H8zM8 15h5v2H8z"/></svg>' },
-    { id: 'sauna',    label: 'Sauna',           svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/></svg>' },
-    { id: 'iron',     label: 'Fer à repasser',  svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v4H4zM4 10h16v10H4z"/></svg>' },
-    { id: 'hairdryer',label: 'Sèche-cheveux',   svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l-1 7H7z"/><path d="M9 11h6v10H9z"/></svg>' },
-    { id: 'coffee',   label: 'Cafetière',       svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h12v4H6z"/><path d="M5 10h14v10H5z"/><circle cx="12" cy="15" r="2"/></svg>' },
-    { id: 'kettle',   label: 'Bouilloire',      svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h10v2H6z"/><path d="M5 7h12v11H5z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2z"/></svg>' },
-    { id: 'raclette', label: 'Raclette',        svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 7h16v9H4z"/><path d="M8 4h8v3H8z"/><path d="M7 16h2v4H7zM15 16h2v4h-2z"/></svg>' },
-    { id: 'fondue',   label: 'Fondue',          svg: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="10" r="6"/><path d="M8 16h8v5H8z"/></svg>' },
-    { id: 'wifi',     label: 'Wifi',            svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.5a17 17 0 0 1 21 0M5 12a12 12 0 0 1 14 0M8.5 15.5a7 7 0 0 1 7 0M12 19h.01"/></svg>' },
-    { id: 'parking',  label: 'Parking',         svg: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>' },
-    { id: 'pool',     label: 'Piscine',         svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 20c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 16c2-2 4-2 6 0s4 2 6 0 4-2 6 0M12 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>' },
-    { id: 'bbq',      label: 'Barbecue',        svg: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg>' },
-    { id: 'garden',   label: 'Jardin',          svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 3 7 3 12c0 3 1.5 5.5 4 7h10c2.5-1.5 4-4 4-7 0-5-3.5-10-9-10z"/><path d="M12 22v-8M9 16l3-4 3 4"/></svg>' },
-    { id: 'jacuzzi',  label: 'Jacuzzi',         svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 16h16v4H4z"/><path d="M6 8c0-2 2-4 6-4s6 2 6 4v8H6z"/></svg>' },
-    { id: 'bike',     label: 'Vélo',            svg: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M12 5l-2 7h6L14 5M9 10H5.5"/><path d="M12 5h4l3 5"/></svg>' },
-    { id: 'canoe',    label: 'Canoë',           svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 17c4-3 8-5 20-3M4 13l4-8 4 5"/><path d="M8 5v8"/></svg>' },
-    { id: 'game',     label: 'Jeux',            svg: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4M15 11h.01M17 13h.01"/></svg>' },
+    // ── Cuisine ─────────────────────────────────────────────────────────────────
+    { id:'kitchen',     cat:'Cuisine',    label:'Cuisine équipée',  svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>' },
+    { id:'microwave',   cat:'Cuisine',    label:'Micro-ondes',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><rect x="6" y="9" width="10" height="6" rx="1"/><path d="M18 9h.01M18 12h.01M18 15h.01"/></svg>' },
+    { id:'oven',        cat:'Cuisine',    label:'Four',             svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><rect x="6" y="9" width="12" height="9" rx="1"/><circle cx="8" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="16" cy="6" r="1"/></svg>' },
+    { id:'fridge',      cat:'Cuisine',    label:'Réfrigérateur',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M5 10h14"/><path d="M9 6v2M9 14v4"/></svg>' },
+    { id:'dishwasher',  cat:'Cuisine',    label:'Lave-vaisselle',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="18" height="20" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M12 9v4l2 2"/><path d="M7 5h.01M10 5h.01"/></svg>' },
+    { id:'coffee',      cat:'Cuisine',    label:'Cafetière',        svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>' },
+    { id:'kettle',      cat:'Cuisine',    label:'Bouilloire',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v2H6z"/><path d="M5 7h14v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7z"/><path d="M19 10h2a1 1 0 0 1 0 2h-2"/></svg>' },
+    { id:'toaster',     cat:'Cuisine',    label:'Grille-pain',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="10" rx="2"/><path d="M9 9V7M12 9V6M15 9V7"/><path d="M3 19h18"/></svg>' },
+    { id:'blender',     cat:'Cuisine',    label:'Mixeur',           svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l-2 9H8L6 3z"/><rect x="8" y="13" width="8" height="5" rx="1"/><path d="M10 18v2M14 18v2"/></svg>' },
+    { id:'raclette',    cat:'Cuisine',    label:'Raclette',         svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="9" rx="1"/><path d="M7 4h10v3H7z"/><path d="M7 16h2v4H7zM15 16h2v4h-2z"/></svg>' },
+    { id:'fondue',      cat:'Cuisine',    label:'Fondue',           svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0v7H6V8z"/><rect x="5" y="15" width="14" height="4" rx="1"/><path d="M9 19v2M15 19v2"/><path d="M12 2v3"/></svg>' },
+    { id:'wine',        cat:'Cuisine',    label:'Verre à vin',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8M12 11v11M7 3h10l-2 8a4 4 0 0 1-8 0L7 3z"/></svg>' },
+    { id:'cutlery',     cat:'Cuisine',    label:'Couverts',         svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6h4l-1 11"/></svg>' },
+    { id:'bbq',         cat:'Cuisine',    label:'Barbecue',         svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="11" r="7"/><path d="M5 11h14M12 4v3M8 5.8l1.5 2.6M16 5.8l-1.5 2.6"/><path d="M9 18l-2 4M15 18l2 4"/></svg>' },
+    { id:'plancha',     cat:'Cuisine',    label:'Plancha',          svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="20" height="9" rx="2"/><path d="M7 8V6a2 2 0 0 1 4 0v2M13 8V6a2 2 0 0 1 4 0v2"/><path d="M2 17l2 4M22 17l-2 4"/></svg>' },
+    { id:'capsule',     cat:'Cuisine',    label:'Nespresso',        svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l2 7H7L9 3z"/><path d="M7 10h10v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-9z"/><path d="M10 14h4"/></svg>' },
+
+    // ── Salle de bain ────────────────────────────────────────────────────────────
+    { id:'towels',      cat:'Salle de bain', label:'Serviettes',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="3" height="16" rx="1"/><path d="M6 6h14a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H6"/><path d="M6 14h10"/></svg>' },
+    { id:'hairdryer',   cat:'Salle de bain', label:'Sèche-cheveux',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a7 7 0 0 1 10-9l5 4-5 4a7 7 0 0 1-10-1z"/><path d="M13 7l4-4M13 17l4 4"/><circle cx="19" cy="12" r="2"/></svg>' },
+    { id:'bath',        cat:'Salle de bain', label:'Baignoire',        svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6L9 2"/><path d="M7 8V4a2 2 0 0 1 4 0v4"/><path d="M2 12h20v3a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4v-3z"/><path d="M6 19v2M18 19v2"/></svg>' },
+    { id:'shower',      cat:'Salle de bain', label:'Douche',           svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 16 0"/><path d="M4 12h16"/><path d="M6 12v6M8 14v4M10 13v5M12 12v6M14 13v5M16 14v4M18 12v6"/></svg>' },
+    { id:'soap',        cat:'Salle de bain', label:'Savon / gel',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v3H9z"/><rect x="6" y="6" width="12" height="15" rx="2"/><path d="M10 11h4M10 14h4M10 17h2"/></svg>' },
+    { id:'jacuzzi',     cat:'Salle de bain', label:'Jacuzzi',          svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="13" width="20" height="7" rx="2"/><path d="M5 13V8a3 3 0 0 1 6 0M13 13V8a3 3 0 0 1 6 0"/><path d="M5 16h.01M9 16h.01M13 16h.01M17 16h.01"/></svg>' },
+
+    // ── Confort ──────────────────────────────────────────────────────────────────
+    { id:'bed',         cat:'Confort',    label:'Lit',              svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20V10a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10"/><path d="M2 10h20"/><path d="M7 10V6a5 5 0 0 1 10 0v4"/><path d="M2 20h20"/></svg>' },
+    { id:'linen',       cat:'Confort',    label:'Linge de lit',     svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v12H4z"/><path d="M4 8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4"/><path d="M4 12h16"/></svg>' },
+    { id:'heating',     cat:'Confort',    label:'Chauffage',        svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg>' },
+    { id:'ac',          cat:'Confort',    label:'Climatisation',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="9" rx="2"/><path d="M7 14v6M12 14v6M17 14v6M2 11h20"/></svg>' },
+    { id:'fan',         cat:'Confort',    label:'Ventilateur',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a3 3 0 0 1 3 3c0 4-3 5-3 7"/><path d="M12 22a3 3 0 0 1-3-3c0-4 3-5 3-7"/><path d="M2 12a3 3 0 0 1 3-3c4 0 5 3 7 3"/><path d="M22 12a3 3 0 0 1-3 3c-4 0-5-3-7-3"/></svg>' },
+    { id:'iron',        cat:'Confort',    label:'Fer à repasser',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h18a2 2 0 0 0 0-4H9l-3-6H3v10z"/><path d="M7 17v2M17 17v2"/></svg>' },
+    { id:'washer',      cat:'Confort',    label:'Lave-linge',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="18" height="20" rx="2"/><circle cx="12" cy="13" r="5"/><circle cx="12" cy="13" r="2"/><path d="M7 5h.01M10 5h.01"/></svg>' },
+    { id:'dryer',       cat:'Confort',    label:'Sèche-linge',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="18" height="20" rx="2"/><circle cx="12" cy="13" r="5"/><path d="M9 13a3 3 0 0 1 6 0"/><path d="M7 5h.01M10 5h.01"/></svg>' },
+    { id:'fireplace',   cat:'Confort',    label:'Cheminée',         svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"/><path d="M2 22h20"/><path d="M9 22v-6a3 3 0 0 1 6 0v6"/><path d="M12 6c0 3-2 4-2 6s2 3 2 3 2-1 2-3-2-3-2-6z"/></svg>' },
+    { id:'vacuum',      cat:'Confort',    label:'Aspirateur',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="16" r="4"/><path d="M13 16h6a2 2 0 0 0 0-4h-6"/><path d="M3 8l6 4"/><circle cx="5" cy="7" r="2"/></svg>' },
+    { id:'babycot',     cat:'Confort',    label:'Lit bébé',         svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><path d="M3 9a6 6 0 0 1 12 0"/><path d="M7 16v3M17 16v3"/></svg>' },
+    { id:'highchair',   cat:'Confort',    label:'Chaise haute',     svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5h10v5H7z"/><path d="M5 10h14"/><path d="M9 10v12M15 10v12"/><path d="M6 22h12"/></svg>' },
+
+    // ── Divertissement ───────────────────────────────────────────────────────────
+    { id:'tv',          cat:'Divertissement', label:'TV',            svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 9l2 2-2 2M11 13h4"/></svg>' },
+    { id:'wifi',        cat:'Divertissement', label:'Wifi',          svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>' },
+    { id:'netflix',     cat:'Divertissement', label:'Netflix',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18M16 3v18M8 12h8"/></svg>' },
+    { id:'book',        cat:'Divertissement', label:'Livres',        svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h5"/></svg>' },
+    { id:'game',        cat:'Divertissement', label:'Jeux de société', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M6 12h2M7 11v2"/><circle cx="14" cy="13" r="1" fill="currentColor"/><circle cx="17" cy="13" r="1" fill="currentColor"/></svg>' },
+    { id:'controller',  cat:'Divertissement', label:'Console jeux',  svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H2l2 12h16l2-12h-4"/><rect x="6" y="3" width="12" height="8" rx="2"/><path d="M10 7h4M12 5v4"/><circle cx="16" cy="6" r="1" fill="currentColor"/></svg>' },
+    { id:'music',       cat:'Divertissement', label:'Enceinte / Musique', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="14" r="4"/><circle cx="12" cy="14" r="1.5" fill="currentColor"/><path d="M10 6h4"/></svg>' },
+    { id:'projector',   cat:'Divertissement', label:'Projecteur',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="14" height="8" rx="2"/><circle cx="20" cy="12" r="2"/><path d="M16 10l4-2M16 14l4 2"/></svg>' },
+    { id:'puzzle',      cat:'Divertissement', label:'Puzzles',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 7.65l.77.78L12 21l7.65-7.99.77-.78a5.4 5.4 0 0 0 0-7.65z"/></svg>' },
+    { id:'piano',       cat:'Divertissement', label:'Piano',         svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M6 6V3M10 6V3M18 6V3"/><path d="M2 13h20"/><path d="M6 13v7M10 13v7"/></svg>' },
+
+    // ── Extérieur ────────────────────────────────────────────────────────────────
+    { id:'sauna',       cat:'Extérieur',  label:'Sauna',            svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V10l9-8 9 8v12"/><path d="M9 22v-6a3 3 0 0 1 6 0v6"/><path d="M9 12c0-1 .5-2 1.5-2.5"/><path d="M13 9c1 .5 1.5 1.5 1.5 2.5"/></svg>' },
+    { id:'pool',        cat:'Extérieur',  label:'Piscine',          svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 16c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><circle cx="7" cy="10" r="3"/><path d="M10 10h4"/></svg>' },
+    { id:'garden',      cat:'Extérieur',  label:'Jardin',           svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 12C12 7 8 4 4 5c0 5 4 8 8 7"/><path d="M12 12c0-5 4-8 8-7 0 5-4 8-8 7"/></svg>' },
+    { id:'terrace',     cat:'Extérieur',  label:'Terrasse',         svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/><rect x="2" y="17" width="20" height="3" rx="1"/></svg>' },
+    { id:'parking',     cat:'Extérieur',  label:'Parking',          svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>' },
+    { id:'bike',        cat:'Extérieur',  label:'Vélo',             svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M12 4h-2l-3 9h8L13 9l-3-2"/><path d="M5 17l4-6M19 17l-3-4"/></svg>' },
+    { id:'canoe',       cat:'Extérieur',  label:'Canoë',            svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17c4-3 12-3 16 0"/><path d="M8 17V9l4-5 4 5v8"/><path d="M10 9h4"/></svg>' },
+    { id:'hike',        cat:'Extérieur',  label:'Randonnée',        svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M9 8l2 5 2-3 3 7"/><path d="M6 21l2-7M17 21l-3-6"/></svg>' },
+    { id:'ski',         cat:'Extérieur',  label:'Ski',              svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="4" r="2"/><path d="M3 21l7-9 3 3 2-2 6 8"/><path d="M3 21h18"/></svg>' },
+    { id:'fishing',     cat:'Extérieur',  label:'Pêche',            svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7 7"/><path d="M10.5 10.5l-2 2.5a4 4 0 0 0 5 5l2.5-2"/><path d="M20 8a8 8 0 0 0-8 8"/><path d="M18 5v5h5"/></svg>' },
+    { id:'horseback',   cat:'Extérieur',  label:'Équitation',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="4" r="2"/><path d="M6 11l2-5 5 2-3 4-2-1z"/><path d="M13 8l3 3-2 6-4-2"/><path d="M7 21l2-7M14 21l1-5"/></svg>' },
+    { id:'tent',        cat:'Extérieur',  label:'Camping / Tente',  svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20L12 4l9 16H3z"/><path d="M12 4v16M9 20l3-5 3 5"/></svg>' },
+    { id:'mountain',    cat:'Extérieur',  label:'Montagne',         svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3l4 8 5-5 5 13H2L8 3z"/><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19"/></svg>' },
+    { id:'river',       cat:'Extérieur',  label:'Rivière / Lac',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 18c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>' },
+
+    // ── Services ─────────────────────────────────────────────────────────────────
+    { id:'firstaid',    cat:'Services',   label:'Premiers secours', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M12 8v8M8 12h8"/></svg>' },
+    { id:'extinguisher',cat:'Services',   label:'Extincteur',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h2a1 1 0 0 1 1 1v2H6V5a1 1 0 0 1 1-1z"/><rect x="5" y="7" width="8" height="14" rx="2"/><path d="M13 10h3a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-3"/><path d="M9 4V2M7 4V2"/></svg>' },
+    { id:'smoke',       cat:'Services',   label:'Détecteur fumée',  svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="5"/><path d="M7 7h10M12 12v10M9 18c0-2 1-3 3-3s3 1 3 3"/></svg>' },
+    { id:'accessible',  cat:'Services',   label:'Accès handicapé',  svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="4" r="2"/><path d="M11 12h5l2 5H6"/><path d="M11 12l-2-5H6"/><circle cx="9" cy="21" r="2"/><circle cx="19" cy="21" r="2"/></svg>' },
+    { id:'elevator',    cat:'Services',   label:'Ascenseur',        svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="18" height="20" rx="2"/><path d="M9 2v20M9 7l-3-3 3-3M9 17l-3 3 3 3M15 7l3-3-3-3M15 17l3 3-3 3"/></svg>' },
+    { id:'concierge',   cat:'Services',   label:'Conciergerie',     svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M12 4a8 8 0 0 1 8 8H4a8 8 0 0 1 8-8z"/><path d="M12 4v3"/></svg>' },
+    { id:'breakfast',   cat:'Services',   label:'Petit-déjeuner',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><path d="M6 2v2M10 2v2M14 2v2"/></svg>' },
+    { id:'safe',        cat:'Services',   label:'Coffre-fort',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="12" r="4"/><path d="M12 8v1M12 15v1M8 12h1M15 12h1"/><path d="M18 21v-3"/></svg>' },
+    { id:'ev',          cat:'Services',   label:'Borne recharge EV', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 8h4l-2 4h4l-5 8v-6H7l2-6z"/></svg>' },
+    { id:'dog',         cat:'Services',   label:'Animaux acceptés', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5.17A6 6 0 0 0 8 10v4a4 4 0 0 0 8 0v-4a6 6 0 0 0-2-4.83"/><path d="M8 14H5l-2 4h2M16 14h3l2 4h-2"/><circle cx="9" cy="7" r="1" fill="currentColor"/><circle cx="15" cy="7" r="1" fill="currentColor"/><path d="M6 4l2 3M18 4l-2 3"/></svg>' },
   ];
+
+  const CATEGORIES = [...new Set(ICONS.map(function(i){ return i.cat; }))];
 
   let equipments = [];
   try {
@@ -67,9 +146,14 @@
   } catch(e) { equipments = []; }
 
   let selectedIconId = null;
+  let activeCategory = 'all';
 
   function persist() {
     document.getElementById('cfg_equipments').value = JSON.stringify(equipments);
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   function renderList() {
@@ -83,40 +167,78 @@
     noMsg.classList.add('hidden');
     equipments.forEach(function(eq, idx) {
       const row = document.createElement('div');
-      row.className = 'flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-2 border';
+      row.className = 'flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-2 border group';
       row.innerHTML =
-        '<span class="w-6 h-6 flex-shrink-0 text-gray-600">' + eq.svg + '</span>' +
-        '<span class="flex-1 text-sm">' + escapeHtml(eq.label) + '</span>' +
-        '<button type="button" onclick="removeEquipment(' + idx + ')" class="text-red-400 hover:text-red-600 text-lg leading-none">&times;</button>';
+        '<span class="w-5 h-5 flex-shrink-0 text-gray-600">' + eq.svg + '</span>' +
+        '<span class="flex-1 text-sm text-gray-800">' + escapeHtml(eq.label) + '</span>' +
+        '<button type="button" onclick="removeEquipment(' + idx + ')" class="text-gray-300 hover:text-red-500 transition text-xl leading-none">&times;</button>';
       list.appendChild(row);
     });
   }
 
-  function escapeHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  function renderCategoryTabs() {
+    const tabs = document.getElementById('categoryTabs');
+    tabs.innerHTML = '';
+    ['all'].concat(CATEGORIES).forEach(function(cat) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = cat === 'all' ? 'Toutes' : cat;
+      btn.dataset.cat = cat;
+      btn.className = 'px-2.5 py-1 rounded-full text-xs font-medium border transition cat-tab ' +
+        (cat === activeCategory ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-white text-gray-600 border-gray-300 hover:border-cyan-400 hover:text-cyan-600');
+      btn.addEventListener('click', function() {
+        activeCategory = cat;
+        document.getElementById('iconSearch').value = '';
+        renderCategoryTabs();
+        renderIconPicker('');
+      });
+      tabs.appendChild(btn);
+    });
   }
 
-  function renderIconPicker() {
+  function renderIconPicker(query) {
     const picker = document.getElementById('iconPicker');
+    const noResults = document.getElementById('noIconResults');
+    const q = (query || '').toLowerCase().trim();
     picker.innerHTML = '';
-    ICONS.forEach(function(icon) {
+
+    const filtered = ICONS.filter(function(icon) {
+      const catMatch = activeCategory === 'all' || icon.cat === activeCategory;
+      const textMatch = !q || icon.label.toLowerCase().includes(q) || icon.id.includes(q);
+      return catMatch && textMatch;
+    });
+
+    if (filtered.length === 0) {
+      noResults.classList.remove('hidden');
+      return;
+    }
+    noResults.classList.add('hidden');
+
+    filtered.forEach(function(icon) {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.title = icon.label;
       btn.dataset.iconId = icon.id;
-      btn.className = 'flex flex-col items-center gap-1 p-2 rounded-lg border text-xs hover:bg-cyan-50 hover:border-cyan-400 transition icon-pick-btn';
-      btn.innerHTML = '<span class="w-6 h-6 text-gray-600">' + icon.svg + '</span><span class="text-gray-500 text-[10px] truncate w-full text-center">' + icon.label + '</span>';
+      const isSelected = icon.id === selectedIconId;
+      btn.className = 'icon-pick-btn flex flex-col items-center justify-start gap-1 p-2 rounded-lg border text-center transition cursor-pointer ' +
+        (isSelected ? 'bg-cyan-50 border-cyan-400 ring-2 ring-cyan-400' : 'bg-white border-gray-200 hover:bg-cyan-50 hover:border-cyan-300');
+      btn.innerHTML =
+        '<span class="w-6 h-6 text-gray-600 flex-shrink-0">' + icon.svg + '</span>' +
+        '<span class="text-gray-500 text-[9px] leading-tight line-clamp-2 w-full">' + escapeHtml(icon.label) + '</span>';
       btn.addEventListener('click', function() {
         selectedIconId = icon.id;
-        document.querySelectorAll('.icon-pick-btn').forEach(function(b) {
-          b.classList.remove('bg-cyan-50', 'border-cyan-400', 'ring-2', 'ring-cyan-400');
-        });
-        btn.classList.add('bg-cyan-50', 'border-cyan-400', 'ring-2', 'ring-cyan-400');
         document.getElementById('newEquipSvg').value = '';
+        renderIconPicker(document.getElementById('iconSearch').value);
       });
       picker.appendChild(btn);
     });
   }
+
+  window.filterIcons = function(query) {
+    activeCategory = 'all';
+    renderCategoryTabs();
+    renderIconPicker(query);
+  };
 
   window.addEquipment = function() {
     const label = document.getElementById('newEquipLabel').value.trim();
@@ -127,7 +249,7 @@
     if (customSvg) {
       svg = customSvg;
     } else if (selectedIconId) {
-      const icon = ICONS.find(function(i) { return i.id === selectedIconId; });
+      const icon = ICONS.find(function(i){ return i.id === selectedIconId; });
       if (icon) svg = icon.svg;
     }
     if (!svg) { alert('Veuillez choisir une icône ou coller du SVG.'); return; }
@@ -135,12 +257,11 @@
     equipments.push({ svg: svg, label: label });
     persist();
     renderList();
+
     document.getElementById('newEquipLabel').value = '';
     document.getElementById('newEquipSvg').value = '';
     selectedIconId = null;
-    document.querySelectorAll('.icon-pick-btn').forEach(function(b) {
-      b.classList.remove('bg-cyan-50', 'border-cyan-400', 'ring-2', 'ring-cyan-400');
-    });
+    renderIconPicker(document.getElementById('iconSearch').value);
   };
 
   window.removeEquipment = function(idx) {
@@ -149,7 +270,8 @@
     renderList();
   };
 
-  renderIconPicker();
+  renderCategoryTabs();
+  renderIconPicker('');
   renderList();
 })();
 </script>
