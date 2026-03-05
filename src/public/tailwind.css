@@ -30,6 +30,10 @@
   font-display: swap;
 }
 
+html{
+    scroll-behavior: smooth;
+}
+
 body{
     font-family: "UniversityRoman";
     font-style: italic;
@@ -37,6 +41,154 @@ body{
 
 a, button{
     cursor: pointer;
+}
+
+/* Smooth transitions on inputs */
+input, textarea, select {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--color-cyan-500);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+    outline: none;
+}
+
+/* FAQ accordion animation */
+details summary {
+    transition: color 0.2s ease;
+}
+
+details[open] summary {
+    color: var(--color-cyan-700);
+}
+
+details[open] summary .faq-chevron {
+    transform: rotate(180deg);
+}
+
+.faq-chevron {
+    transition: transform 0.3s ease;
+}
+
+details .faq-answer {
+    overflow: hidden;
+    animation: faq-open 0.3s ease forwards;
+}
+
+@keyframes faq-open {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Photo gallery hover effects */
+.photo-hover {
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.photo-hover:hover {
+    transform: scale(1.03);
+    filter: brightness(1.05);
+}
+
+/* Lightbox fade animation */
+.lightbox-enter {
+    animation: lightbox-fade-in 0.25s ease forwards;
+}
+
+@keyframes lightbox-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Toast slide-in animation */
+.toast-enter {
+    animation: toast-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast-exit {
+    animation: toast-slide-out 0.3s ease forwards;
+}
+
+@keyframes toast-slide-in {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes toast-slide-out {
+    from { opacity: 1; transform: translate(-50%, 0); }
+    to { opacity: 0; transform: translate(-50%, 20px); }
+}
+
+/* Loading spinner for buttons */
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+    color: transparent !important;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Equipment item hover */
+.equip-item {
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    border-radius: 0.75rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.equip-item:hover {
+    background-color: var(--color-gray-50);
+}
+
+/* Card section hover lift */
+.card-section {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card-section:hover {
+    box-shadow: 0 14px 30px -12px rgba(0,0,0,0.18);
+    transform: translateY(-2px);
+}
+
+/* Admin tab icons */
+.tab-btn {
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Scroll to top button */
+.scroll-top-btn {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.scroll-top-btn.hidden-btn {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+}
+
+/* Photo card overlay on hover */
+.photo-card-overlay {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.photo-card:hover .photo-card-overlay {
+    opacity: 1;
 }
 
 /* Calendar */

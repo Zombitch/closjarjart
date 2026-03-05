@@ -1,10 +1,17 @@
+<header class="mb-5">
+    <h1 class="text-2xl font-semibold text-slate-800">Informations</h1>
+    <p class="text-sm text-slate-500">Description et r&#232;gles du logement.</p>
+</header>
+
 <div class="space-y-5">
     <div>
-        <h3 class="font-semibold mb-2">Description</h3>
-        <textarea name="description" id="cfg_description" rows="5" class="w-full rounded-lg border px-3 py-2" placeholder="Décrivez l'espace, la disposition, les points forts, etc."><%= config.description %></textarea>
+        <h3 class="font-semibold mb-2 text-slate-700">Description</h3>
+        <textarea name="description" id="cfg_description" rows="6" class="w-full rounded-lg border px-3 py-2.5 text-sm leading-relaxed" placeholder="D&#233;crivez l'espace, la disposition, les points forts, etc."><%= config.description %></textarea>
+        <p class="mt-1 text-xs text-slate-400">Supporte le HTML pour la mise en forme.</p>
     </div>
     <div>
-        <h3 class="font-semibold mb-2">Règles du logement</h3>
-        <textarea name="rules" id="cfg_rules" rows="5" class="w-full rounded-lg border px-3 py-2" placeholder="Ex. non-fumeur, pas de fêtes, horaires de calme, etc."><%= config.rules %></textarea>
+        <h3 class="font-semibold mb-2 text-slate-700">R&#232;gles du logement</h3>
+        <textarea name="rules" id="cfg_rules" rows="6" class="w-full rounded-lg border px-3 py-2.5 text-sm leading-relaxed" placeholder="Ex. non-fumeur, pas de f&#234;tes, horaires de calme, etc."><%= config.rules %></textarea>
+        <p class="mt-1 text-xs text-slate-400">Supporte le HTML pour la mise en forme.</p>
     </div>
 </div>

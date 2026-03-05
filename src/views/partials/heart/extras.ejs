@@ -1,26 +1,26 @@
-<header class="mb-5">
-    <h1 class="text-2xl font-semibold text-slate-800">Extras (réservables)</h1>
-    <p class="text-sm text-slate-500">Gestion du jaccuzzi, sauna, canoe</p>
+<header class="mb-4">
+    <h2 class="text-lg font-semibold text-slate-800">Extras (r&#233;servables)</h2>
+    <p class="text-sm text-slate-500">Gestion du jacuzzi, sauna, cano&#235;</p>
 </header>
 
 <section>
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-    <label class="text-sm gap-1">Sauna (€)
-        <input name="sauna_price" id="cfg_price_sauna" type="number" min="0" step="1" class="rounded-lg border px-3 py-2 block" placeholder="25" value="<%= config.sauna_price %>" />
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+    <label class="text-sm grid gap-1">Sauna (&euro;)
+        <input name="sauna_price" id="cfg_price_sauna" type="number" min="0" step="1" class="rounded-lg border px-3 py-2.5 block" placeholder="25" value="<%= config.sauna_price %>" />
     </label>
-    <label class="text-sm gap-1">Jacuzzi (€)
-        <input name="jacuzzi_price" id="cfg_price_jacuzzi" type="number" min="0" step="1" class="rounded-lg border px-3 py-2 block" placeholder="30" value="<%= config.jacuzzi_price %>" />
+    <label class="text-sm grid gap-1">Jacuzzi (&euro;)
+        <input name="jacuzzi_price" id="cfg_price_jacuzzi" type="number" min="0" step="1" class="rounded-lg border px-3 py-2.5 block" placeholder="30" value="<%= config.jacuzzi_price %>" />
     </label>
     </div>
-    <div class="mt-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-    <label class="text-sm gap-1">Canoë — court (€)
-        <input name="canoe_short_price" id="cfg_price_canoe_short" type="number" min="0" step="1" class="rounded-lg border px-3 py-2 block" placeholder="15" value="<%= config.canoe_short_price %>"/>
+    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+    <label class="text-sm grid gap-1">Cano&#235; &#8212; court (&euro;)
+        <input name="canoe_short_price" id="cfg_price_canoe_short" type="number" min="0" step="1" class="rounded-lg border px-3 py-2.5 block" placeholder="15" value="<%= config.canoe_short_price %>"/>
     </label>
-    <label class="text-sm gap-1">Canoë — moyen (€)
-        <input name="canoe_medium_price" id="cfg_price_canoe_medium" type="number" min="0" step="1" class="rounded-lg border px-3 py-2 block" placeholder="25" value="<%= config.canoe_medium_price %>"/>
+    <label class="text-sm grid gap-1">Cano&#235; &#8212; moyen (&euro;)
+        <input name="canoe_medium_price" id="cfg_price_canoe_medium" type="number" min="0" step="1" class="rounded-lg border px-3 py-2.5 block" placeholder="25" value="<%= config.canoe_medium_price %>"/>
     </label>
-    <label class="text-sm gap-1">Canoë — long (€)
-        <input name="canoe_long_price" id="cfg_price_canoe_long" type="number" min="0" step="1" class="rounded-lg border px-3 py-2 block" placeholder="40" value="<%= config.canoe_long_price %>"/>
+    <label class="text-sm grid gap-1">Cano&#235; &#8212; long (&euro;)
+        <input name="canoe_long_price" id="cfg_price_canoe_long" type="number" min="0" step="1" class="rounded-lg border px-3 py-2.5 block" placeholder="40" value="<%= config.canoe_long_price %>"/>
     </label>
     </div>
 </section>

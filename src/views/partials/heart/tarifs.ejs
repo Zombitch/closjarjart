@@ -1,24 +1,30 @@
 <header class="mb-5">
     <h1 class="text-2xl font-semibold text-slate-800">Tarifs</h1>
-    <p class="text-sm text-slate-500">Gérer les différents tarifs et taxes.</p>
+    <p class="text-sm text-slate-500">G&#233;rer les diff&#233;rents tarifs et taxes.</p>
 </header>
 
 <section>
-    <div class="grid grid-cols-1 gap-3">
-        <label class="text-sm grid gap-1">Prix / nuit (€)
-            <input name="price" id="cfg_price_night" type="number" min="0" step="1" class="rounded-lg border px-3 py-2" placeholder="120" value="<%= config.price %>"/>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label class="text-sm grid gap-1">Prix / nuit (&euro;)
+            <input name="price" id="cfg_price_night" type="number" min="0" step="1" class="rounded-lg border px-3 py-2.5" placeholder="120" value="<%= config.price %>"/>
         </label>
         <label class="text-sm grid gap-1">Max voyageurs
-            <input name="max_guests" id="cfg_max_guests" type="number" min="0" max="10" step="1" class="rounded-lg border px-3 py-2" placeholder="4" value="<%= config.max_guests %>"/>
+            <input name="max_guests" id="cfg_max_guests" type="number" min="0" max="10" step="1" class="rounded-lg border px-3 py-2.5" placeholder="4" value="<%= config.max_guests %>"/>
         </label>
-        <label class="text-sm grid gap-1">Mainteance
-            <div class="flex items-center gap-4">
+    </div>
+    <div class="mt-4 pt-4 border-t">
+        <label class="text-sm grid gap-1">Maintenance
+            <div class="flex items-center gap-4 mt-1">
                 <input id="toogleMaintenanceInput" name="maintenance" type="hidden" value="<%= config.maintenance %>"/>
-                <span id="toggleMaintenanceLabel" class="text-gray-600 font-medium">Désactivé</span>
                 <a id="toggleMaintenanceBtn" class="relative w-14 h-8 flex items-center rounded-full transition-colors duration-300 bg-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400">
                     <span id="toggleMaintenanceCircle" class="absolute left-1 w-6 h-6 bg-white rounded-full shadow transform transition-transform duration-300"></span>
                 </a>
+                <span id="toggleMaintenanceLabel" class="text-gray-600 font-medium text-sm">D&#233;sactiv&#233;</span>
             </div>
         </label>
     </div>
 </section>
+
+<div class="mt-6">
+    <%- include('./extras.ejs') %>
+</div>

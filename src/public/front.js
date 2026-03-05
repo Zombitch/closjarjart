@@ -11,7 +11,11 @@ function updateLightbox() {
   currentPhotoIndex = safeIndex;
 
   const photo = photos[safeIndex];
-  lightboxImage.src = photo.url;
+  lightboxImage.style.opacity = '0';
+  setTimeout(() => {
+    lightboxImage.src = photo.url;
+    lightboxImage.style.opacity = '1';
+  }, 150);
   lightboxCounter.textContent = `${safeIndex + 1} / ${photos.length}`;
 }
 
@@ -19,16 +23,16 @@ function openLightbox(index) {
   const photos = getLightboxPhotos();
   if (!photos.length || !lightbox) return;
   currentPhotoIndex = Number.isInteger(index) ? index : 0;
-  updateLightbox();
   lightbox.classList.remove('hidden');
-  lightbox.classList.add('flex');
+  lightbox.classList.add('flex', 'lightbox-enter');
   document.body.classList.add('overflow-hidden');
+  updateLightbox();
 }
 
 function closeLightbox() {
   if (!lightbox) return;
   lightbox.classList.add('hidden');
-  lightbox.classList.remove('flex');
+  lightbox.classList.remove('flex', 'lightbox-enter');
   document.body.classList.remove('overflow-hidden');
 }
 
@@ -57,6 +61,26 @@ window.addEventListener('keydown', (event) => {
   else if (event.key === 'ArrowLeft') previousPhoto();
 });
 
+// Touch swipe support for lightbox on mobile
+let touchStartX = 0;
+let touchEndX = 0;
+const lightboxContainer = document.getElementById('lightboxImageContainer');
+
+if(lightboxContainer){
+  lightboxContainer.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  lightboxContainer.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) nextPhoto();
+      else previousPhoto();
+    }
+  }, { passive: true });
+}
+
 window.openLightbox = openLightbox;
 window.closeLightbox = closeLightbox;
 window.nextPhoto = nextPhoto;
@@ -71,14 +95,27 @@ function showToast(msg, type){
   if(type == "danger") bgClass= "bg-red-600";
   else bgClass= "bg-green-600";
 
-  t.textContent = msg; 
-  t.classList.remove('hidden');
-  t.classList.add(bgClass);
+  t.className = 'fixed bottom-15 left-1/2 -translate-x-1/2 text-white px-5 py-3 rounded-full shadow-lg text-sm font-medium';
+  t.textContent = msg;
+  t.classList.add(bgClass, 'toast-enter');
 
   setTimeout(()=> {
-    t.classList.add('hidden');
-    t.classList.remove(bgClass);
-  }, 10000);
+    t.classList.remove('toast-enter');
+    t.classList.add('toast-exit');
+    setTimeout(() => {
+      t.classList.add('hidden');
+      t.classList.remove('toast-exit', bgClass);
+    }, 300);
+  }, 5000);
+}
+
+// Scroll to top button
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+if(scrollTopBtn){
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 400) scrollTopBtn.classList.remove('hidden-btn');
+    else scrollTopBtn.classList.add('hidden-btn');
+  }, { passive: true });
 }
 
 
@@ -179,7 +216,8 @@ function submitBooking(){
   const telInput = document.getElementById('tel');
   const lastnameInput = document.getElementById('lastname');
   const firstnameInput = document.getElementById('firstname');
-  
+  const submitBtn = document.getElementById('bookingSubmitBtn');
+
   if(!bookingForm?.checkValidity()){
     bookingForm?.reportValidity();
     return;
@@ -190,6 +228,9 @@ function submitBooking(){
       showToast('Une erreur est survenue, veuillez de nouveau renseigner le formulaire de réservation', "danger");
       return;
     }
+
+    if(submitBtn) submitBtn.classList.add('btn-loading');
+
     fetch('/', {
       method: 'POST',
       credentials: 'same-origin',
@@ -216,7 +257,7 @@ function submitBooking(){
       return data;
     })
     .then(data => {
-      if (!data.ok)showToast(data.message, "danger");
+      if (!data.ok) showToast(data.message, "danger");
       else showToast(data.message, "success");
 
       if(data.reservations){
@@ -235,9 +276,10 @@ function submitBooking(){
     .catch(()  => {
       showToast('Une erreur est survenue, veuillez de nouveau renseigner le formulaire de réservation', "danger");
     })
+    .finally(() => {
+      if(submitBtn) submitBtn.classList.remove('btn-loading');
+    })
   }
-
-  // Ici vous pourriez faire un fetch/POST vers votre backend
 }
 // Année footer & calc init
 //document.getElementById('year').textContent = new Date().getFullYear();

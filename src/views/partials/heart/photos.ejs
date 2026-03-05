@@ -1,33 +1,46 @@
-<header class="flex flex-wrap items-center gap-2 mb-3">
+<header class="flex flex-wrap items-center gap-3 mb-4">
   <div class="flex items-center gap-2">
+    <a id="addPhotoBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-600 text-white text-sm font-medium hover:bg-cyan-700 transition shadow-sm">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      Ajouter des photos
+    </a>
     <% if (photos.length > 1) { %>
-      <a id="deleteAllBtn" class="w-full sm:w-auto px-3 py-1.5 rounded bg-red-500 text-white text-sm hover:bg-red-600" onclick="fetch('/heart/photos',{method:'DELETE'}).then(function(data) {window.location.reload();});">
-        Delete all photos
+      <a id="deleteAllBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition shadow-sm" onclick="if(confirm('Supprimer toutes les photos ?')) fetch('/heart/photos',{method:'DELETE'}).then(function(data) {window.location.reload();});">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Tout supprimer
       </a>
     <% } %>
   </div>
-  <a id="addPhotoBtn" class="w-full sm:w-auto px-3 py-1.5 rounded bg-cyan-600 text-white text-sm hover:bg-cyan-700">
-    Ajouter des photos
-  </a>
-  <div class="mt-2 text-sm text-slate-500 text-right"><span id="selectedPhotoCount">Aucune</span> photo(s) sélectionnée(s)</div>
-
+  <div class="text-sm text-slate-500"><span id="selectedPhotoCount">Aucune</span> photo(s) s&#233;lectionn&#233;e(s)</div>
   <input name="cfg_photos" id="cfg_photos" type="file" accept="image/*" class="hidden" multiple/>
 </header>
 
 <section>
-    
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <% photos.forEach(function(photo) { %>
-            <div class="relative rounded-lg overflow-hidden border">
-                <img src="<%= photo.url %>" alt="photo" class="rounded-lg object-cover w-full h-40 sm:h-48">
+            <div class="photo-card group relative rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                <img src="<%= photo.url %>" alt="photo" class="object-cover w-full h-40 sm:h-48 transition-transform duration-300 group-hover:scale-105">
 
-                <% if(photo.default == true) { %><span class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-0.5 rounded">Mis en avant</span><% } %>
+                <% if(photo.default == true) { %>
+                  <span class="absolute top-2 left-2 inline-flex items-center gap-1 bg-green-600 text-white text-xs px-2 py-0.5 rounded-full font-medium shadow-sm">
+                    <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                    Mis en avant
+                  </span>
+                <% } %>
 
-                <div class="absolute bottom-2 left-1/2 -translate-x-1/2">
-                    <a class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600" onclick="fetch('/heart/photo/<%= photo._id %>',{method:'DELETE'})">Supprimer</a>
-                    <% if(photo.default != true) { %><a class="px-2 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700" onclick="fetch('/heart/photo/setDefault/<%= photo._id %>',{method:'POST'}).then(function(data) {window.location.reload();});">Defaut</a><% } %>
+                <div class="photo-card-overlay absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center pb-3 gap-2">
+                    <a class="inline-flex items-center gap-1 px-2.5 py-1 bg-red-500 text-white text-xs rounded-lg hover:bg-red-600 font-medium transition" onclick="if(confirm('Supprimer cette photo ?')) fetch('/heart/photo/<%= photo._id %>',{method:'DELETE'}).then(function(){window.location.reload();});">
+                      <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                      Supprimer
+                    </a>
+                    <% if(photo.default != true) { %>
+                      <a class="inline-flex items-center gap-1 px-2.5 py-1 bg-green-600 text-white text-xs rounded-lg hover:bg-green-700 font-medium transition" onclick="fetch('/heart/photo/setDefault/<%= photo._id %>',{method:'POST'}).then(function(data) {window.location.reload();});">
+                        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                        D&#233;faut
+                      </a>
+                    <% } %>
                 </div>
-            </div>            
+            </div>
         <% }); %>
     </div>
 </section>
