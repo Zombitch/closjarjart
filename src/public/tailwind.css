@@ -95,7 +95,7 @@ a, button{
 .anim-item:nth-child(10) { left: 92%; animation-duration: 8s;   animation-delay: 5s;   }
 
 /* --- Green leaves --- */
-.anim-leaves .anim-item { animation: leafFall linear infinite; }
+.anim-leaves .anim-item { animation-name: leafFall; animation-timing-function: linear; animation-iteration-count: infinite; }
 
 @keyframes leafFall {
     0%   { top: -40px; opacity: 0; transform: rotate(0deg) translateX(0px); }
@@ -108,7 +108,7 @@ a, button{
 }
 
 /* --- Falling hearts --- */
-.anim-hearts .anim-item { animation: heartFall ease-in infinite; }
+.anim-hearts .anim-item { animation-name: heartFall; animation-timing-function: ease-in; animation-iteration-count: infinite; }
 
 @keyframes heartFall {
     0%   { top: -40px; opacity: 0; transform: scale(0.6) rotate(0deg); }
@@ -121,7 +121,7 @@ a, button{
 }
 
 /* --- Snowflakes --- */
-.anim-snow .anim-item { animation: snowFall linear infinite; width: 12px; height: 12px; }
+.anim-snow .anim-item { animation-name: snowFall; animation-timing-function: linear; animation-iteration-count: infinite; width: 12px; height: 12px; }
 
 @keyframes snowFall {
     0%   { top: -20px; opacity: 0; transform: translateX(0) rotate(0deg); }
@@ -134,7 +134,7 @@ a, button{
 }
 
 /* --- Autumn leaves --- */
-.anim-autumn .anim-item { animation: autumnFall ease-in-out infinite; width: 22px; height: 22px; }
+.anim-autumn .anim-item { animation-name: autumnFall; animation-timing-function: ease-in-out; animation-iteration-count: infinite; width: 22px; height: 22px; }
 
 @keyframes autumnFall {
     0%   { top: -40px; opacity: 0; transform: rotate(0deg) translateX(0); }
