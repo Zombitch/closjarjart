@@ -239,6 +239,37 @@ function submitBooking(){
 
   // Ici vous pourriez faire un fetch/POST vers votre backend
 }
+
+function initReservationSticky(){
+  const reservationColumn = document.getElementById('reservationColumn');
+  if(!reservationColumn) return;
+
+  const desktopMediaQuery = window.matchMedia('(min-width: 64rem)');
+  const stickyOffset = 24; // 1.5rem, same spacing as top-6
+
+  function updateStickyOffset(){
+    if(!desktopMediaQuery.matches){
+      reservationColumn.style.top = '';
+      return;
+    }
+
+    const viewportHeight = window.innerHeight;
+    const columnHeight = reservationColumn.offsetHeight;
+    const stickyTop = Math.min(stickyOffset, viewportHeight - columnHeight - stickyOffset);
+    reservationColumn.style.top = `${stickyTop}px`;
+  }
+
+  updateStickyOffset();
+  window.addEventListener('resize', updateStickyOffset);
+  desktopMediaQuery.addEventListener('change', updateStickyOffset);
+
+  if('ResizeObserver' in window){
+    const observer = new ResizeObserver(updateStickyOffset);
+    observer.observe(reservationColumn);
+  }
+}
+
+initReservationSticky();
 // Année footer & calc init
 //document.getElementById('year').textContent = new Date().getFullYear();
 /*recalc();*/
