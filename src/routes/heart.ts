@@ -118,10 +118,13 @@ router.post('/', upload.array('cfg_photos', 6), requireAuth, async (req, res) =>
     files?.map(file => processImageUploadToDatabase(req, file));
   } catch (e) { }
 
- if(req.body){
-  const config = new ConfigModel(req.body);
-  config.save();
- }
+  if(req.body){
+    if (req.body.equipments && typeof req.body.equipments === 'string') {
+      try { req.body.equipments = JSON.parse(req.body.equipments); } catch { req.body.equipments = []; }
+    }
+    const config = new ConfigModel(req.body);
+    config.save();
+  }
 
   res.redirect('/heart');
 });

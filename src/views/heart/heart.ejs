@@ -10,6 +10,9 @@
         <button type="button" data-tab="info" class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-800">
           Info
         </button>
+        <button type="button" data-tab="equipements" class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-800">
+          Équipements
+        </button>
         <button type="button" data-tab="photos" class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-800">
           Photos
         </button>
@@ -33,6 +36,11 @@
           <div class="space-y-5">
             <%- include('../partials/heart/info.ejs') %>
           </div>
+        </div>
+
+        <div id="tab-equipements" class="tab-panel hidden">
+          <h2 class="text-xl font-semibold text-gray-800 mb-3">Équipements</h2>
+          <%- include('../partials/heart/equipments.ejs') %>
         </div>
 
         <div id="tab-photos" class="tab-panel hidden">
