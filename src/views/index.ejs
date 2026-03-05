@@ -35,26 +35,26 @@
         <!-- Équipements -->
         <section class="mt-6 p-6 rounded-2xl bg-white shadow-soft">
           <h3 class="text-xl font-semibold">Équipements</h3>
-          <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-3 text-sm">
             <% if (config.equipments && config.equipments.length > 0) { %>
               <% config.equipments.forEach(function(eq) { %>
-                <div class="flex items-center gap-3">
-                  <span class="w-5 h-5 flex-shrink-0"><%- eq.svg %></span>
-                  <%= eq.label %>
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="w-5 h-5 flex-shrink-0 text-gray-600"><%- eq.svg %></span>
+                  <span class="truncate"><%= eq.label %></span>
                 </div>
               <% }); %>
             <% } else { %>
-              <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z"/><path d="M6 8h12v2H6z"/></svg> Cuisine équipée</div>
-              <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v4H4zM4 10h16v10H4z"/></svg> Chauffage</div>
-              <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v12H3z"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/></svg> TV + Netflix</div>
-              <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3h14v18H5z"/><path d="M8 7h8v2H8zM8 11h8v2H8zM8 15h5v2H8z"/></svg> Linges de lit et serviettes</div>
-              <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/></svg> Sauna privatif</div>
-              <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v4H4zM4 10h16v10H4z"/></svg> Table à repasser et fer</div>
-              <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l-1 7H7z"/><path d="M9 11h6v10H9z"/></svg> Sèche cheveux</div>
-              <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h12v4H6z"/><path d="M5 10h14v10H5z"/><circle cx="12" cy="15" r="2"/></svg> Cafetière Senseo</div>
-              <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h10v2H6z"/><path d="M5 7h12v11H5z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2z"/></svg> Bouilloire</div>
-              <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M4 7h16v9H4z"/><path d="M8 4h8v3H8z"/><path d="M7 16h2v4H7zM15 16h2v4h-2z"/></svg> Appareils à raclette duo</div>
-              <div class="flex items-center gap-3"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="10" r="6"/><path d="M8 16h8v5H8z"/></svg> Appareil à fondue duo</div>
+              <div class="flex items-center gap-3"><svg class="w-5 h-5 flex-shrink-0 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg><span>Cuisine équipée</span></div>
+              <div class="flex items-center gap-3"><svg class="w-5 h-5 flex-shrink-0 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg><span>Chauffage</span></div>
+              <div class="flex items-center gap-3"><svg class="w-5 h-5 flex-shrink-0 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 9l2 2-2 2M11 13h4"/></svg><span>TV + Netflix</span></div>
+              <div class="flex items-center gap-3"><svg class="w-5 h-5 flex-shrink-0 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v12H4z"/><path d="M4 8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4"/><path d="M4 12h16"/></svg><span>Linges de lit et serviettes</span></div>
+              <div class="flex items-center gap-3"><svg class="w-5 h-5 flex-shrink-0 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V10l9-8 9 8v12"/><path d="M9 22v-6a3 3 0 0 1 6 0v6"/><path d="M9 12c0-1 .5-2 1.5-2.5"/><path d="M13 9c1 .5 1.5 1.5 1.5 2.5"/></svg><span>Sauna privatif</span></div>
+              <div class="flex items-center gap-3"><svg class="w-5 h-5 flex-shrink-0 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h18a2 2 0 0 0 0-4H9l-3-6H3v10z"/><path d="M7 17v2M17 17v2"/></svg><span>Table à repasser et fer</span></div>
+              <div class="flex items-center gap-3"><svg class="w-5 h-5 flex-shrink-0 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a7 7 0 0 1 10-9l5 4-5 4a7 7 0 0 1-10-1z"/><path d="M13 7l4-4M13 17l4 4"/><circle cx="19" cy="12" r="2"/></svg><span>Sèche cheveux</span></div>
+              <div class="flex items-center gap-3"><svg class="w-5 h-5 flex-shrink-0 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg><span>Cafetière Senseo</span></div>
+              <div class="flex items-center gap-3"><svg class="w-5 h-5 flex-shrink-0 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h10v2H6z"/><path d="M5 7h12v11H5z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2z"/></svg><span>Bouilloire</span></div>
+              <div class="flex items-center gap-3"><svg class="w-5 h-5 flex-shrink-0 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="9" rx="1"/><path d="M7 4h10v3H7z"/><path d="M7 16h2v4H7zM15 16h2v4h-2z"/></svg><span>Appareils à raclette duo</span></div>
+              <div class="flex items-center gap-3"><svg class="w-5 h-5 flex-shrink-0 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0v7H6V8z"/><rect x="5" y="15" width="14" height="4" rx="1"/><path d="M9 19v2M15 19v2"/><path d="M12 2v3"/></svg><span>Appareil à fondue duo</span></div>
             <% } %>
           </div>
         </section>
