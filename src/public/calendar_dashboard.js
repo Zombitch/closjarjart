@@ -126,15 +126,15 @@ function getReservation(resID){
 
 function activeSelectedModeButton(btn){
     btn.classList.add("bg-cyan-600", "hover:bg-cyan-700");
-    btn.classList.remove("bg-gray-200", "hover:bg-gray-300"); 
+    btn.classList.remove("bg-cyan-800", "hover:bg-cyan-900"); 
 
     if(btn != addResarvationDashboardBtn){
         addResarvationDashboardBtn.classList.remove("bg-cyan-600", "hover:bg-cyan-700");
-        addResarvationDashboardBtn.classList.add("bg-gray-200", "hover:bg-gray-300"); 
+        addResarvationDashboardBtn.classList.add("bg-cyan-800", "hover:bg-cyan-900"); 
     }
     if(btn != editResarvationDashboardBtn){
         editResarvationDashboardBtn.classList.remove("bg-cyan-600", "hover:bg-cyan-700");
-        editResarvationDashboardBtn.classList.add("bg-gray-200", "hover:bg-gray-300"); 
+        editResarvationDashboardBtn.classList.add("bg-cyan-800", "hover:bg-cyan-900"); 
     }
 }
 
@@ -354,5 +354,5 @@ function renderCalendar(){
 }
 
 setViewDate(now);
-setCalendarDashboardMode("EDIT");
+setCalendarDashboardMode("ADD");
 renderCalendar();
