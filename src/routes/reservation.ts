@@ -26,7 +26,7 @@ router.delete('/:id', requireAuth, async (_req, res) => {
 router.post('/', requireAuth, async (req, res) => {
   const { id, guests, lastname, firstname, email, tel, totalPrice, type} = req.body as { id:string, guests: number, lastname: string, firstname: string, email: string, tel: string, totalPrice: number, type: string };
   const { startDate, endDate } = req.body as { startDate: Date; endDate: Date };
-  if (!guests || !lastname || !firstname || !totalPrice) return res.status(400).json({ error: true, ok:false, message: 'Données requises' });
+  //if (!guests || !lastname || !firstname || !totalPrice) return res.status(400).json({ error: true, ok:false, message: 'Données requises' });
 
   if(!id){
     const formattedStartDate = new Date(startDate);
