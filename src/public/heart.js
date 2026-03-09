@@ -41,7 +41,7 @@ if(addPhotoBtn && photosInput){
     });
 
     // Default tab
-    activateTab("price");
+    activateTab("stats");
 }
 
 if(toggleMainteanceBtn){
